@@ -1,0 +1,45 @@
+version: "2"
+
+services:
+
+  php-base:
+    build: .
+    image: keboola/mongodb-extractor
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./:/code
+    working_dir: /code
+    command: bash
+
+  php:
+    extends:
+      service: php-base
+    links:
+      - mongodb
+
+  php-tests:
+    extends:
+      service: php-base
+    links:
+      - mongodb
+    command: >
+             sh -c '
+             composer install --prefer-dist --no-interaction
+             && mongoimport --host mongodb --db test --collection restaurants --drop
+             --file tests/dataset.json
+             && ./tests.sh
+             '
+
+  php-tests-with-report:
+    extends:
+      service: php-base
+    links:
+      - mongodb
+    volumes:
+      - ./.git:/code/.git
+
+  mongodb:
+    image: mongo:3
+    volumes:
+      - ./.mongodb-datadir/:/data/db
