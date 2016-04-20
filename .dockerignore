@@ -1,3 +1,4 @@
 .git
 .dpl
 build
+ssh.*
