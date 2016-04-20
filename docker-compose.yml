@@ -5,18 +5,15 @@ services:
   php-base:
     build: .
     image: keboola/mongodb-extractor
-    tty: true
-    stdin_open: true
-    volumes:
-      - ./:/code
-    working_dir: /code
-    command: bash
 
   php:
     extends:
       service: php-base
+    tty: true
+    stdin_open: true
     links:
       - mongodb
+    command: bash
 
   php-tests:
     extends:
