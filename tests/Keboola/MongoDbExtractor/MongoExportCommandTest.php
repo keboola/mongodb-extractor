@@ -1,10 +1,10 @@
 <?php
 
-namespace Keboola\MongodbExtractor;
+namespace Keboola\MongoDbExtractor;
 
 use Symfony\Component\Filesystem\Filesystem;
 
-class MongoexportCommandTest extends \PHPUnit_Framework_TestCase
+class MongoExportCommandTest extends \PHPUnit_Framework_TestCase
 {
     /** @var Filesystem */
     private $fs;
@@ -40,7 +40,7 @@ class MongoexportCommandTest extends \PHPUnit_Framework_TestCase
         ];
         $outputPath = '/tmp';
 
-        $command = new MongoexportCommand($connectionParams, $exportParams, $outputPath);
+        $command = new MongoExportCommand($connectionParams, $exportParams, $outputPath);
         $expectedCommand = <<<BASH
 mongoexport --host 'localhost' --port '27017' --db 'myDatabase' --collection 'myCollection' --fields 'field1,field2' --csv --out '/tmp/create-test.csv'
 BASH;
@@ -66,7 +66,7 @@ BASH;
             'name' => 'export-one',
         ];
 
-        $command = new MongoexportCommand($connectionParams, $exportParams, $this->path);
+        $command = new MongoExportCommand($connectionParams, $exportParams, $this->path);
         $this->assertTrue($command->run(), 'Command successful');
 
         $expectedCsv = <<<CSV
@@ -99,7 +99,7 @@ CSV;
             'name' => 'export-multi',
         ];
 
-        $command = new MongoexportCommand($connectionParams, $exportParams, $this->path);
+        $command = new MongoExportCommand($connectionParams, $exportParams, $this->path);
         $this->assertTrue($command->run(), 'Command successful');
 
         $expectedCsv = <<<CSV
@@ -136,7 +136,7 @@ CSV;
             'name' => 'export-multi-fields-paths',
         ];
 
-        $command = new MongoexportCommand($connectionParams, $exportParams, $this->path);
+        $command = new MongoExportCommand($connectionParams, $exportParams, $this->path);
         $this->assertTrue($command->run(), 'Command successful');
 
         $expectedCsv = <<<CSV
@@ -172,7 +172,7 @@ CSV;
             'name' => 'export-multi-with-json',
         ];
 
-        $command = new MongoexportCommand($connectionParams, $exportParams, $this->path);
+        $command = new MongoExportCommand($connectionParams, $exportParams, $this->path);
         $this->assertTrue($command->run(), 'Command successful');
 
         $expectedCsv = <<<CSV
@@ -207,7 +207,7 @@ CSV;
             'name' => 'export-multi-with-json',
         ];
 
-        $command = new MongoexportCommand($connectionParams, $exportParams, $this->path);
+        $command = new MongoExportCommand($connectionParams, $exportParams, $this->path);
         $this->assertTrue($command->run(), 'Command successful');
 
         $expectedCsv = <<<CSV

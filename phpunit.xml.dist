@@ -11,12 +11,12 @@
          bootstrap="tests/bootstrap.php">
 
     <testsuite name="Main Test">
-        <directory>tests/Keboola/MongodbExtractor</directory>
+        <directory>tests/Keboola/MongoDbExtractor</directory>
     </testsuite>
 
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">./src/Keboola/MongodbExtractor</directory>
+            <directory suffix=".php">./src/Keboola/MongoDbExtractor</directory>
         </whitelist>
     </filter>
 

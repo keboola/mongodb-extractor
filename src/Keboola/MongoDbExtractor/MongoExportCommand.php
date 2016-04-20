@@ -1,10 +1,10 @@
 <?php
 
-namespace Keboola\MongodbExtractor;
+namespace Keboola\MongoDbExtractor;
 
 use Symfony\Component\Process\Process;
 
-class MongoexportCommand
+class MongoExportCommand
 {
     /** @var array */
     private $connectionParams;
