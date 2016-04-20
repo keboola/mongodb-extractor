@@ -6,7 +6,7 @@ use Symfony\Component\Process\Process;
 
 class Extractor extends \Keboola\DbExtractor\Extractor\Extractor
 {
-    
+
     public function createConnection($params)
     {
         return true;
