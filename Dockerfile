@@ -12,3 +12,12 @@ RUN pecl install xdebug \
 RUN cd \
   && curl -sS https://getcomposer.org/installer | php \
   && ln -s /root/composer.phar /usr/local/bin/composer
+
+ADD . /code
+
+RUN cd /code \
+  && composer install --prefer-dist --no-interaction
+
+WORKDIR /code
+
+CMD php ./src/run.php --data=/data

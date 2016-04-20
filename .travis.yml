@@ -21,7 +21,7 @@ install:
 before_script:
   - docker -v
   - docker-compose -v
-  - docker-compose build php-tests
+  - docker-compose build php-base php-tests
 
 script:
   - >
@@ -31,6 +31,12 @@ script:
 
 after_success:
   - docker images
+
+deploy:
+  provider: script
+  script: ./deploy.sh
+  on:
+    branch: master
 
 notifications:
   slack:
