@@ -75,12 +75,10 @@ class MongoExportCommand
 //            $command[] = '--sort';
 //            $command[] = escapeshellarg($this->exportParams['sort']);
 //        }
-
-        if (isset($this->exportParams['limit'])) {
-            $command[] = '--limit';
-            $command[] = escapeshellarg($this->exportParams['limit']);
-        }
-
+//        if (isset($this->exportParams['limit'])) {
+//            $command[] = '--limit';
+//            $command[] = escapeshellarg($this->exportParams['limit']);
+//        }
 //        $command[] = '--type';
 //        $command[] = escapeshellarg('csv');
 
@@ -90,22 +88,5 @@ class MongoExportCommand
         $command[] = escapeshellarg($this->outputPath . '/' . $this->exportParams['name'] . '.csv');
 
         $this->command = implode(' ', $command);
-    }
-
-    /**
-     * Executes prepared command
-     * @return bool
-     * @throws \Exception
-     */
-    public function run()
-    {
-        $process = new Process($this->command);
-        $process->mustRun();
-
-        if ($process->getExitCode() !== 0) {
-            throw new \Exception('Command execution failed');
-        }
-
-        return true;
     }
 }

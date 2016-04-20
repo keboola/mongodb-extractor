@@ -45,4 +45,4 @@ services:
              '
 
   mongodb:
-    image: mongo:3
+    build: docker/mongodb
