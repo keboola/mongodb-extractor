@@ -25,7 +25,7 @@ services:
       - mongodb
     command: >
              sh -c '
-             composer install --prefer-dist --no-interaction
+             sleep 4
              && mongoimport --host mongodb --db test --collection restaurants --drop
              --file tests/dataset.json
              && ./tests.sh
@@ -38,6 +38,14 @@ services:
       - mongodb
     volumes:
       - ./.git:/code/.git
+    command: >
+             sh -c '
+             sleep 4
+             && mongoimport --host mongodb --db test --collection restaurants --drop
+             --file tests/dataset.json
+             && ./tests.sh
+             && ./vendor/bin/test-reporter
+             '
 
   mongodb:
     image: mongo:3
