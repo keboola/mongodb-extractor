@@ -41,5 +41,3 @@ services:
 
   mongodb:
     image: mongo:3
-    volumes:
-      - ./.mongodb-datadir/:/data/db
