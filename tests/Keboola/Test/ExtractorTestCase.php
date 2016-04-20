@@ -158,39 +158,4 @@ CSV;
         $this->assertFileExists($expectedFile);
         $this->assertEquals($expectedCsv, file_get_contents($expectedFile));
     }
-
-    public function testExportMultiWithJsonFail()
-    {
-        $exportParams = [
-            'db' => 'test',
-            'collection' => 'restaurants',
-            'fields' => [
-                'borough',
-                'cuisine',
-                'name',
-                'address', // as JSON string
-            ],
-            'query' => '{borough : "Bronx", cuisine: "Bakery", "address.zipcode": "10452"}',
-            'name' => 'export-multi-with-json',
-        ];
-
-        $extractor = new Extractor($this->getConfig(), $this->logger);
-        $export = $extractor->export([
-            new MongoExportCommand($this->getConfig()['parameters']['db'], $exportParams, $this->path),
-        ]);
-
-        $this->assertTrue($export, 'Command successful');
-
-        $expectedCsv = <<<CSV
-borough,cuisine,name,address
-"Bronx","Bakery","Nb. National Bakery","{ ""building"" : ""1193"", ""coord"" : [ -73.9197389, 40.83489170000001 ], ""street"" : ""Walton Avenue"", ""zipcode"" : ""10452"" }"
-"Bronx","Bakery","La Rosa Bakery","{ ""building"" : ""155"", ""coord"" : [ -73.9147942, 40.83937700000001 ], ""street"" : ""East 170 Street"", ""zipcode"" : ""10452"" }"
-"Bronx","Bakery","Emilio Super Bakery Corp","{ ""building"" : ""6A"", ""coord"" : [ -73.9188034, 40.8381439 ], ""street"" : ""East Clarke Place"", ""zipcode"" : ""10452"" }"\n
-CSV;
-
-        $expectedFile = $this->path . '/' . 'export-multi-with-json.csv';
-
-        $this->assertFileExists($expectedFile);
-        $this->assertEquals($expectedCsv, file_get_contents($expectedFile));
-    }
 }
