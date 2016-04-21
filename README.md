@@ -54,7 +54,17 @@ For more information about SSH tunnel creation see [`createSshTunnel` function](
 
 ## Output
 
-After successful extraction there are several CSV files, which contains exported [and filtered] data.
+After successful extraction there are several CSV files, which contains exported data.
+
+Each output file is named after `name` parameter in export configuration.
+
+Sample CSV from first export configuration above, named `bronx-bakeries.csv`:
+
+| name |
+| --- |
+| `Mom'S Bakery` |
+| `Enrico'S Pastry Shop & Caffe` |
+| ... |
 
 ## Development
 
@@ -72,7 +82,7 @@ Application is prepared for run in container, you can start development same way
 3. Build services: `docker-compose build`
 4. Create data dir: `mkdir -p data`
 5. Follow configuration sample and create `config.yml` file. Then place it to your data directory (e.g. `data/config.yml`):
-6. Run service: `docker-composer run --rm php bash`
+6. Run service: `docker-compose run --rm php bash`
 7. Run entrypoint command: `php src/run.php --data=/data`
 
 ### Tests
@@ -81,7 +91,7 @@ Environment is already prepared for running tests.
 
 #### Inside
 
-While you're in container run `tests.sh` script while will run `phpunit` and related commands:
+In running container execute `tests.sh` script which contains `phpunit` and related commands:
 
 ```bash
 ./tests.sh
@@ -92,7 +102,7 @@ While you're in container run `tests.sh` script while will run `phpunit` and rel
 Using `docker-compose`
 
 ```bash
-docker-composer run --rm php-tests
+docker-compose run --rm php-tests
 ```
 
 ## License
