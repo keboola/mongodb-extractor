@@ -13,7 +13,7 @@
     "require": {
         "symfony/process": "~3.0",
         "symfony/yaml": "~3.0",
-        "keboola/db-extractor-common": "~2.0",
+        "keboola/db-extractor-common": "~3.0",
         "symfony/filesystem": "~3.0",
         "symfony/console": "~3.0"
     },

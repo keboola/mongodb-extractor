@@ -44,7 +44,7 @@ try {
         throw new Exception('Please remove duplicate export names');
     }
 
-    $extractor = new Extractor(['parameters' => $parameters], new Logger('keboola.ex-mongodb'));
+    $extractor = new Extractor($parameters, new Logger('keboola.ex-mongodb'));
     $extractor->export($exports);
 
     exit(0);

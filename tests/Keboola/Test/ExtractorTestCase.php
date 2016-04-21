@@ -34,7 +34,7 @@ abstract class ExtractorTestCase extends \PHPUnit_Framework_TestCase
             'name' => 'export-all',
         ];
 
-        $extractor = new Extractor($this->getConfig(), $this->logger);
+        $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
         $export = $extractor->export([
             new MongoExportCommand($this->getConfig()['parameters']['db'], $exportParams, $this->path),
         ]);
@@ -64,7 +64,7 @@ abstract class ExtractorTestCase extends \PHPUnit_Framework_TestCase
             'name' => 'export-one',
         ];
 
-        $extractor = new Extractor($this->getConfig(), $this->logger);
+        $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
         $export = $extractor->export([
             new MongoExportCommand($this->getConfig()['parameters']['db'], $exportParams, $this->path),
         ]);
@@ -97,7 +97,7 @@ CSV;
             'name' => 'export-multi',
         ];
 
-        $extractor = new Extractor($this->getConfig(), $this->logger);
+        $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
         $export = $extractor->export([
             new MongoExportCommand($this->getConfig()['parameters']['db'], $exportParams, $this->path),
         ]);
@@ -134,7 +134,7 @@ CSV;
             'name' => 'export-multi-fields-paths',
         ];
 
-        $extractor = new Extractor($this->getConfig(), $this->logger);
+        $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
         $export = $extractor->export([
             new MongoExportCommand($this->getConfig()['parameters']['db'], $exportParams, $this->path),
         ]);
@@ -170,7 +170,7 @@ CSV;
             'name' => 'export-multi-with-json',
         ];
 
-        $extractor = new Extractor($this->getConfig(), $this->logger);
+        $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
         $export = $extractor->export([
             new MongoExportCommand($this->getConfig()['parameters']['db'], $exportParams, $this->path),
         ]);
@@ -206,7 +206,7 @@ CSV;
             'name' => 'export-bad-query',
         ];
 
-        $extractor = new Extractor($this->getConfig(), $this->logger);
+        $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
         $extractor->export([
             new MongoExportCommand($this->getConfig()['parameters']['db'], $exportParams, $this->path),
         ]);
@@ -226,7 +226,7 @@ CSV;
             'name' => 'export-random-database',
         ];
 
-        $extractor = new Extractor($this->getConfig(), $this->logger);
+        $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
         $export = $extractor->export([
             new MongoExportCommand($this->getConfig()['parameters']['db'], $exportParams, $this->path),
         ]);
