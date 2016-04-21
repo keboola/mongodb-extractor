@@ -30,21 +30,21 @@ try {
     $outputPath = $arguments['data'] . '/out/tables';
 
     $processor = new Processor;
-    $processor->processConfiguration(new ConfigDefinition, [$config]);
+    $parameters = $processor->processConfiguration(new ConfigDefinition, [$config['parameters']]);
 
     $exports = [];
     $exportNames = [];
 
-    foreach ($config['parameters']['exports'] as $exportParams) {
-        $exports[] = new MongoExportCommand($config['parameters']['db'], $exportParams, $outputPath);
+    foreach ($parameters['exports'] as $exportParams) {
+        $exports[] = new MongoExportCommand($parameters['db'], $exportParams, $outputPath);
         $exportNames[$exportParams['name']] = $exportParams['name'];
     }
 
-    if (count($config['parameters']['exports']) !== count($exportNames)) {
+    if (count($parameters['exports']) !== count($exportNames)) {
         throw new Exception('Please remove duplicate export names');
     }
 
-    $extractor = new Extractor($config, new Logger('keboola.ex-mongodb'));
+    $extractor = new Extractor(['parameters' => $parameters], new Logger('keboola.ex-mongodb'));
     $extractor->export($exports);
 
     exit(0);
