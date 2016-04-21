@@ -5,6 +5,8 @@ namespace Keboola\Test;
 use Keboola\MongoDbExtractor\MongoExportCommand;
 use Keboola\MongoDbExtractor\Extractor;
 use Keboola\DbExtractor\Logger;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 
 abstract class ExtractorTestCase extends \PHPUnit_Framework_TestCase
 {
@@ -18,6 +20,35 @@ abstract class ExtractorTestCase extends \PHPUnit_Framework_TestCase
     }
 
     abstract protected function getConfig();
+
+    public function testExportAll()
+    {
+        $exportParams = [
+            'db' => 'test',
+            'collection' => 'restaurants',
+            'fields' => [
+                'borough',
+                'cuisine',
+                'name',
+            ],
+            'name' => 'export-all',
+        ];
+
+        $extractor = new Extractor($this->getConfig(), $this->logger);
+        $export = $extractor->export([
+            new MongoExportCommand($this->getConfig()['parameters']['db'], $exportParams, $this->path),
+        ]);
+
+        $this->assertTrue($export, 'Command successful');
+
+        $expectedFile = $this->path . '/' . 'export-all.csv';
+        $this->assertFileExists($expectedFile);
+
+        $process = new Process('wc -l ' . $expectedFile);
+        $process->mustRun();
+
+        $this->assertSame(72, (int) $process->getOutput());
+    }
 
     public function testExportOne()
     {
@@ -157,5 +188,59 @@ CSV;
 
         $this->assertFileExists($expectedFile);
         $this->assertEquals($expectedCsv, file_get_contents($expectedFile));
+    }
+
+    public function testExportBadQueryJson()
+    {
+        $this->expectException(ProcessFailedException::class);
+
+        $exportParams = [
+            'db' => 'test',
+            'collection' => 'restaurants',
+            'fields' => [
+                'borough',
+                'cuisine',
+                'name',
+            ],
+            'query' => '{a: b}', // invalid JSON
+            'name' => 'export-bad-query',
+        ];
+
+        $extractor = new Extractor($this->getConfig(), $this->logger);
+        $extractor->export([
+            new MongoExportCommand($this->getConfig()['parameters']['db'], $exportParams, $this->path),
+        ]);
+    }
+
+    public function testExportRandomDatabase()
+    {
+        $exportParams = [
+            'db' => 'randomDatabase',
+            'collection' => 'randomCollection',
+            'fields' => [
+                'borough',
+                'cuisine',
+                'name',
+            ],
+            'query' => '{_id: ObjectId("5716054bee6e764c94fa7ddd")}',
+            'name' => 'export-random-database',
+        ];
+
+        $extractor = new Extractor($this->getConfig(), $this->logger);
+        $export = $extractor->export([
+            new MongoExportCommand($this->getConfig()['parameters']['db'], $exportParams, $this->path),
+        ]);
+
+        $this->assertTrue($export, 'Command successful');
+
+        $expectedCsv = <<<CSV
+borough,cuisine,name\n
+CSV;
+
+        $expectedFile = $this->path . '/' . 'export-random-database.csv';
+
+        $this->assertFileExists($expectedFile);
+        $this->assertEquals($expectedCsv, file_get_contents($expectedFile));
+
     }
 }
