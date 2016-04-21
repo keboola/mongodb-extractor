@@ -50,6 +50,8 @@ class ConfigDefinition extends DbExtractorConfigDefinition
                         ->end()
                     ->end()
                 ->end()
+                ->arrayNode('image_parameters')
+                ->end()
             ->end()
         ;
 
