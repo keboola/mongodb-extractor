@@ -35,14 +35,14 @@ parameters:
           -----END RSA PRIVATE KEY-----
   exports:
     - name: bronx-bakeries
-      db: 'test'
-      collection: 'restaurants'
+      db: test
+      collection: restaurants
       query: '{borough: "Bronx"}'
       fields:
         - name
     - name: bronx-bakeries-westchester
-      db: 'test'
-      collection: 'restaurants'
+      db: test
+      collection: restaurants
       query: '{borough: "Bronx", "address.street": "Westchester Avenue"}'
       fields:
         - name
@@ -54,9 +54,8 @@ For more information about SSH tunnel creation see [`createSshTunnel` function](
 
 ## Output
 
-After successful extraction there are several CSV files, which contains exported data.
-
-Each output file is named after `name` parameter in export configuration.
+After successful extraction there are several CSV files, which contains exported data. Each output
+file is named after `name` parameter in export configuration.
 
 Sample CSV from first export configuration above, named `bronx-bakeries.csv`:
 
