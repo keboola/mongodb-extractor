@@ -3,13 +3,22 @@
 namespace Keboola\MongoDbExtractor;
 
 use Symfony\Component\Process\Process;
+use MongoDB\Driver\Manager;
+use MongoDB\Driver\Command;
 
 class Extractor extends \Keboola\DbExtractor\Extractor\Extractor
 {
-
+    /**
+     * Tries to ping database server
+     * @param $params
+     * @return Manager
+     */
     public function createConnection($params)
     {
-        return true;
+        $manager = new Manager('mongodb://' . $params['host'] .':' . $params['port']);
+        $manager->executeCommand('local', new Command(['ping' => 1]));
+
+        return $manager;
     }
 
     /**
