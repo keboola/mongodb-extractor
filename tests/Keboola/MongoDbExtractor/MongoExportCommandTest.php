@@ -47,4 +47,11 @@ BASH;
 
         $this->assertSame($expectedCommand, $command->getCommand());
     }
+
+    public function testCreateWithMissingRequiredParam()
+    {
+        $this->expectException(MongoExportCommandException::class);
+
+        new MongoExportCommand([], [], $this->path);
+    }
 }

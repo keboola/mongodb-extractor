@@ -2,8 +2,6 @@
 
 namespace Keboola\MongoDbExtractor;
 
-use Symfony\Component\Process\Process;
-
 class MongoExportCommand
 {
     /** @var array */
@@ -24,7 +22,9 @@ class MongoExportCommand
         $this->exportParams = $exportParams;
         $this->outputPath = $outputPath;
 
-        $this->create();
+        if ($this->validate()) {
+            $this->create();
+        }
     }
 
     /**
@@ -37,9 +37,28 @@ class MongoExportCommand
     }
 
     /**
+     * Validates existence of export parameters
+     * @return bool
+     * @throws MongoExportCommandException
+     */
+    private function validate()
+    {
+        $params = array_merge($this->connectionParams, $this->exportParams);
+        $requiredParams = ['host', 'port', 'db', 'collection', 'fields', 'name'];
+
+        foreach ($requiredParams as $param) {
+            if (!isset($params[$param])) {
+                throw new MongoExportCommandException('Please provide all required params: ' . implode(', ', $requiredParams));
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Creates command from connection and export params
      */
-    protected function create()
+    private function create()
     {
         $command = [
             'mongoexport'
