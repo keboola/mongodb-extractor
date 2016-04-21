@@ -24,10 +24,6 @@ class Extractor extends \Keboola\DbExtractor\Extractor\Extractor
             /** @var MongoExportCommand $command */
             $process = new Process($command->getCommand());
             $process->mustRun();
-
-            if ($process->getExitCode() !== 0) {
-                throw new \Exception('Command execution failed');
-            }
         }
 
         return true;
