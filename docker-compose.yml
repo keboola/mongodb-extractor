@@ -46,3 +46,18 @@ services:
 
   mongodb:
     build: docker/mongodb
+
+  mongodb-auth:
+    extends:
+      service: mongodb
+    volumes:
+      - ./docker/mongodb/init.js:/init.js
+    command: >
+             sh -c '
+             service ssh start
+             && sh -c "mongod &"
+             && sleep 2
+             && mongo < /init.js
+             && mongod --shutdown
+             && mongod --auth
+             '
