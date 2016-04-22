@@ -73,7 +73,7 @@ abstract class ExtractorTestCase extends \PHPUnit_Framework_TestCase
 
         $expectedCsv = <<<CSV
 borough,cuisine,name
-"Bronx","Bakery","Morris Park Bake Shop"\n
+Bronx,Bakery,Morris Park Bake Shop\n
 CSV;
 
         $expectedFile = $this->path . '/' . 'export-one.csv';
@@ -106,9 +106,9 @@ CSV;
 
         $expectedCsv = <<<CSV
 borough,cuisine,name
-"Bronx","Bakery","Nb. National Bakery"
-"Bronx","Bakery","La Rosa Bakery"
-"Bronx","Bakery","Emilio Super Bakery Corp"\n
+Bronx,Bakery,Nb. National Bakery
+Bronx,Bakery,La Rosa Bakery
+Bronx,Bakery,Emilio Super Bakery Corp\n
 CSV;
 
         $expectedFile = $this->path . '/' . 'export-multi.csv';
@@ -143,9 +143,9 @@ CSV;
 
         $expectedCsv = <<<CSV
 borough,cuisine,name,address.street,address.zipcode,address.building
-"Bronx","Bakery","Nb. National Bakery","Walton Avenue","10452","1193"
-"Bronx","Bakery","La Rosa Bakery","East 170 Street","10452","155"
-"Bronx","Bakery","Emilio Super Bakery Corp","East Clarke Place","10452","6A"\n
+Bronx,Bakery,Nb. National Bakery,Walton Avenue,10452,1193
+Bronx,Bakery,La Rosa Bakery,East 170 Street,10452,155
+Bronx,Bakery,Emilio Super Bakery Corp,East Clarke Place,10452,6A\n
 CSV;
 
         $expectedFile = $this->path . '/' . 'export-multi-fields-paths.csv';
@@ -179,9 +179,9 @@ CSV;
 
         $expectedCsv = <<<CSV
 borough,cuisine,name,address
-"Bronx","Bakery","Nb. National Bakery","{ ""building"" : ""1193"", ""coord"" : [ -73.9197389, 40.83489170000001 ], ""street"" : ""Walton Avenue"", ""zipcode"" : ""10452"" }"
-"Bronx","Bakery","La Rosa Bakery","{ ""building"" : ""155"", ""coord"" : [ -73.9147942, 40.83937700000001 ], ""street"" : ""East 170 Street"", ""zipcode"" : ""10452"" }"
-"Bronx","Bakery","Emilio Super Bakery Corp","{ ""building"" : ""6A"", ""coord"" : [ -73.9188034, 40.8381439 ], ""street"" : ""East Clarke Place"", ""zipcode"" : ""10452"" }"\n
+Bronx,Bakery,Nb. National Bakery,"{""building"":""1193"",""coord"":[-73.9197389,40.83489170000001],""street"":""Walton Avenue"",""zipcode"":""10452""}"
+Bronx,Bakery,La Rosa Bakery,"{""building"":""155"",""coord"":[-73.9147942,40.83937700000001],""street"":""East 170 Street"",""zipcode"":""10452""}"
+Bronx,Bakery,Emilio Super Bakery Corp,"{""building"":""6A"",""coord"":[-73.9188034,40.8381439],""street"":""East Clarke Place"",""zipcode"":""10452""}"\n
 CSV;
 
         $expectedFile = $this->path . '/' . 'export-multi-with-json.csv';
