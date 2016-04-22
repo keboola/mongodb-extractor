@@ -73,6 +73,15 @@ class MongoExportCommand
         $command[] = '--port';
         $command[] = escapeshellarg($this->connectionParams['port']);
 
+        if (isset($this->connectionParams['user'])) {
+            $command[] = '--username';
+            $command[] = escapeshellarg($this->connectionParams['user']);
+        }
+        if (isset($this->connectionParams['password'])) {
+            $command[] = '--password';
+            $command[] = escapeshellarg($this->connectionParams['password']);
+        }
+
         /**
          * Export options like db, collection, query, limit, etc.
          */

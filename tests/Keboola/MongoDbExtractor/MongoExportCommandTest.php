@@ -23,7 +23,7 @@ class MongoExportCommandTest extends \PHPUnit_Framework_TestCase
         $this->fs->remove($this->path);
     }
 
-    public function testCreate()
+    public function testCreateMinimal()
     {
         $connectionParams = [
             'host' => 'localhost',
@@ -32,6 +32,33 @@ class MongoExportCommandTest extends \PHPUnit_Framework_TestCase
         $exportParams = [
             'db' => 'myDatabase',
             'collection' => 'myCollection',
+            'fields' => [
+                'field',
+            ],
+            'name' => 'create-test',
+        ];
+        $outputPath = '/tmp';
+
+        $command = new MongoExportCommand($connectionParams, $exportParams, $outputPath);
+        $expectedCommand = <<<BASH
+mongoexport --host 'localhost' --port '27017' --db 'myDatabase' --collection 'myCollection' --fields 'field' --type 'csv' --out '/tmp/create-test.csv'
+BASH;
+
+        $this->assertSame($expectedCommand, $command->getCommand());
+    }
+
+    public function testCreateFull()
+    {
+        $connectionParams = [
+            'host' => 'localhost',
+            'port' => 27017,
+            'user' => 'user',
+            'password' => 'pass',
+        ];
+        $exportParams = [
+            'db' => 'myDatabase',
+            'collection' => 'myCollection',
+            'query' => '{a: "b"}',
             'fields' => [
                 'field1',
                 'field2',
@@ -42,7 +69,7 @@ class MongoExportCommandTest extends \PHPUnit_Framework_TestCase
 
         $command = new MongoExportCommand($connectionParams, $exportParams, $outputPath);
         $expectedCommand = <<<BASH
-mongoexport --host 'localhost' --port '27017' --db 'myDatabase' --collection 'myCollection' --fields 'field1,field2' --type 'csv' --out '/tmp/create-test.csv'
+mongoexport --host 'localhost' --port '27017' --username 'user' --password 'pass' --db 'myDatabase' --collection 'myCollection' --fields 'field1,field2' --query '{a: "b"}' --type 'csv' --out '/tmp/create-test.csv'
 BASH;
 
         $this->assertSame($expectedCommand, $command->getCommand());
