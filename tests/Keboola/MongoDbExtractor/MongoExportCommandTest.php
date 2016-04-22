@@ -42,7 +42,7 @@ class MongoExportCommandTest extends \PHPUnit_Framework_TestCase
 
         $command = new MongoExportCommand($connectionParams, $exportParams, $outputPath);
         $expectedCommand = <<<BASH
-mongoexport --host 'localhost' --port '27017' --db 'myDatabase' --collection 'myCollection' --fields 'field1,field2' --csv --out '/tmp/create-test.csv'
+mongoexport --host 'localhost' --port '27017' --db 'myDatabase' --collection 'myCollection' --fields 'field1,field2' --type 'csv' --out '/tmp/create-test.csv'
 BASH;
 
         $this->assertSame($expectedCommand, $command->getCommand());

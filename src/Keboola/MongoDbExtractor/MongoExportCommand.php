@@ -98,10 +98,9 @@ class MongoExportCommand
 //            $command[] = '--limit';
 //            $command[] = escapeshellarg($this->exportParams['limit']);
 //        }
-//        $command[] = '--type';
-//        $command[] = escapeshellarg('csv');
 
-        $command[] = '--csv';
+        $command[] = '--type';
+        $command[] = escapeshellarg('csv');
 
         $command[] = '--out';
         $command[] = escapeshellarg($this->outputPath . '/' . $this->exportParams['name'] . '.csv');
