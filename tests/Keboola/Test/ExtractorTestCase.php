@@ -212,10 +212,10 @@ CSV;
         ]);
     }
 
-    public function testExportRandomDatabase()
+    public function testExportRandomCollection()
     {
         $exportParams = [
-            'db' => 'randomDatabase',
+            'db' => 'test',
             'collection' => 'randomCollection',
             'fields' => [
                 'borough',
