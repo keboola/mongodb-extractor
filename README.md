@@ -18,16 +18,16 @@ Example:
 ```yaml
 parameters:
   db:
-    host: 127.0.0.1
-    port: 27017
+    host: 127.0.0.1 # can be real host behind firewall, will be replaced by 127.0.0.1
+    port: 27017 # can br real port behind firewall, will be replaced by ssh.localPort
     ssh:
       enabled: true
       sshHost: mongodb
-      sshPort: 22
+      sshPort: 22 # optional, default 22
       user: root
-      localPort: 27017
-      remoteHost: 127.0.0.1
-      remotePort: 27017
+      localPort: 27017 # optional, default 33006
+      remoteHost: 127.0.0.1 # optional, default to initial value db.host
+      remotePort: 27017 # optional, default to initial value db.port
       keys:
         public: ssh-rsa ...your public key...
         private: |
@@ -57,14 +57,6 @@ For more information about SSH tunnel creation see [`createSshTunnel` function](
 
 After successful extraction there are several CSV files, which contains exported data. Each output
 file is named after `name` parameter in export configuration.
-
-Sample CSV from first export configuration above, named `bronx-bakeries.csv`:
-
-| name |
-| --- |
-| `Mom'S Bakery` |
-| `Enrico'S Pastry Shop & Caffe` |
-| ... |
 
 ## Development
 
