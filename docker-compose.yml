@@ -13,18 +13,28 @@ services:
     stdin_open: true
     links:
       - mongodb
-    command: bash
+      - mongodb-auth
+    command: >
+             sh -c '
+             sleep 4
+             && mongoimport --host mongodb --db test --collection restaurants --drop --file tests/dataset.json
+             && mongoimport --host mongodb-auth --username user --password user --db test --collection restaurants --drop --file tests/dataset.json
+             && bash
+             '
+    volumes:
+      - ./:/code
 
   php-tests:
     extends:
       service: php-base
     links:
       - mongodb
+      - mongodb-auth
     command: >
              sh -c '
              sleep 4
-             && mongoimport --host mongodb --db test --collection restaurants --drop
-             --file tests/dataset.json
+             && mongoimport --host mongodb --db test --collection restaurants --drop --file tests/dataset.json
+             && mongoimport --host mongodb-auth --username user --password user --db test --collection restaurants --drop --file tests/dataset.json
              && ./tests.sh
              '
 
@@ -33,16 +43,32 @@ services:
       service: php-base
     links:
       - mongodb
+      - mongodb-auth
     volumes:
       - ./.git:/code/.git
     command: >
              sh -c '
              sleep 4
-             && mongoimport --host mongodb --db test --collection restaurants --drop
-             --file tests/dataset.json
+             && mongoimport --host mongodb --db test --collection restaurants --drop --file tests/dataset.json
+             && mongoimport --host mongodb-auth --username user --password user --db test --collection restaurants --drop --file tests/dataset.json
              && ./tests.sh
              && ./vendor/bin/test-reporter
              '
 
   mongodb:
     build: docker/mongodb
+
+  mongodb-auth:
+    extends:
+      service: mongodb
+    volumes:
+      - ./docker/mongodb/init.js:/init.js
+    command: >
+             sh -c '
+             service ssh start
+             && sh -c "mongod &"
+             && sleep 2
+             && mongo < /init.js
+             && mongod --shutdown
+             && mongod --auth
+             '
