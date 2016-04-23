@@ -63,13 +63,15 @@ BASH;
                 'field1',
                 'field2',
             ],
+            'sort' => '{a: 1, b: -1}',
+            'limit' => 10,
             'name' => 'create-test',
         ];
         $outputPath = '/tmp';
 
         $command = new MongoExportCommand($connectionParams, $exportParams, $outputPath);
         $expectedCommand = <<<BASH
-mongoexport --host 'localhost' --port '27017' --username 'user' --password 'pass' --db 'myDatabase' --collection 'myCollection' --fields 'field1,field2' --query '{a: "b"}' --type 'csv' --out '/tmp/create-test.csv'
+mongoexport --host 'localhost' --port '27017' --username 'user' --password 'pass' --db 'myDatabase' --collection 'myCollection' --fields 'field1,field2' --query '{a: "b"}' --sort '{a: 1, b: -1}' --limit '10' --type 'csv' --out '/tmp/create-test.csv'
 BASH;
 
         $this->assertSame($expectedCommand, $command->getCommand());

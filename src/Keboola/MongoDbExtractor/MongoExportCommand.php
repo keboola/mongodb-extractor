@@ -99,14 +99,15 @@ class MongoExportCommand
             $command[] = escapeshellarg($this->exportParams['query']);
         }
 
-//        if (isset($this->exportParams['sort'])) {
-//            $command[] = '--sort';
-//            $command[] = escapeshellarg($this->exportParams['sort']);
-//        }
-//        if (isset($this->exportParams['limit'])) {
-//            $command[] = '--limit';
-//            $command[] = escapeshellarg($this->exportParams['limit']);
-//        }
+        if (isset($this->exportParams['sort'])) {
+            $command[] = '--sort';
+            $command[] = escapeshellarg($this->exportParams['sort']);
+        }
+
+        if (isset($this->exportParams['limit'])) {
+            $command[] = '--limit';
+            $command[] = escapeshellarg($this->exportParams['limit']);
+        }
 
         $command[] = '--type';
         $command[] = escapeshellarg('csv');
