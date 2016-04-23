@@ -32,6 +32,10 @@ try {
     $processor = new Processor;
     $parameters = $processor->processConfiguration(new ConfigDefinition, [$config['parameters']]);
 
+    if (isset($parameters['db']['#password'])) {
+        $parameters['db']['password'] = $parameters['db']['#password'];
+    }
+
     $exports = [];
     $exportNames = [];
 
