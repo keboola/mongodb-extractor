@@ -190,6 +190,43 @@ CSV;
         $this->assertEquals($expectedCsv, file_get_contents($expectedFile));
     }
 
+    public function testExportMultiWithSortAndLimit()
+    {
+        $exportParams = [
+            'db' => 'test',
+            'collection' => 'restaurants',
+            'fields' => [
+                'name',
+                'borough',
+                'address.street',
+                'address.zipcode',
+            ],
+            'query' => '{name: "National Bakery"}',
+            'sort' => '{"address.street": 1}',
+            'limit' => 3,
+            'name' => 'export-multi-with-sort-and-limit',
+        ];
+
+        $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
+        $export = $extractor->export([
+            new MongoExportCommand($this->getConfig()['parameters']['db'], $exportParams, $this->path),
+        ]);
+
+        $this->assertTrue($export, 'Command successful');
+
+        $expectedCsv = <<<CSV
+name,borough,address.street,address.zipcode
+National Bakery,Bronx,Allerton Avenue,10467
+National Bakery,Bronx,Intelvale Avenue,10459
+National Bakery,Bronx,Westchester Avenue,10472\n
+CSV;
+
+        $expectedFile = $this->path . '/' . 'export-multi-with-sort-and-limit.csv';
+
+        $this->assertFileExists($expectedFile);
+        $this->assertEquals($expectedCsv, file_get_contents($expectedFile));
+    }
+
     public function testExportBadQueryJson()
     {
         $this->expectException(ProcessFailedException::class);
