@@ -47,6 +47,8 @@ class ConfigDefinition extends DbExtractorConfigDefinition
                             ->scalarNode('query')
 
                             ->end()
+                            ->scalarNode('sort')->end()
+                            ->scalarNode('limit')->end()
                             ->arrayNode('fields')
                                 ->prototype('scalar')->end()
                                 ->isRequired()
