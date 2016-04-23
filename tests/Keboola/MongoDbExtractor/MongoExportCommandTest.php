@@ -2,27 +2,8 @@
 
 namespace Keboola\MongoDbExtractor;
 
-use Symfony\Component\Filesystem\Filesystem;
-
 class MongoExportCommandTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var Filesystem */
-    private $fs;
-
-    private $path = '/tmp/mongoexport';
-
-    protected function setUp()
-    {
-        $this->fs = new Filesystem;
-        $this->fs->remove($this->path);
-        $this->fs->mkdir($this->path);
-    }
-
-    protected function tearDown()
-    {
-        $this->fs->remove($this->path);
-    }
-
     public function testCreateMinimal()
     {
         $connectionParams = [
@@ -37,9 +18,8 @@ class MongoExportCommandTest extends \PHPUnit_Framework_TestCase
             ],
             'name' => 'create-test',
         ];
-        $outputPath = '/tmp';
 
-        $command = new MongoExportCommand($connectionParams, $exportParams, $outputPath);
+        $command = new MongoExportCommand($connectionParams, $exportParams, '/tmp');
         $expectedCommand = <<<BASH
 mongoexport --host 'localhost' --port '27017' --db 'myDatabase' --collection 'myCollection' --fields 'field' --type 'csv' --out '/tmp/create-test.csv'
 BASH;
@@ -67,9 +47,8 @@ BASH;
             'limit' => 10,
             'name' => 'create-test',
         ];
-        $outputPath = '/tmp';
 
-        $command = new MongoExportCommand($connectionParams, $exportParams, $outputPath);
+        $command = new MongoExportCommand($connectionParams, $exportParams, '/tmp');
         $expectedCommand = <<<BASH
 mongoexport --host 'localhost' --port '27017' --username 'user' --password 'pass' --db 'myDatabase' --collection 'myCollection' --fields 'field1,field2' --query '{a: "b"}' --sort '{a: 1, b: -1}' --limit '10' --type 'csv' --out '/tmp/create-test.csv'
 BASH;
@@ -95,7 +74,7 @@ BASH;
             'name' => 'validate-test',
         ];
 
-        new MongoExportCommand($connectionParams, $exportParams, $this->path);
+        new MongoExportCommand($connectionParams, $exportParams, '/tmp');
     }
 
     public function testValidateWithoutPassword()
@@ -116,13 +95,13 @@ BASH;
             'name' => 'validate-test',
         ];
 
-        new MongoExportCommand($connectionParams, $exportParams, $this->path);
+        new MongoExportCommand($connectionParams, $exportParams, '/tmp');
     }
 
     public function testCreateWithMissingRequiredParam()
     {
         $this->expectException(MongoExportCommandException::class);
 
-        new MongoExportCommand([], [], $this->path);
+        new MongoExportCommand([], [], '/tmp');
     }
 }
