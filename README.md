@@ -19,8 +19,10 @@ Example:
 parameters:
   db:
     host: 127.0.0.1 # can be real host behind firewall, will be replaced by 127.0.0.1
-    port: 27017 # can br real port behind firewall, will be replaced by ssh.localPort
-    ssh:
+    port: 27017 # can be real port behind firewall, will be replaced by ssh.localPort
+    user: username # optional
+    password: password # optional (can be encrypted)
+    ssh: # optional section
       enabled: true
       sshHost: mongodb
       sshPort: 22 # optional, default 22
