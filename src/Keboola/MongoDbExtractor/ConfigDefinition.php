@@ -26,6 +26,7 @@ class ConfigDefinition extends DbExtractorConfigDefinition
                         ->end()
                         ->scalarNode('user')->end()
                         ->scalarNode('password')->end()
+                        ->scalarNode('#password')->end()
                         ->append($this->addSshNode())
                     ->end()
                 ->end()
