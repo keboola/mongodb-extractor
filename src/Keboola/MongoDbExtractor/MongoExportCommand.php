@@ -52,6 +52,12 @@ class MongoExportCommand
             }
         }
 
+        // none or both
+        if (isset($this->connectionParams['user']) && !isset($this->connectionParams['password'])
+            || !isset($this->connectionParams['user']) && isset($this->connectionParams['password'])) {
+            throw new MongoExportCommandException('When connecting with authentication, both "user" and "password" params are required');
+        }
+
         return true;
     }
 
@@ -76,8 +82,7 @@ class MongoExportCommand
         if (isset($this->connectionParams['user'])) {
             $command[] = '--username';
             $command[] = escapeshellarg($this->connectionParams['user']);
-        }
-        if (isset($this->connectionParams['password'])) {
+
             $command[] = '--password';
             $command[] = escapeshellarg($this->connectionParams['password']);
         }

@@ -77,6 +77,48 @@ BASH;
         $this->assertSame($expectedCommand, $command->getCommand());
     }
 
+    public function testValidateWithoutUser()
+    {
+        $this->expectException(MongoExportCommandException::class);
+
+        $connectionParams = [
+            'host' => 'localhost',
+            'port' => 27017,
+            'password' => 'password'
+        ];
+        $exportParams = [
+            'db' => 'myDatabase',
+            'collection' => 'myCollection',
+            'fields' => [
+                'field',
+            ],
+            'name' => 'validate-test',
+        ];
+
+        new MongoExportCommand($connectionParams, $exportParams, $this->path);
+    }
+
+    public function testValidateWithoutPassword()
+    {
+        $this->expectException(MongoExportCommandException::class);
+
+        $connectionParams = [
+            'host' => 'localhost',
+            'port' => 27017,
+            'user' => 'user'
+        ];
+        $exportParams = [
+            'db' => 'myDatabase',
+            'collection' => 'myCollection',
+            'fields' => [
+                'field',
+            ],
+            'name' => 'validate-test',
+        ];
+
+        new MongoExportCommand($connectionParams, $exportParams, $this->path);
+    }
+
     public function testCreateWithMissingRequiredParam()
     {
         $this->expectException(MongoExportCommandException::class);
