@@ -39,15 +39,6 @@ class MongoExportCommandCsv
     }
 
     /**
-     * Gets options
-     * @return array
-     */
-    public function getOptions()
-    {
-        return $this->options;
-    }
-
-    /**
      * Validates export options
      * @return bool
      * @throws MongoExportCommandCsvException
