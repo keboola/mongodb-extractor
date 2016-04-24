@@ -2,24 +2,22 @@
 
 namespace Keboola\MongoDbExtractor;
 
-class MongoExportCommandTest extends \PHPUnit_Framework_TestCase
+class MongoExportCommandCsvTest extends \PHPUnit_Framework_TestCase
 {
     public function testCreateMinimal()
     {
-        $connectionParams = [
+        $options = [
             'host' => 'localhost',
             'port' => 27017,
-        ];
-        $exportParams = [
             'db' => 'myDatabase',
             'collection' => 'myCollection',
             'fields' => [
                 'field',
             ],
-            'name' => 'create-test',
+            'out' => '/tmp/create-test.csv',
         ];
 
-        $command = new MongoExportCommand($connectionParams, $exportParams, '/tmp');
+        $command = new MongoExportCommandCsv($options);
         $expectedCommand = <<<BASH
 mongoexport --host 'localhost' --port '27017' --db 'myDatabase' --collection 'myCollection' --fields 'field' --type 'csv' --out '/tmp/create-test.csv'
 BASH;
@@ -29,13 +27,11 @@ BASH;
 
     public function testCreateFull()
     {
-        $connectionParams = [
+        $options = [
             'host' => 'localhost',
             'port' => 27017,
-            'user' => 'user',
+            'username' => 'user',
             'password' => 'pass',
-        ];
-        $exportParams = [
             'db' => 'myDatabase',
             'collection' => 'myCollection',
             'query' => '{a: "b"}',
@@ -45,10 +41,10 @@ BASH;
             ],
             'sort' => '{a: 1, b: -1}',
             'limit' => 10,
-            'name' => 'create-test',
+            'out' => '/tmp/create-test.csv',
         ];
 
-        $command = new MongoExportCommand($connectionParams, $exportParams, '/tmp');
+        $command = new MongoExportCommandCsv($options);
         $expectedCommand = <<<BASH
 mongoexport --host 'localhost' --port '27017' --username 'user' --password 'pass' --db 'myDatabase' --collection 'myCollection' --fields 'field1,field2' --query '{a: "b"}' --sort '{a: 1, b: -1}' --limit '10' --type 'csv' --out '/tmp/create-test.csv'
 BASH;
@@ -58,50 +54,46 @@ BASH;
 
     public function testValidateWithoutUser()
     {
-        $this->expectException(MongoExportCommandException::class);
+        $this->expectException(MongoExportCommandCsvException::class);
 
-        $connectionParams = [
+        $options = [
             'host' => 'localhost',
             'port' => 27017,
-            'password' => 'password'
-        ];
-        $exportParams = [
+            'password' => 'password',
             'db' => 'myDatabase',
             'collection' => 'myCollection',
             'fields' => [
                 'field',
             ],
-            'name' => 'validate-test',
+            'out' => '/tmp/validate-test.csv',
         ];
 
-        new MongoExportCommand($connectionParams, $exportParams, '/tmp');
+        new MongoExportCommandCsv($options);
     }
 
     public function testValidateWithoutPassword()
     {
-        $this->expectException(MongoExportCommandException::class);
+        $this->expectException(MongoExportCommandCsvException::class);
 
-        $connectionParams = [
+        $options = [
             'host' => 'localhost',
             'port' => 27017,
-            'user' => 'user'
-        ];
-        $exportParams = [
+            'username' => 'user',
             'db' => 'myDatabase',
             'collection' => 'myCollection',
             'fields' => [
                 'field',
             ],
-            'name' => 'validate-test',
+            'out' => '/tmp/validate-test.csv',
         ];
 
-        new MongoExportCommand($connectionParams, $exportParams, '/tmp');
+        new MongoExportCommandCsv($options);
     }
 
     public function testCreateWithMissingRequiredParam()
     {
-        $this->expectException(MongoExportCommandException::class);
+        $this->expectException(MongoExportCommandCsvException::class);
 
-        new MongoExportCommand([], [], '/tmp');
+        new MongoExportCommandCsv([]);
     }
 }

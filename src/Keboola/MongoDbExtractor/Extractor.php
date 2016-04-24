@@ -2,7 +2,6 @@
 
 namespace Keboola\MongoDbExtractor;
 
-use Symfony\Component\Process\Process;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\Command;
 
@@ -23,16 +22,14 @@ class Extractor extends \Keboola\DbExtractor\Extractor\Extractor
 
     /**
      * Perform execution of all export commands
-     * @param array $commands
+     * @param Export[] $exports
      * @return bool
-     * @throws \Exception
      */
-    public function export(array $commands)
+    public function export(array $exports)
     {
-        foreach ($commands as $command) {
-            /** @var MongoExportCommand $command */
-            $process = new Process($command->getCommand());
-            $process->mustRun();
+        foreach ($exports as $export) {
+            $export->export();
+            $export->createManifest();
         }
 
         return true;
