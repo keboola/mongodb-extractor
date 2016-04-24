@@ -2,6 +2,7 @@
 
 namespace Keboola\MongoDbExtractor;
 
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\Command;
@@ -33,6 +34,11 @@ class Extractor extends \Keboola\DbExtractor\Extractor\Extractor
             /** @var MongoExportCommand $command */
             $process = new Process($command->getCommand());
             $process->mustRun();
+            
+            (new Filesystem)->dumpFile(
+                $command->getOutputFileName() . '.manifest',
+                $command->getManifestOptions()
+            );
         }
 
         return true;
