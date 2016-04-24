@@ -1,4 +1,4 @@
-# WIP - MongoDb Extractor
+# MongoDB Extractor
 
 [![Build Status](https://travis-ci.org/keboola/mongodb-extractor.svg?branch=master)](https://travis-ci.org/keboola/mongodb-extractor)
 [![Code Climate](https://codeclimate.com/github/keboola/mongodb-extractor/badges/gpa.svg)](https://codeclimate.com/github/keboola/mongodb-extractor)
@@ -10,8 +10,8 @@ command.
 
 ## Configuration
 
-This describes configuration from developer point of view. To learn more about configuration in
-Keboola Connection please follow [UI page](https://github.com/keboola/mongodb-extractor/blob/master/UI.md).
+This describes configuration from developer point of view. For documentation about [configuring in
+Keboola Connection click here](https://github.com/keboola/mongodb-extractor/blob/master/UI.md).
 
 Example:
 
@@ -42,9 +42,12 @@ parameters:
       collection: restaurants
       query: '{borough: "Bronx"}' # optional
       fields:
+        - _id
         - name
       sort: '{name: 1}' # optional
       limit: 10 # optional
+      primaryKey: # optional
+        - _id
     - name: bronx-bakeries-westchester
       db: test
       collection: restaurants
@@ -54,6 +57,7 @@ parameters:
         - address.zipcode
         - address.street
         - address.building
+      incremental: false # optional, default true
 ```
 For more information about SSH tunnel creation see [`createSshTunnel` function](https://github.com/keboola/db-extractor-common/blob/8e66dc9/src/Keboola/DbExtractor/Extractor/Extractor.php#L47)
 

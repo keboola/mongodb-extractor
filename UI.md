@@ -29,7 +29,11 @@ Sample:
             "db": "test",
             "collection": "restaurants",
             "fields": [
+                "_id",
                 "name"
+            ],
+            "primaryKey": [
+                "_id"
             ]
         },
         {
@@ -49,6 +53,23 @@ Sample:
 ```
 
 Explanation:
+
+- `db`: *array*
+    - `host`: *string*
+    - `port`: *integer*
+    - `user`: *string*
+    - `password`: *string*
+
+- `exports`: *array*
+    - `name`: *string* export name, generated CSV file will be named after this
+    - `db`: *string* database to select
+    - `collection`: *string* collection to export
+    - `query`: *JSON* (optional) filter collection data
+    - `fields`: *array* fields to export
+    - `sort`: *JSON* (optional) JSON with fields to sort by
+    - `limit`: *integer* (optional) limit results
+    - `incremental`: *boolean* (optional) incremental load of data, default `true`
+    - `primaryKey`: *array* (optional) primary keys
 
 - Description of SSH section can be found on [README page](https://github.com/keboola/mongodb-extractor#configuration)
 - First export fetches whole `restaurants` collection and produces CSV file `bronx-bakeries.csv`
