@@ -36,6 +36,11 @@ class MongoExportCommand
         return $this->command;
     }
 
+    public function getExportOptions()
+    {
+        return $this->exportParams;
+    }
+
     /**
      * Validates existence of export parameters
      * @return bool
@@ -59,6 +64,26 @@ class MongoExportCommand
         }
 
         return true;
+    }
+
+    public function getOutputFileName()
+    {
+        return $this->outputPath . '/' . $this->exportParams['name'] . '.csv';
+    }
+
+    public function getManifestOptions()
+    {
+        $config = [
+            'incremental' => isset($this->exportParams['incremental'])
+                                ? $this->exportParams['incremental']
+                                : true,
+        ];
+
+        if (isset($this->exportParams['primaryKey'])) {
+            $config['primary_key'] = (bool) $this->exportParams['primaryKey'];
+        }
+
+        return $config;
     }
 
     /**
@@ -118,7 +143,7 @@ class MongoExportCommand
         $command[] = escapeshellarg('csv');
 
         $command[] = '--out';
-        $command[] = escapeshellarg($this->outputPath . '/' . $this->exportParams['name'] . '.csv');
+        $command[] = escapeshellarg($this->getOutputFileName());
 
         $this->command = implode(' ', $command);
     }
