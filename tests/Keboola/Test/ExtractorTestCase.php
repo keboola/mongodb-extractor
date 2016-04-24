@@ -2,7 +2,7 @@
 
 namespace Keboola\Test;
 
-use Keboola\MongoDbExtractor\MongoExportCommand;
+use Keboola\MongoDbExtractor\Export;
 use Keboola\MongoDbExtractor\Extractor;
 use Keboola\DbExtractor\Logger;
 use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -36,7 +36,7 @@ abstract class ExtractorTestCase extends \PHPUnit_Framework_TestCase
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
         $export = $extractor->export([
-            new MongoExportCommand($this->getConfig()['parameters']['db'], $exportParams, $this->path),
+            new Export($this->getConfig()['parameters']['db'], $exportParams, $this->path, $exportParams['name']),
         ]);
 
         $this->assertTrue($export, 'Command successful');
@@ -66,7 +66,7 @@ abstract class ExtractorTestCase extends \PHPUnit_Framework_TestCase
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
         $export = $extractor->export([
-            new MongoExportCommand($this->getConfig()['parameters']['db'], $exportParams, $this->path),
+            new Export($this->getConfig()['parameters']['db'], $exportParams, $this->path, $exportParams['name']),
         ]);
 
         $this->assertTrue($export, 'Command successful');
@@ -99,7 +99,7 @@ CSV;
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
         $export = $extractor->export([
-            new MongoExportCommand($this->getConfig()['parameters']['db'], $exportParams, $this->path),
+            new Export($this->getConfig()['parameters']['db'], $exportParams, $this->path, $exportParams['name']),
         ]);
 
         $this->assertTrue($export, 'Command successful');
@@ -136,7 +136,7 @@ CSV;
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
         $export = $extractor->export([
-            new MongoExportCommand($this->getConfig()['parameters']['db'], $exportParams, $this->path),
+            new Export($this->getConfig()['parameters']['db'], $exportParams, $this->path, $exportParams['name']),
         ]);
 
         $this->assertTrue($export, 'Command successful');
@@ -172,7 +172,7 @@ CSV;
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
         $export = $extractor->export([
-            new MongoExportCommand($this->getConfig()['parameters']['db'], $exportParams, $this->path),
+            new Export($this->getConfig()['parameters']['db'], $exportParams, $this->path, $exportParams['name']),
         ]);
 
         $this->assertTrue($export, 'Command successful');
@@ -209,7 +209,7 @@ CSV;
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
         $export = $extractor->export([
-            new MongoExportCommand($this->getConfig()['parameters']['db'], $exportParams, $this->path),
+            new Export($this->getConfig()['parameters']['db'], $exportParams, $this->path, $exportParams['name']),
         ]);
 
         $this->assertTrue($export, 'Command successful');
@@ -245,7 +245,7 @@ CSV;
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
         $extractor->export([
-            new MongoExportCommand($this->getConfig()['parameters']['db'], $exportParams, $this->path),
+            new Export($this->getConfig()['parameters']['db'], $exportParams, $this->path, $exportParams['name']),
         ]);
     }
 
@@ -265,7 +265,7 @@ CSV;
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
         $export = $extractor->export([
-            new MongoExportCommand($this->getConfig()['parameters']['db'], $exportParams, $this->path),
+            new Export($this->getConfig()['parameters']['db'], $exportParams, $this->path, $exportParams['name']),
         ]);
 
         $this->assertTrue($export, 'Command successful');
