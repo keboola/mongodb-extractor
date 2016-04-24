@@ -8,7 +8,7 @@ use Symfony\Component\Yaml\Yaml;
 use Keboola\DbExtractor\Logger;
 
 use Keboola\MongoDbExtractor\ConfigDefinition;
-use Keboola\MongoDbExtractor\MongoExportCommand;
+use Keboola\MongoDbExtractor\Export;
 use Keboola\MongoDbExtractor\Extractor;
 
 $arguments = getopt('', ['data:']);
@@ -29,23 +29,15 @@ try {
     $config = Yaml::parse(file_get_contents($arguments['data'] . '/config.yml'));
     $outputPath = $arguments['data'] . '/out/tables';
 
-    $processor = new Processor;
-    $parameters = $processor->processConfiguration(new ConfigDefinition, [$config['parameters']]);
+    $parameters = (new Processor)->processConfiguration(new ConfigDefinition, [$config['parameters']]);
 
-    if (isset($parameters['db']['#password'])) {
-        $parameters['db']['password'] = $parameters['db']['#password'];
+    if (count($parameters['exports']) !== count(array_unique(array_column($parameters['exports'], 'name')))) {
+        throw new Exception('Please remove duplicate export names');
     }
 
     $exports = [];
-    $exportNames = [];
-
-    foreach ($parameters['exports'] as $exportParams) {
-        $exports[] = new MongoExportCommand($parameters['db'], $exportParams, $outputPath);
-        $exportNames[$exportParams['name']] = $exportParams['name'];
-    }
-
-    if (count($parameters['exports']) !== count($exportNames)) {
-        throw new Exception('Please remove duplicate export names');
+    foreach ($parameters['exports'] as $exportOptions) {
+        $exports[] = new Export($parameters['db'], $exportOptions, $outputPath, $exportOptions['name']);
     }
 
     $extractor = new Extractor($parameters, new Logger('keboola.ex-mongodb'));
