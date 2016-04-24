@@ -40,13 +40,15 @@ parameters:
     - name: bronx-bakeries
       db: test
       collection: restaurants
-      query: '{borough: "Bronx"}'
+      query: '{borough: "Bronx"}' # optional
       fields:
         - name
+      sort: '{name: 1}' # optional
+      limit: 10 # optional
     - name: bronx-bakeries-westchester
       db: test
       collection: restaurants
-      query: '{borough: "Bronx", "address.street": "Westchester Avenue"}'
+      query: '{borough: "Bronx", "address.street": "Westchester Avenue"}' # optional
       fields:
         - name
         - address.zipcode
@@ -62,41 +64,31 @@ file is named after `name` parameter in export configuration.
 
 ## Development
 
-### Requirements
+Requirements:
 
 - Docker Engine `~1.10.0`
 - Docker Compose `~1.6.0`
-
-### Start
 
 Application is prepared for run in container, you can start development same way.
 
 1. Clone this repository: `git clone git@github.com:keboola/mongodb-extractor.git`
 2. Change directory: `cd mongodb-extractor`
 3. Build services: `docker-compose build`
-4. Create data dir: `mkdir -p data`
-5. Follow configuration sample and create `config.yml` file. Then place it to your data directory (e.g. `data/config.yml`):
-6. Run service: `docker-compose run --rm php bash`
-7. Run entrypoint command: `php src/run.php --data=/data`
+4. Run tests `docker-compose run --rm php-tests`
+
+After seeing all tests green, continue:
+
+1. Create data dir: `mkdir -p data`
+2. Follow configuration sample and create `config.yml` file and place it to your data directory (`data/config.yml`):
+3. Run service: `docker-compose run --rm php` (starts container with `bash`)
+4. Simulate real run: `php src/run.php --data=/data`
 
 ### Tests
-
-Environment is already prepared for running tests.
-
-#### Inside
 
 In running container execute `tests.sh` script which contains `phpunit` and related commands:
 
 ```bash
-./tests.sh
-```
-
-#### Outside
-
-Using `docker-compose`
-
-```bash
-docker-compose run --rm php-tests
+./tests.sh # or any command from this file separately
 ```
 
 ## License
