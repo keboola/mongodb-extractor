@@ -35,7 +35,7 @@ parameters:
     host: mongodb-auth
     port: 27017
     user: user
-    password: user
+    '#password': user
 YAML;
         return Yaml::parse($config);
 
