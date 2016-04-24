@@ -10,8 +10,8 @@ command.
 
 ## Configuration
 
-This describes configuration from developer point of view. For documentation about [configuring in
-Keboola Connection click here](https://github.com/keboola/mongodb-extractor/blob/master/UI.md).
+This describes configuration from developer point of view. For [documentation about configuring in
+Keboola Connection follow this link](https://github.com/keboola/mongodb-extractor/blob/master/UI.md).
 
 Example:
 
@@ -65,6 +65,8 @@ For more information about SSH tunnel creation see [`createSshTunnel` function](
 
 After successful extraction there are several CSV files, which contains exported data. Each output
 file is named after `name` parameter in export configuration.
+
+Also, there is manifest file for each of the export.
 
 ## Development
 
