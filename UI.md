@@ -44,8 +44,8 @@ Options description:
 - `db`: *array*
     - `host`: *string* host ot connect to
     - `port`: *integer* port to use, usually 27017 for MongoDB
-    - `user`: *string* username
-    - `password`: *string* password
+    - `user`: *string* (optional) username
+    - `password`: *string* (optional) password
     - `ssh`: *array* (optional), in most cases configured through UI
 
 - `exports`: *array*
