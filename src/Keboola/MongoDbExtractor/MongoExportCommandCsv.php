@@ -55,7 +55,8 @@ class MongoExportCommandCsv
         // validate auth options: both or none
         if (isset($this->options['username']) && !isset($this->options['password'])
             || !isset($this->options['username']) && isset($this->options['password'])) {
-            throw new MongoExportCommandCsvException('When passing authentication details, both "user" and "password" params are required');
+            throw new MongoExportCommandCsvException('When passing authentication details,'
+                . ' both "user" and "password" params are required');
         }
 
         return true;
