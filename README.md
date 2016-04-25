@@ -5,7 +5,7 @@
 [![Test Coverage](https://codeclimate.com/github/keboola/mongodb-extractor/badges/coverage.svg)](https://codeclimate.com/github/keboola/mongodb-extractor/coverage)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/keboola/mongodb-extractor/blob/master/LICENSE.md)
 
-Docker application for exporting data from MongoDB. Basically, it's a wrapper of `mongoexport`
+Docker application for exporting data from MongoDB. Basically, it's a simple wrapper of `mongoexport`
 command.
 
 ## Configuration
@@ -75,19 +75,19 @@ Requirements:
 - Docker Engine `~1.10.0`
 - Docker Compose `~1.6.0`
 
-Application is prepared for run in container, you can start development same way.
+Application is prepared for run in container, you can start development same way:
 
 1. Clone this repository: `git clone git@github.com:keboola/mongodb-extractor.git`
 2. Change directory: `cd mongodb-extractor`
 3. Build services: `docker-compose build`
-4. Run tests `docker-compose run --rm php-tests`
+4. Run tests `docker-compose run --rm php-tests` (runs `./tests.sh` script)
 
 After seeing all tests green, continue:
 
 1. Create data dir: `mkdir -p data`
 2. Follow configuration sample and create `config.yml` file and place it to your data directory (`data/config.yml`):
 3. Run service: `docker-compose run --rm php` (starts container with `bash`)
-4. Simulate real run: `php src/run.php --data=/data`
+4. Simulate real run: `php src/run.php --data=./data`
 
 ### Tests
 
