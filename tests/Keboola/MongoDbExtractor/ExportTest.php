@@ -33,9 +33,9 @@ parameters:
   db:
     host: 127.0.0.1
     port: 27017
+    database: test
   exports:
     - name: create-manifest-default
-      db: 'test'
       collection: 'test'
       fields:
         - name
@@ -69,9 +69,9 @@ parameters:
   db:
     host: 127.0.0.1
     port: 27017
+    database: test
   exports:
     - name: create-manifest-full
-      db: 'test'
       collection: 'test'
       fields:
         - _id

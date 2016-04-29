@@ -34,6 +34,7 @@ parameters:
   db:
     host: mongodb-auth
     port: 27017
+    database: test
     user: user
     '#password': user
 YAML;

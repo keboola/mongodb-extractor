@@ -34,6 +34,7 @@ parameters:
   db:
     host: mongodb
     port: 27017
+    database: test
 YAML;
         return Yaml::parse($config);
 
