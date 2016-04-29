@@ -20,6 +20,7 @@ parameters:
   db:
     host: 127.0.0.1 # can be real host behind firewall, will be replaced by 127.0.0.1
     port: 27017 # can be real port behind firewall, will be replaced by ssh.localPort
+    database: test
     user: username # optional
     password: password # optional (can be encrypted)
     ssh: # optional section
@@ -38,7 +39,6 @@ parameters:
           -----END RSA PRIVATE KEY-----
   exports:
     - name: bronx-bakeries
-      db: test
       collection: restaurants
       query: '{borough: "Bronx"}' # optional
       fields:
@@ -49,7 +49,6 @@ parameters:
       primaryKey: # optional
         - _id
     - name: bronx-bakeries-westchester
-      db: test
       collection: restaurants
       query: '{borough: "Bronx", "address.street": "Westchester Avenue"}' # optional
       fields:
