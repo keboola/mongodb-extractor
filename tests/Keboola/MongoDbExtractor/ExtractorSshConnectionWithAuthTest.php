@@ -2,7 +2,6 @@
 
 namespace Keboola\MongoDbExtractor;
 
-use Keboola\Test\ExtractorTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Yaml\Yaml;

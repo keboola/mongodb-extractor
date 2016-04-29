@@ -1,9 +1,7 @@
 <?php
 
-namespace Keboola\Test;
+namespace Keboola\MongoDbExtractor;
 
-use Keboola\MongoDbExtractor\Export;
-use Keboola\MongoDbExtractor\Extractor;
 use Keboola\DbExtractor\Logger;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
