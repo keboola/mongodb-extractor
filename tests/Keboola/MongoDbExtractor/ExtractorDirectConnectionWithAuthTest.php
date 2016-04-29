@@ -2,7 +2,6 @@
 
 namespace Keboola\MongoDbExtractor;
 
-use Keboola\Test\ExtractorTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
 
@@ -34,6 +33,7 @@ parameters:
   db:
     host: mongodb-auth
     port: 27017
+    database: test
     user: user
     '#password': user
 YAML;

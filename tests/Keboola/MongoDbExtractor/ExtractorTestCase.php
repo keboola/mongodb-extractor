@@ -1,9 +1,7 @@
 <?php
 
-namespace Keboola\Test;
+namespace Keboola\MongoDbExtractor;
 
-use Keboola\MongoDbExtractor\Export;
-use Keboola\MongoDbExtractor\Extractor;
 use Keboola\DbExtractor\Logger;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
@@ -24,7 +22,6 @@ abstract class ExtractorTestCase extends \PHPUnit_Framework_TestCase
     public function testExportAll()
     {
         $exportParams = [
-            'db' => 'test',
             'collection' => 'restaurants',
             'fields' => [
                 'borough',
@@ -53,7 +50,6 @@ abstract class ExtractorTestCase extends \PHPUnit_Framework_TestCase
     public function testExportOne()
     {
         $exportParams = [
-            'db' => 'test',
             'collection' => 'restaurants',
             'fields' => [
                 'borough',
@@ -86,7 +82,6 @@ CSV;
     public function testExportMulti()
     {
         $exportParams = [
-            'db' => 'test',
             'collection' => 'restaurants',
             'fields' => [
                 'borough',
@@ -120,7 +115,6 @@ CSV;
     public function testExportMultiFieldsPaths()
     {
         $exportParams = [
-            'db' => 'test',
             'collection' => 'restaurants',
             'fields' => [
                 'borough',
@@ -158,7 +152,6 @@ CSV;
     public function testExportMultiWithJson()
     {
         $exportParams = [
-            'db' => 'test',
             'collection' => 'restaurants',
             'fields' => [
                 'borough',
@@ -193,7 +186,6 @@ CSV;
     public function testExportMultiWithSortAndLimit()
     {
         $exportParams = [
-            'db' => 'test',
             'collection' => 'restaurants',
             'fields' => [
                 'name',
@@ -232,7 +224,6 @@ CSV;
         $this->expectException(ProcessFailedException::class);
 
         $exportParams = [
-            'db' => 'test',
             'collection' => 'restaurants',
             'fields' => [
                 'borough',
@@ -252,7 +243,6 @@ CSV;
     public function testExportRandomCollection()
     {
         $exportParams = [
-            'db' => 'test',
             'collection' => 'randomCollection',
             'fields' => [
                 'borough',

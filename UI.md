@@ -7,13 +7,13 @@ Sample:
     "db": {
         "host": "127.0.0.1",
         "port": 27017,
+        "database": "test",
         "user": "username",
         "password": "password"
     },
     "exports": [
         {
             "name": "bronx-bakeries",
-            "db": "test",
             "collection": "restaurants",
             "fields": [
                 "id",
@@ -25,7 +25,6 @@ Sample:
         },
         {
             "name": "bronx-bakeries-westchester",
-            "db": "test",
             "collection": "restaurants",
             "query": "{borough: \"Bronx\", \"address.street\": \"Westchester Avenue\"}",
             "fields": [
@@ -44,13 +43,13 @@ Options description:
 - `db`: *array*
     - `host`: *string* host ot connect to
     - `port`: *integer* port to use, usually 27017 for MongoDB
+    - `database`: *string* database to select
     - `user`: *string* (optional) username
     - `password`: *string* (optional) password
     - `ssh`: *array* (optional), in most cases configured through UI
 
 - `exports`: *array*
     - `name`: *string* export name, generated CSV file will be named after this
-    - `db`: *string* database to select
     - `collection`: *string* collection to export
     - `query`: *MongoDB Extended JSON* (optional) query to filter by
     - `fields`: *array* fields to export

@@ -15,11 +15,11 @@ parameters:
   db:
     host: 127.0.0.1
     port: 27017
+    database: test
     user: user
     password: password
   exports:
     - name: bronx-bakeries
-      db: 'test'
       collection: 'restaurants'
       query: '{borough: "Bronx"}'
       fields:
@@ -45,9 +45,9 @@ YAML;
 parameters:
   db:
     host: 127.0.0.1
+    database: test
   exports:
     - name: bronx-bakeries
-      db: 'test'
       collection: 'restaurants'
 YAML;
 

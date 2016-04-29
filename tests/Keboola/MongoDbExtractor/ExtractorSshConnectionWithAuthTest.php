@@ -2,7 +2,6 @@
 
 namespace Keboola\MongoDbExtractor;
 
-use Keboola\Test\ExtractorTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Yaml\Yaml;
@@ -38,6 +37,7 @@ parameters:
   db:
     host: 127.0.0.1
     port: 27017
+    database: test
     user: user
     password: user
     ssh:

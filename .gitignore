@@ -3,3 +3,4 @@
 /data
 /.*-datadir
 /build
+/ssh.*
