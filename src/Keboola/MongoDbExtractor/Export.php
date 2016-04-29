@@ -23,12 +23,30 @@ class Export
     /** @var string */
     private $name;
 
+    /**
+     * Mapping:
+     * - compatibility with db-extractor-common
+     * - encrypted password
+     * @var array
+     */
+    private $connectionOptionsMapping = [
+        'user' => 'username',
+        'database' => 'db',
+        '#password' => 'password',
+    ];
+
     public function __construct(array $connectionOptions, array $exportOptions, $path, $name)
     {
         $this->connectionOptions = $connectionOptions;
         $this->exportOptions = $exportOptions;
         $this->path = $path;
         $this->name = $name;
+
+        foreach ($this->connectionOptionsMapping as $from => $to) {
+            if (isset($this->connectionOptions[$from])) {
+                $this->connectionOptions[$to] = $this->connectionOptions[$from];
+            }
+        }
 
         $this->createCommand();
     }
@@ -58,17 +76,6 @@ class Export
     private function createCommand()
     {
         $options = $this->connectionOptions;
-
-        // handle encrypted password
-        if (isset($options['#password'])) {
-            $options['password'] = $options['#password'];
-        }
-
-        // compatibility with db-extractor-common (accepting "user" param)
-        if (isset($options['user'])) {
-            $options['username'] = $options['user'];
-        }
-
         $options['out'] = $this->getOutputFilename();
 
         $this->exportCommand = new MongoExportCommandCsv(array_merge($options, $this->exportOptions));
