@@ -56,7 +56,7 @@ services:
              '
 
   mongodb:
-    build: docker/mongodb
+    image: quay.io/keboola/mongodb-extractor-mongodb
 
   mongodb-auth:
     extends:
