@@ -8,8 +8,8 @@ use Symfony\Component\Yaml\Yaml;
 use Keboola\DbExtractor\Logger;
 
 use Keboola\MongoDbExtractor\ConfigDefinition;
-use Keboola\MongoDbExtractor\Export;
-use Keboola\MongoDbExtractor\Extractor;
+use Keboola\MongoDbExtractor\ExportJson;
+use Keboola\MongoDbExtractor\ExtractorJson;
 
 $arguments = getopt('', ['data:']);
 if (!isset($arguments['data'])) {
@@ -37,10 +37,10 @@ try {
 
     $exports = [];
     foreach ($parameters['exports'] as $exportOptions) {
-        $exports[] = new Export($parameters['db'], $exportOptions, $outputPath, $exportOptions['name']);
+        $exports[] = new ExportJson($parameters['db'], $exportOptions, $outputPath, $exportOptions['name']);
     }
 
-    $extractor = new Extractor($parameters, new Logger('keboola.ex-mongodb'));
+    $extractor = new ExtractorJson($parameters, new Logger('keboola.ex-mongodb'));
     $extractor->export($exports);
 
     exit(0);
