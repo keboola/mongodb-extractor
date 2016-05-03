@@ -15,6 +15,8 @@ RUN cd \
   && curl -sS https://getcomposer.org/installer | php \
   && ln -s /root/composer.phar /usr/local/bin/composer
 
+RUN echo "memory_limit = -1" > /usr/local/etc/php/php.ini
+
 ADD . /code
 
 RUN cd /code \
