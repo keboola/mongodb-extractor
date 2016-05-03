@@ -91,6 +91,15 @@ class ExportJson
     }
 
     /**
+     * Get output path
+     * @return string
+     */
+    public function getOutputPath()
+    {
+        return $this->path;
+    }
+
+    /**
      * Gets manifest file options
      * @return array
      */
