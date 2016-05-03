@@ -28,6 +28,8 @@ class ExtractorJson extends \Keboola\DbExtractor\Extractor\Extractor
      */
     public function export(array $exports)
     {
+        $fs = new \Symfony\Component\Filesystem\Filesystem;
+
         foreach ($exports as $export) {
             $export->export();
 
@@ -40,12 +42,13 @@ class ExtractorJson extends \Keboola\DbExtractor\Extractor\Extractor
             $results = $parser->getCsvFiles();
             foreach ($results as $result) {
                 /** @var $result \Keboola\Csv\CsvFile */
-                $fs = new \Symfony\Component\Filesystem\Filesystem;
                 $fs->copy(
                     $result->getFileInfo()->getPathname(),
                     $export->getOutputPath() . '/' . $result->getFileInfo()->getFilename()
                 );
             }
+
+            $fs->remove($export->getOutputFilename());
         }
 
         return true;
