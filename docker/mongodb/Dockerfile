@@ -1,4 +1,4 @@
-FROM mongo:3
+FROM mongo:3.2
 MAINTAINER Vladimír Kriška <vlado@keboola.com>
 ENV DEBIAN_FRONTEND noninteractive
 
