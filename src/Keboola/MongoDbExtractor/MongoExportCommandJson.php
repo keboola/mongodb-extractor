@@ -91,6 +91,7 @@ class MongoExportCommandJson
 
         $command[] = '--type ' . escapeshellarg('json');
         $command[] = '--out ' . escapeshellarg($this->options['out']);
+        $command[] = '--jsonArray';
 
         $this->command = implode(' ', $command);
     }

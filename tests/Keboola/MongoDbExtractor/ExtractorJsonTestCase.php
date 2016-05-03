@@ -39,7 +39,7 @@ abstract class ExtractorJsonTestCase extends \PHPUnit_Framework_TestCase
         $process = new Process('wc -l ' . $expectedFile);
         $process->mustRun();
 
-        $this->assertSame(71, (int) $process->getOutput());
+        $this->assertSame(1, (int) $process->getOutput());
     }
 
     public function testExportOne()
@@ -58,7 +58,7 @@ abstract class ExtractorJsonTestCase extends \PHPUnit_Framework_TestCase
         $this->assertTrue($export, 'Command successful');
 
         $expectedJson = <<<JSON
-{"_id":{"\$oid":"5716054bee6e764c94fa7ddd"},"address":{"building":"1007","coord":[-73.856077,40.848447],"street":"Morris Park Ave","zipcode":"10462"},"borough":"Bronx","cuisine":"Bakery","name":"Morris Park Bake Shop"}\n
+[{"_id":{"\$oid":"5716054bee6e764c94fa7ddd"},"address":{"building":"1007","coord":[-73.856077,40.848447],"street":"Morris Park Ave","zipcode":"10462"},"borough":"Bronx","cuisine":"Bakery","name":"Morris Park Bake Shop"}]\n
 JSON;
 
         $expectedFile = $this->path . '/' . 'export-one.json';
@@ -84,9 +84,7 @@ JSON;
         $this->assertTrue($export, 'Command successful');
 
         $expectedJson = <<<JSON
-{"_id":{"\$oid":"5716054bee6e764c94fa8c8b"},"address":{"building":"1193","coord":[-73.9197389,40.83489170000001],"street":"Walton Avenue","zipcode":"10452"},"borough":"Bronx","cuisine":"Bakery","name":"Nb. National Bakery"}
-{"_id":{"\$oid":"5716054cee6e764c94faba0d"},"address":{"building":"155","coord":[-73.9147942,40.83937700000001],"street":"East 170 Street","zipcode":"10452"},"borough":"Bronx","cuisine":"Bakery","name":"La Rosa Bakery"}
-{"_id":{"\$oid":"5716054cee6e764c94fad056"},"address":{"building":"6A","coord":[-73.9188034,40.8381439],"street":"East Clarke Place","zipcode":"10452"},"borough":"Bronx","cuisine":"Bakery","name":"Emilio Super Bakery Corp"}\n
+[{"_id":{"\$oid":"5716054bee6e764c94fa8c8b"},"address":{"building":"1193","coord":[-73.9197389,40.83489170000001],"street":"Walton Avenue","zipcode":"10452"},"borough":"Bronx","cuisine":"Bakery","name":"Nb. National Bakery"},{"_id":{"\$oid":"5716054cee6e764c94faba0d"},"address":{"building":"155","coord":[-73.9147942,40.83937700000001],"street":"East 170 Street","zipcode":"10452"},"borough":"Bronx","cuisine":"Bakery","name":"La Rosa Bakery"},{"_id":{"\$oid":"5716054cee6e764c94fad056"},"address":{"building":"6A","coord":[-73.9188034,40.8381439],"street":"East Clarke Place","zipcode":"10452"},"borough":"Bronx","cuisine":"Bakery","name":"Emilio Super Bakery Corp"}]\n
 JSON;
 
         $expectedFile = $this->path . '/' . 'export-multi.json';
@@ -111,9 +109,7 @@ JSON;
         $this->assertTrue($export, 'Command successful');
 
         $expectedJson = <<<JSON
-{"_id":{"\$oid":"5716054bee6e764c94fa8c8b"},"address":{"building":"1193","coord":[-73.9197389,40.83489170000001],"street":"Walton Avenue","zipcode":"10452"},"borough":"Bronx","cuisine":"Bakery","name":"Nb. National Bakery"}
-{"_id":{"\$oid":"5716054cee6e764c94faba0d"},"address":{"building":"155","coord":[-73.9147942,40.83937700000001],"street":"East 170 Street","zipcode":"10452"},"borough":"Bronx","cuisine":"Bakery","name":"La Rosa Bakery"}
-{"_id":{"\$oid":"5716054cee6e764c94fad056"},"address":{"building":"6A","coord":[-73.9188034,40.8381439],"street":"East Clarke Place","zipcode":"10452"},"borough":"Bronx","cuisine":"Bakery","name":"Emilio Super Bakery Corp"}\n
+[{"_id":{"\$oid":"5716054bee6e764c94fa8c8b"},"address":{"building":"1193","coord":[-73.9197389,40.83489170000001],"street":"Walton Avenue","zipcode":"10452"},"borough":"Bronx","cuisine":"Bakery","name":"Nb. National Bakery"},{"_id":{"\$oid":"5716054cee6e764c94faba0d"},"address":{"building":"155","coord":[-73.9147942,40.83937700000001],"street":"East 170 Street","zipcode":"10452"},"borough":"Bronx","cuisine":"Bakery","name":"La Rosa Bakery"},{"_id":{"\$oid":"5716054cee6e764c94fad056"},"address":{"building":"6A","coord":[-73.9188034,40.8381439],"street":"East Clarke Place","zipcode":"10452"},"borough":"Bronx","cuisine":"Bakery","name":"Emilio Super Bakery Corp"}]\n
 JSON;
 
         $expectedFile = $this->path . '/' . 'export-multi-fields-paths.json';
@@ -141,9 +137,7 @@ JSON;
         $this->assertTrue($export, 'Command successful');
 
         $expectedJson = <<<JSON
-{"_id":{"\$oid":"5716054bee6e764c94fa9620"},"address":{"building":"767","coord":[-73.86468099999999,40.865699],"street":"Allerton Avenue","zipcode":"10467"},"borough":"Bronx","cuisine":"Bakery","name":"National Bakery"}
-{"_id":{"\$oid":"5716054bee6e764c94fa93f9"},"address":{"building":"944","coord":[-73.8965138,40.8212482],"street":"Intelvale Avenue","zipcode":"10459"},"borough":"Bronx","cuisine":"Bakery","name":"National Bakery"}
-{"_id":{"\$oid":"5716054bee6e764c94fa8ff6"},"address":{"building":"1522-4","coord":[-73.8789604,40.8286012],"street":"Westchester Avenue","zipcode":"10472"},"borough":"Bronx","cuisine":"Bakery","name":"National Bakery"}\n
+[{"_id":{"\$oid":"5716054bee6e764c94fa9620"},"address":{"building":"767","coord":[-73.86468099999999,40.865699],"street":"Allerton Avenue","zipcode":"10467"},"borough":"Bronx","cuisine":"Bakery","name":"National Bakery"},{"_id":{"\$oid":"5716054bee6e764c94fa93f9"},"address":{"building":"944","coord":[-73.8965138,40.8212482],"street":"Intelvale Avenue","zipcode":"10459"},"borough":"Bronx","cuisine":"Bakery","name":"National Bakery"},{"_id":{"\$oid":"5716054bee6e764c94fa8ff6"},"address":{"building":"1522-4","coord":[-73.8789604,40.8286012],"street":"Westchester Avenue","zipcode":"10472"},"borough":"Bronx","cuisine":"Bakery","name":"National Bakery"}]\n
 JSON;
 
         $expectedFile = $this->path . '/' . 'export-multi-with-sort-and-limit.json';
@@ -183,7 +177,9 @@ JSON;
 
         $this->assertTrue($export, 'Command successful');
 
-        $expectedJson = '';
+        $expectedJson = <<<JSON
+[]\n
+JSON;
 
         $expectedFile = $this->path . '/' . 'export-random-database.json';
 
