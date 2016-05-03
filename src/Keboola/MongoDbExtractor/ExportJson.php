@@ -100,6 +100,15 @@ class ExportJson
     }
 
     /**
+     * Gets export name
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
      * Gets manifest file options
      * @return array
      */
