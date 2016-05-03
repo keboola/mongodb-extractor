@@ -5,6 +5,7 @@ namespace Keboola\MongoDbExtractor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\Command;
 use Keboola\Json\Parser;
+use Symfony\Component\Yaml\Yaml;
 
 class ExtractorJson extends \Keboola\DbExtractor\Extractor\Extractor
 {
@@ -33,24 +34,65 @@ class ExtractorJson extends \Keboola\DbExtractor\Extractor\Extractor
         foreach ($exports as $export) {
             $export->export();
 
-            // json parser
             $parser = Parser::create(new \Monolog\Logger('json-parser'));
             $json = file_get_contents($export->getOutputFilename());
             $data = json_decode($json);
 
-            $parser->process($data);
+            $parser->process($data, $export->getName());
             $results = $parser->getCsvFiles();
+
             foreach ($results as $result) {
-                /** @var $result \Keboola\Csv\CsvFile */
+                /** @var $result \Keboola\CsvTable\Table */
+                $destinationFilename = $export->getOutputPath() . '/' . $result->getName();
+
                 $fs->copy(
-                    $result->getFileInfo()->getPathname(),
-                    $export->getOutputPath() . '/' . $result->getFileInfo()->getFilename()
+                    $result->getPathname(),
+                    $destinationFilename
                 );
+
+                if ($result->getName() === $export->getName()) {
+                    $this->createManifestForMainFile($destinationFilename);
+                } else {
+                    $this->createManifestForRelatedFile($destinationFilename);
+                }
             }
 
             $fs->remove($export->getOutputFilename());
         }
 
         return true;
+    }
+
+    private function createManifestForMainFile($filepath)
+    {
+        $fs = new \Symfony\Component\Filesystem\Filesystem;
+
+        $fs->dumpFile(
+            $filepath . '.manifest',
+            Yaml::dump(['incremental' => true, 'primary_key' => ['id_oid']])
+        );
+    }
+
+    private function createManifestForRelatedFile($filepath)
+    {
+        $fs = new \Symfony\Component\Filesystem\Filesystem;
+
+        $manifestOptions = [
+            'incremental' => true,
+        ];
+
+        $file = fopen($filepath, 'r');
+        $header = fgets($file);
+        fclose($file);
+        $pks = explode(',', $header);
+        array_walk($pks, function (&$pk) {
+            $pk = trim(trim($pk), '"');
+        });
+        $manifestOptions['primary_key'] = $pks;
+
+        $fs->dumpFile(
+            $filepath . '.manifest',
+            Yaml::dump($manifestOptions)
+        );
     }
 }
