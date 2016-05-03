@@ -15,7 +15,8 @@ RUN cd \
   && curl -sS https://getcomposer.org/installer | php \
   && ln -s /root/composer.phar /usr/local/bin/composer
 
-ADD . /code
+COPY ./docker/php/php.ini /usr/local/etc/php/php.ini
+COPY . /code
 
 RUN cd /code \
   && composer install --prefer-dist --no-interaction
