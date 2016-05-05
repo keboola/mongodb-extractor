@@ -56,7 +56,8 @@ class Export
      */
     public function export()
     {
-        (new Process($this->exportCommand->getCommand()))->mustRun();
+        $process = new Process($this->exportCommand->getCommand(), null, null, null, null);
+        $process->mustRun();
     }
 
     /**
