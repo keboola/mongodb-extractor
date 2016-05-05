@@ -92,6 +92,24 @@ class Export
     }
 
     /**
+     * Gets output path
+     * @return string
+     */
+    public function getOutputPath()
+    {
+        return $this->path;
+    }
+
+    /**
+     * Gets export name
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
      * Gets manifest file options
      * @return array
      */
