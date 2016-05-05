@@ -56,7 +56,7 @@ YAML;
 incremental: true\n
 YAML;
 
-        $expectedFile = $this->path . '/create-manifest-default.csv.manifest';
+        $expectedFile = $this->path . '/create-manifest-default.json.manifest';
 
         $this->assertFileExists($expectedFile);
         $this->assertEquals($expectedYaml, file_get_contents($expectedFile));
@@ -98,7 +98,7 @@ primary_key:
     - _id\n
 YAML;
 
-        $expectedFile = $this->path . '/create-manifest-full.csv.manifest';
+        $expectedFile = $this->path . '/create-manifest-full.json.manifest';
 
         $this->assertFileExists($expectedFile);
         $this->assertEquals($expectedYaml, file_get_contents($expectedFile));

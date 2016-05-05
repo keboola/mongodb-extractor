@@ -8,7 +8,7 @@ use Symfony\Component\Yaml\Yaml;
 
 class Export
 {
-    /** @var MongoExportCommandCsv */
+    /** @var MongoExportCommandJson */
     private $exportCommand;
 
     /** @var array */
@@ -79,7 +79,7 @@ class Export
         $options = $this->connectionOptions;
         $options['out'] = $this->getOutputFilename();
 
-        $this->exportCommand = new MongoExportCommandCsv(array_merge($options, $this->exportOptions));
+        $this->exportCommand = new MongoExportCommandJson(array_merge($options, $this->exportOptions));
     }
 
     /**
@@ -88,7 +88,7 @@ class Export
      */
     public function getOutputFilename()
     {
-        return $this->path . '/' . $this->name . '.csv';
+        return $this->path . '/' . $this->name . '.json';
     }
 
     /**
