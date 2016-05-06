@@ -41,22 +41,12 @@ parameters:
     - name: bronx-bakeries
       collection: restaurants
       query: '{borough: "Bronx"}' # optional
-      fields:
-        - _id
-        - name
       sort: '{name: 1}' # optional
       limit: 10 # optional
-      primaryKey: # optional
-        - _id
     - name: bronx-bakeries-westchester
       collection: restaurants
       query: '{borough: "Bronx", "address.street": "Westchester Avenue"}' # optional
-      fields:
-        - name
-        - address.zipcode
-        - address.street
-        - address.building
-      incremental: false # optional, default true
+      incremental: true # optional, default false
 ```
 For more information about SSH tunnel creation see [`createSshTunnel` function](https://github.com/keboola/db-extractor-common/blob/8e66dc9/src/Keboola/DbExtractor/Extractor/Extractor.php#L47)
 

@@ -15,24 +15,41 @@ Sample:
         {
             "name": "bronx-bakeries",
             "collection": "restaurants",
-            "fields": [
-                "id",
-                "name"
-            ],
-            "primaryKey": [
-                "id"
-            ]
+            "mapping": {
+                "_id.$oid": {
+                    "type": "column",
+                    "mapping": {
+                        "destination": "id",
+                        "primaryKey": true
+                    }
+                },
+                "name": {
+                    "type": "column",
+                    "mapping": {
+                    "destination": "name"
+                    }
+                }
+            }
         },
         {
             "name": "bronx-bakeries-westchester",
             "collection": "restaurants",
             "query": "{borough: \"Bronx\", \"address.street\": \"Westchester Avenue\"}",
-            "fields": [
-                "name",
-                "address.zipcode",
-                "address.street",
-                "address.building"
-            ]
+            "mapping": {
+                "_id.$oid": {
+                    "type": "column",
+                    "mapping": {
+                        "destination": "id",
+                        "primaryKey": true
+                    }
+                },
+                "name": {
+                    "type": "column",
+                    "mapping": {
+                    "destination": "name"
+                    }
+                }
+            }
         }
     ]
 }
@@ -52,11 +69,9 @@ Options description:
     - `name`: *string* export name, generated CSV file will be named after this
     - `collection`: *string* collection to export
     - `query`: *MongoDB Extended JSON* (optional) query to filter by
-    - `fields`: *array* fields to export
     - `sort`: *MongoDB Extended JSON* (optional) fields to sort by
     - `limit`: *integer* (optional) limit results
-    - `incremental`: *boolean* (optional) incremental load of data, default `true`
-    - `primaryKey`: *array* (optional) primary keys
+    - `incremental`: *boolean* (optional) incremental load of data, default `false`
 
 Explanation:
 
