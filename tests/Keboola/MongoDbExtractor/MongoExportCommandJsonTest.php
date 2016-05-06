@@ -11,15 +11,12 @@ class MongoExportCommandJsonTest extends \PHPUnit_Framework_TestCase
             'port' => 27017,
             'db' => 'myDatabase',
             'collection' => 'myCollection',
-            'fields' => [
-                'field',
-            ],
             'out' => '/tmp/create-test.json',
         ];
 
         $command = new MongoExportCommandJson($options);
         $expectedCommand = <<<BASH
-mongoexport --host 'localhost' --port '27017' --db 'myDatabase' --collection 'myCollection' --fields 'field' --type 'json' --out '/tmp/create-test.json' --jsonArray
+mongoexport --host 'localhost' --port '27017' --db 'myDatabase' --collection 'myCollection' --type 'json' --out '/tmp/create-test.json' --jsonArray
 BASH;
 
         $this->assertSame($expectedCommand, $command->getCommand());
@@ -35,10 +32,6 @@ BASH;
             'db' => 'myDatabase',
             'collection' => 'myCollection',
             'query' => '{a: "b"}',
-            'fields' => [
-                'field1',
-                'field2',
-            ],
             'sort' => '{a: 1, b: -1}',
             'limit' => 10,
             'out' => '/tmp/create-test.json',
@@ -46,7 +39,7 @@ BASH;
 
         $command = new MongoExportCommandJson($options);
         $expectedCommand = <<<BASH
-mongoexport --host 'localhost' --port '27017' --username 'user' --password 'pass' --db 'myDatabase' --collection 'myCollection' --fields 'field1,field2' --query '{a: "b"}' --sort '{a: 1, b: -1}' --limit '10' --type 'json' --out '/tmp/create-test.json' --jsonArray
+mongoexport --host 'localhost' --port '27017' --username 'user' --password 'pass' --db 'myDatabase' --collection 'myCollection' --query '{a: "b"}' --sort '{a: 1, b: -1}' --limit '10' --type 'json' --out '/tmp/create-test.json' --jsonArray
 BASH;
 
         $this->assertSame($expectedCommand, $command->getCommand());
@@ -62,9 +55,6 @@ BASH;
             'password' => 'password',
             'db' => 'myDatabase',
             'collection' => 'myCollection',
-            'fields' => [
-                'field',
-            ],
             'out' => '/tmp/validate-test.json',
         ];
 
@@ -81,9 +71,6 @@ BASH;
             'username' => 'user',
             'db' => 'myDatabase',
             'collection' => 'myCollection',
-            'fields' => [
-                'field',
-            ],
             'out' => '/tmp/validate-test.json',
         ];
 

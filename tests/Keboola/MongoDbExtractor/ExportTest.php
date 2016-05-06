@@ -37,10 +37,6 @@ parameters:
   exports:
     - name: bakeries
       collection: restaurants
-      fields:
-        - _id
-        - name
-        - address
       query: '{borough: "Bronx", "address.street": "Westchester Avenue"}'
       mapping:
         '_id.\$oid':
@@ -93,7 +89,7 @@ YAML;
         // json
         $expectedJsonFile = $this->path . '/bakeries.json';
         $expectedJson = <<<JSON
-[{"_id":{"\$oid":"5716054bee6e764c94fa841e"},"address":{"building":"1484","coord":[-73.8806669,40.8283447],"street":"Westchester Avenue","zipcode":"10472"},"name":"Nacional Bakery #1"},{"_id":{"\$oid":"5716054bee6e764c94fa8c13"},"address":{"building":"104512","coord":[-73.88541699999999,40.82766],"street":"Westchester Avenue","zipcode":"10459"},"name":"La Nueva Giralda Bakery"},{"_id":{"\$oid":"5716054bee6e764c94fa8ff6"},"address":{"building":"1522-4","coord":[-73.8789604,40.8286012],"street":"Westchester Avenue","zipcode":"10472"},"name":"National Bakery"},{"_id":{"\$oid":"5716054cee6e764c94fa9f31"},"address":{"building":"1617","coord":[-73.8747516,40.829474],"street":"Westchester Avenue","zipcode":"10472"},"name":"1617-A National Bakery"},{"_id":{"\$oid":"5716054cee6e764c94faa105"},"address":{"building":"2214","coord":[-73.8510158,40.8342588],"street":"Westchester Avenue","zipcode":"10462"},"name":"National Bakery"},{"_id":{"\$oid":"5716054cee6e764c94fad66f"},"address":{"building":"1579","coord":[-73.87670779999999,40.8290734],"street":"Westchester Avenue","zipcode":"10472"},"name":"Jacqueline'S Bakery Restaurant"}]\n
+[{"_id":{"\$oid":"5716054bee6e764c94fa841e"},"address":{"building":"1484","coord":[-73.8806669,40.8283447],"street":"Westchester Avenue","zipcode":"10472"},"borough":"Bronx","cuisine":"Bakery","name":"Nacional Bakery #1"},{"_id":{"\$oid":"5716054bee6e764c94fa8c13"},"address":{"building":"104512","coord":[-73.88541699999999,40.82766],"street":"Westchester Avenue","zipcode":"10459"},"borough":"Bronx","cuisine":"Bakery","name":"La Nueva Giralda Bakery"},{"_id":{"\$oid":"5716054bee6e764c94fa8ff6"},"address":{"building":"1522-4","coord":[-73.8789604,40.8286012],"street":"Westchester Avenue","zipcode":"10472"},"borough":"Bronx","cuisine":"Bakery","name":"National Bakery"},{"_id":{"\$oid":"5716054cee6e764c94fa9f31"},"address":{"building":"1617","coord":[-73.8747516,40.829474],"street":"Westchester Avenue","zipcode":"10472"},"borough":"Bronx","cuisine":"Bakery","name":"1617-A National Bakery"},{"_id":{"\$oid":"5716054cee6e764c94faa105"},"address":{"building":"2214","coord":[-73.8510158,40.8342588],"street":"Westchester Avenue","zipcode":"10462"},"borough":"Bronx","cuisine":"Bakery","name":"National Bakery"},{"_id":{"\$oid":"5716054cee6e764c94fad66f"},"address":{"building":"1579","coord":[-73.87670779999999,40.8290734],"street":"Westchester Avenue","zipcode":"10472"},"borough":"Bronx","cuisine":"Bakery","name":"Jacqueline'S Bakery Restaurant"}]\n
 JSON;
         $this->assertFileExists($expectedJsonFile);
         $this->assertEquals($expectedJson, file_get_contents($expectedJsonFile));

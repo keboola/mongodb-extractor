@@ -16,7 +16,6 @@ class MongoExportCommandJson
         'port',
         'db',
         'collection',
-        'fields',
         'out'
     ];
 
@@ -83,7 +82,6 @@ class MongoExportCommandJson
         // export options
         $command[] = '--db ' . escapeshellarg($this->options['db']);
         $command[] = '--collection ' . escapeshellarg($this->options['collection']);
-        $command[] = '--fields ' . escapeshellarg(implode(',', $this->options['fields']));
 
         foreach (['query', 'sort', 'limit'] as $option) {
             if (isset($this->options[$option])) {

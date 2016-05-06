@@ -22,11 +22,6 @@ parameters:
     - name: bronx-bakeries
       collection: 'restaurants'
       query: '{borough: "Bronx"}'
-      fields:
-        - _id
-        - name
-      primaryKey:
-        - _id
       incremental: false
       mapping:
         _id:

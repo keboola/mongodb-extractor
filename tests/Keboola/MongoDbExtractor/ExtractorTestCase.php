@@ -41,11 +41,6 @@ abstract class ExtractorTestCase extends \PHPUnit_Framework_TestCase
     {
         $exportParams = [
             'collection' => 'restaurants',
-            'fields' => [
-                'borough',
-                'cuisine',
-                'name',
-            ],
             'name' => 'export-all',
             'mapping' => $this->getMapping(),
         ];
@@ -76,11 +71,6 @@ abstract class ExtractorTestCase extends \PHPUnit_Framework_TestCase
     {
         $exportParams = [
             'collection' => 'restaurants',
-            'fields' => [
-                'borough',
-                'cuisine',
-                'name',
-            ],
             'query' => '{_id: ObjectId("5716054bee6e764c94fa7ddd")}',
             'name' => 'export-one',
             'mapping' => $this->getMapping(),
@@ -114,11 +104,6 @@ CSV;
     {
         $exportParams = [
             'collection' => 'restaurants',
-            'fields' => [
-                'borough',
-                'cuisine',
-                'name',
-            ],
             'query' => '{borough : "Bronx", cuisine: "Bakery", "address.zipcode": "10452"}',
             'name' => 'export-multi',
             'mapping' => $this->getMapping(),
@@ -154,14 +139,6 @@ CSV;
     {
         $exportParams = [
             'collection' => 'restaurants',
-            'fields' => [
-                'borough',
-                'cuisine',
-                'name',
-                'address.street',
-                'address.zipcode',
-                'address.building',
-            ],
             'query' => '{borough : "Bronx", cuisine: "Bakery", "address.zipcode": "10452"}',
             'name' => 'export-multi-fields-paths',
             'mapping' => $this->getMapping(),
@@ -198,12 +175,6 @@ CSV;
     {
         $exportParams = [
             'collection' => 'restaurants',
-            'fields' => [
-                'name',
-                'borough',
-                'address.street',
-                'address.zipcode',
-            ],
             'query' => '{name: "National Bakery"}',
             'sort' => '{"address.street": 1}',
             'limit' => 3,
@@ -243,11 +214,6 @@ CSV;
 
         $exportParams = [
             'collection' => 'restaurants',
-            'fields' => [
-                'borough',
-                'cuisine',
-                'name',
-            ],
             'query' => '{a: b}', // invalid JSON
             'name' => 'export-bad-query',
             'mapping' => $this->getMapping(),
@@ -269,11 +235,6 @@ CSV;
     {
         $exportParams = [
             'collection' => 'randomCollection',
-            'fields' => [
-                'borough',
-                'cuisine',
-                'name',
-            ],
             'query' => '{_id: ObjectId("5716054bee6e764c94fa7ddd")}',
             'name' => 'export-random-database',
             'mapping' => $this->getMapping(),
