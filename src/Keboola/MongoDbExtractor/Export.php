@@ -93,7 +93,10 @@ class Export
             ];
 
             $this->fs->dumpFile($outputCsv . '.manifest', Yaml::dump($manifest));
-            $this->fs->remove($file->getPathname());
+            $this->fs->remove([
+                $this->getOutputFilename(),
+                $file->getPathname()
+            ]);
         }
     }
 

@@ -100,6 +100,8 @@ JSON;
 
         $export->parseAndCreateManifest();
 
+        $this->assertFileNotExists($expectedJsonFile);
+
         // main csv
         $expectedCsvFileMain = $this->path . '/bakeries.csv';
         $expectedCsvMain = <<<CSV

@@ -19,6 +19,24 @@ abstract class ExtractorTestCase extends \PHPUnit_Framework_TestCase
 
     abstract protected function getConfig();
 
+    private function getMapping()
+    {
+        return [
+            '_id.$oid' => [
+                'type' => 'column',
+                'mapping' => [
+                    'destination' => 'id',
+                ]
+            ],
+            'name' => [
+                'type' => 'column',
+                'mapping' => [
+                    'destination' => 'name'
+                ]
+            ],
+        ];
+    }
+
     public function testExportAll()
     {
         $exportParams = [
@@ -29,14 +47,7 @@ abstract class ExtractorTestCase extends \PHPUnit_Framework_TestCase
                 'name',
             ],
             'name' => 'export-all',
-            'mapping' => [
-                'name' => [
-                    'type' => 'column',
-                    'mapping' => [
-                        'destination' => 'name'
-                    ]
-                ],
-            ],
+            'mapping' => $this->getMapping(),
         ];
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
@@ -52,13 +63,13 @@ abstract class ExtractorTestCase extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($export, 'Command successful');
 
-        $expectedFile = $this->path . '/' . 'export-all.json';
+        $expectedFile = $this->path . '/' . 'export-all.csv';
         $this->assertFileExists($expectedFile);
 
         $process = new Process('wc -l ' . $expectedFile);
         $process->mustRun();
 
-        $this->assertSame(1, (int) $process->getOutput());
+        $this->assertSame(72, (int) $process->getOutput());
     }
 
     public function testExportOne()
@@ -72,14 +83,7 @@ abstract class ExtractorTestCase extends \PHPUnit_Framework_TestCase
             ],
             'query' => '{_id: ObjectId("5716054bee6e764c94fa7ddd")}',
             'name' => 'export-one',
-            'mapping' => [
-                'name' => [
-                    'type' => 'column',
-                    'mapping' => [
-                        'destination' => 'name'
-                    ]
-                ],
-            ],
+            'mapping' => $this->getMapping(),
         ];
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
@@ -95,11 +99,11 @@ abstract class ExtractorTestCase extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($export, 'Command successful');
 
-        $expectedJson = <<<JSON
-[{"_id":{"\$oid":"5716054bee6e764c94fa7ddd"},"borough":"Bronx","cuisine":"Bakery","name":"Morris Park Bake Shop"}]\n
-JSON;
-
-        $expectedFile = $this->path . '/' . 'export-one.json';
+        $expectedJson = <<<CSV
+"id","name"
+"5716054bee6e764c94fa7ddd","Morris Park Bake Shop"\n
+CSV;
+        $expectedFile = $this->path . '/' . 'export-one.csv';
 
         $this->assertFileExists($expectedFile);
         $this->assertEquals($expectedJson, file_get_contents($expectedFile));
@@ -117,14 +121,7 @@ JSON;
             ],
             'query' => '{borough : "Bronx", cuisine: "Bakery", "address.zipcode": "10452"}',
             'name' => 'export-multi',
-            'mapping' => [
-                'name' => [
-                    'type' => 'column',
-                    'mapping' => [
-                        'destination' => 'name'
-                    ]
-                ],
-            ],
+            'mapping' => $this->getMapping(),
         ];
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
@@ -140,11 +137,14 @@ JSON;
 
         $this->assertTrue($export, 'Command successful');
 
-        $expectedJson = <<<JSON
-[{"_id":{"\$oid":"5716054bee6e764c94fa8c8b"},"borough":"Bronx","cuisine":"Bakery","name":"Nb. National Bakery"},{"_id":{"\$oid":"5716054cee6e764c94faba0d"},"borough":"Bronx","cuisine":"Bakery","name":"La Rosa Bakery"},{"_id":{"\$oid":"5716054cee6e764c94fad056"},"borough":"Bronx","cuisine":"Bakery","name":"Emilio Super Bakery Corp"}]\n
-JSON;
+        $expectedJson = <<<CSV
+"id","name"
+"5716054bee6e764c94fa8c8b","Nb. National Bakery"
+"5716054cee6e764c94faba0d","La Rosa Bakery"
+"5716054cee6e764c94fad056","Emilio Super Bakery Corp"\n
+CSV;
 
-        $expectedFile = $this->path . '/' . 'export-multi.json';
+        $expectedFile = $this->path . '/' . 'export-multi.csv';
 
         $this->assertFileExists($expectedFile);
         $this->assertEquals($expectedJson, file_get_contents($expectedFile));
@@ -164,14 +164,7 @@ JSON;
             ],
             'query' => '{borough : "Bronx", cuisine: "Bakery", "address.zipcode": "10452"}',
             'name' => 'export-multi-fields-paths',
-            'mapping' => [
-                'name' => [
-                    'type' => 'column',
-                    'mapping' => [
-                        'destination' => 'name'
-                    ]
-                ],
-            ],
+            'mapping' => $this->getMapping(),
         ];
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
@@ -187,11 +180,14 @@ JSON;
 
         $this->assertTrue($export, 'Command successful');
 
-        $expectedJson = <<<JSON
-[{"_id":{"\$oid":"5716054bee6e764c94fa8c8b"},"address":{"building":"1193","coord":[-73.9197389,40.83489170000001],"street":"Walton Avenue","zipcode":"10452"},"borough":"Bronx","cuisine":"Bakery","name":"Nb. National Bakery"},{"_id":{"\$oid":"5716054cee6e764c94faba0d"},"address":{"building":"155","coord":[-73.9147942,40.83937700000001],"street":"East 170 Street","zipcode":"10452"},"borough":"Bronx","cuisine":"Bakery","name":"La Rosa Bakery"},{"_id":{"\$oid":"5716054cee6e764c94fad056"},"address":{"building":"6A","coord":[-73.9188034,40.8381439],"street":"East Clarke Place","zipcode":"10452"},"borough":"Bronx","cuisine":"Bakery","name":"Emilio Super Bakery Corp"}]\n
-JSON;
+        $expectedJson = <<<CSV
+"id","name"
+"5716054bee6e764c94fa8c8b","Nb. National Bakery"
+"5716054cee6e764c94faba0d","La Rosa Bakery"
+"5716054cee6e764c94fad056","Emilio Super Bakery Corp"\n
+CSV;
 
-        $expectedFile = $this->path . '/' . 'export-multi-fields-paths.json';
+        $expectedFile = $this->path . '/' . 'export-multi-fields-paths.csv';
 
         $this->assertFileExists($expectedFile);
         $this->assertEquals($expectedJson, file_get_contents($expectedFile));
@@ -212,14 +208,7 @@ JSON;
             'sort' => '{"address.street": 1}',
             'limit' => 3,
             'name' => 'export-multi-with-sort-and-limit',
-            'mapping' => [
-                'name' => [
-                    'type' => 'column',
-                    'mapping' => [
-                        'destination' => 'name'
-                    ]
-                ],
-            ],
+            'mapping' => $this->getMapping(),
         ];
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
@@ -235,11 +224,14 @@ JSON;
 
         $this->assertTrue($export, 'Command successful');
 
-        $expectedJson = <<<JSON
-[{"_id":{"\$oid":"5716054bee6e764c94fa9620"},"address":{"building":"767","coord":[-73.86468099999999,40.865699],"street":"Allerton Avenue","zipcode":"10467"},"borough":"Bronx","name":"National Bakery"},{"_id":{"\$oid":"5716054bee6e764c94fa93f9"},"address":{"building":"944","coord":[-73.8965138,40.8212482],"street":"Intelvale Avenue","zipcode":"10459"},"borough":"Bronx","name":"National Bakery"},{"_id":{"\$oid":"5716054bee6e764c94fa8ff6"},"address":{"building":"1522-4","coord":[-73.8789604,40.8286012],"street":"Westchester Avenue","zipcode":"10472"},"borough":"Bronx","name":"National Bakery"}]\n
-JSON;
+        $expectedJson = <<<CSV
+"id","name"
+"5716054bee6e764c94fa9620","National Bakery"
+"5716054bee6e764c94fa93f9","National Bakery"
+"5716054bee6e764c94fa8ff6","National Bakery"\n
+CSV;
 
-        $expectedFile = $this->path . '/' . 'export-multi-with-sort-and-limit.json';
+        $expectedFile = $this->path . '/' . 'export-multi-with-sort-and-limit.csv';
 
         $this->assertFileExists($expectedFile);
         $this->assertEquals($expectedJson, file_get_contents($expectedFile));
@@ -258,14 +250,7 @@ JSON;
             ],
             'query' => '{a: b}', // invalid JSON
             'name' => 'export-bad-query',
-            'mapping' => [
-                'name' => [
-                    'type' => 'column',
-                    'mapping' => [
-                        'destination' => 'name'
-                    ]
-                ],
-            ],
+            'mapping' => $this->getMapping(),
         ];
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
@@ -291,14 +276,7 @@ JSON;
             ],
             'query' => '{_id: ObjectId("5716054bee6e764c94fa7ddd")}',
             'name' => 'export-random-database',
-            'mapping' => [
-                'name' => [
-                    'type' => 'column',
-                    'mapping' => [
-                        'destination' => 'name'
-                    ]
-                ],
-            ],
+            'mapping' => $this->getMapping(),
         ];
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
@@ -314,11 +292,11 @@ JSON;
 
         $this->assertTrue($export, 'Command successful');
 
-        $expectedJson = <<<JSON
-[]\n
-JSON;
+        $expectedJson = <<<CSV
+"id","name"\n
+CSV;
 
-        $expectedFile = $this->path . '/' . 'export-random-database.json';
+        $expectedFile = $this->path . '/' . 'export-random-database.csv';
 
         $this->assertFileExists($expectedFile);
         $this->assertEquals($expectedJson, file_get_contents($expectedFile));
