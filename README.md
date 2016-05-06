@@ -6,7 +6,8 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/keboola/mongodb-extractor/blob/master/LICENSE.md)
 
 Docker application for exporting data from MongoDB. Basically, it's a simple wrapper of `mongoexport`
-command.
+command, which exports data from specified database and collection. Then those data are processed by
+[php-csvmap](https://github.com/keboola/php-csvmap).
 
 ## Configuration
 
@@ -38,22 +39,52 @@ parameters:
           ...your private key...
           -----END RSA PRIVATE KEY-----
   exports:
-    - name: bronx-bakeries
-      collection: restaurants
-      query: '{borough: "Bronx"}' # optional
-      sort: '{name: 1}' # optional
-      limit: 10 # optional
     - name: bronx-bakeries-westchester
       collection: restaurants
       query: '{borough: "Bronx", "address.street": "Westchester Avenue"}' # optional
       incremental: true # optional, default false
+      mapping:
+        '_id.\$oid':
+          type: column
+          mapping:
+            destination: id
+            primaryKey: true
+        name:
+          type: column
+          mapping:
+            destination: name
+        address:
+          type: table
+          destination: bakeries-coords
+          parentKey:
+            destination: bakeries_id
+          tableMapping:
+            coord.0:
+              type: column
+              mapping:
+                destination: w
+            coord.1:
+              type: column
+              mapping:
+                destination: n
+            zipcode:
+              type: column
+              mapping:
+                destination: zipcode
+                primaryKey: true
+            street:
+              type: column
+              mapping:
+                destination: street
+                primaryKey: true
 ```
 For more information about SSH tunnel creation see [`createSshTunnel` function](https://github.com/keboola/db-extractor-common/blob/8e66dc9/src/Keboola/DbExtractor/Extractor/Extractor.php#L47)
 
 ## Output
 
-After successful extraction there are several CSV files, which contains exported data. Each output
-file is named after `name` parameter in export configuration.
+After successful extraction there are several CSV files, which contains exported data. First output
+file is named after `name` parameter in export configuration. Other files are named after destination
+parameter in mapping section.
 
 Also, there is manifest file for each of the export.
 
@@ -82,8 +113,8 @@ After seeing all tests green, continue:
 
 In running container execute `tests.sh` script which contains `phpunit` and related commands:
 
-```bash
-./tests.sh # or any command from this file separately
+```console
+./tests.sh
 ```
 
 ## License

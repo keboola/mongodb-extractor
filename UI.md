@@ -1,6 +1,6 @@
 # Configuring MongoDB Extractor in Keboola Connection
 
-Sample:
+## Sample configuration
 
 ```json
 {
@@ -72,17 +72,37 @@ Options description:
     - `sort`: *MongoDB Extended JSON* (optional) fields to sort by
     - `limit`: *integer* (optional) limit results
     - `incremental`: *boolean* (optional) incremental load of data, default `false`
+    - `mapping`: *array* of mapping configuration for each column needed in export
 
 Explanation:
 
-1. First export fetches whole `restaurants` collection and produces CSV file `bronx-bakeries.csv`
+1. First fetches whole `restaurants` collection and produces CSV file `bronx-bakeries.csv`
 with columns `id` and `name` where `id` is marked as primary key.
-2. Second export filters data in collection with specified `query` and produces CSV
-`bronx-bakeries-westchester.csv` file with columns `name` and 3 `address` fields.
+2. Second filters data in collection with specified `query` and produces CSV
+`bronx-bakeries-westchester.csv` file with same columns as previous one.
+
+## Primary key definition
+
+Since the MongoDB identifies each document in collection uniquely by `_id`, we recommend to set primary
+key to this field by defining first item in mapping section:
+
+```json
+{
+    "_id.$oid": {
+        "type": "column",
+        "mapping": {
+            "destination": "id",
+            "primaryKey": true
+        }
+    }
+}
+```
+*Note: Column with primary key should be named `id` no `_id` to prevent problems with data import.*
+
 
 ## Tips
 
-- Check `mongoexport` command documentation to learn more about:
-    - `query`: [--query](https://docs.mongodb.org/v3.2/reference/program/mongoexport/#cmdoption--query)
-    - `sort`: [--sort](https://docs.mongodb.org/v3.2/reference/program/mongoexport/#cmdoption--sort)
-    - or [MongoDB Extended JSON](https://docs.mongodb.org/v3.2/reference/mongodb-extended-json/)
+- Check `mongoexport` command documentation to learn more about
+[query](https://docs.mongodb.org/v3.2/reference/program/mongoexport/#cmdoption--query)
+[sort](https://docs.mongodb.org/v3.2/reference/program/mongoexport/#cmdoption--sort)
+or [MongoDB Extended JSON](https://docs.mongodb.org/v3.2/reference/mongodb-extended-json/)
