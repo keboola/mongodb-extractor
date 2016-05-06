@@ -29,6 +29,14 @@ abstract class ExtractorTestCase extends \PHPUnit_Framework_TestCase
                 'name',
             ],
             'name' => 'export-all',
+            'mapping' => [
+                'name' => [
+                    'type' => 'column',
+                    'mapping' => [
+                        'destination' => 'name'
+                    ]
+                ],
+            ],
         ];
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
@@ -64,6 +72,14 @@ abstract class ExtractorTestCase extends \PHPUnit_Framework_TestCase
             ],
             'query' => '{_id: ObjectId("5716054bee6e764c94fa7ddd")}',
             'name' => 'export-one',
+            'mapping' => [
+                'name' => [
+                    'type' => 'column',
+                    'mapping' => [
+                        'destination' => 'name'
+                    ]
+                ],
+            ],
         ];
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
@@ -101,6 +117,14 @@ JSON;
             ],
             'query' => '{borough : "Bronx", cuisine: "Bakery", "address.zipcode": "10452"}',
             'name' => 'export-multi',
+            'mapping' => [
+                'name' => [
+                    'type' => 'column',
+                    'mapping' => [
+                        'destination' => 'name'
+                    ]
+                ],
+            ],
         ];
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
@@ -140,6 +164,14 @@ JSON;
             ],
             'query' => '{borough : "Bronx", cuisine: "Bakery", "address.zipcode": "10452"}',
             'name' => 'export-multi-fields-paths',
+            'mapping' => [
+                'name' => [
+                    'type' => 'column',
+                    'mapping' => [
+                        'destination' => 'name'
+                    ]
+                ],
+            ],
         ];
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
@@ -180,6 +212,14 @@ JSON;
             'sort' => '{"address.street": 1}',
             'limit' => 3,
             'name' => 'export-multi-with-sort-and-limit',
+            'mapping' => [
+                'name' => [
+                    'type' => 'column',
+                    'mapping' => [
+                        'destination' => 'name'
+                    ]
+                ],
+            ],
         ];
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
@@ -218,6 +258,14 @@ JSON;
             ],
             'query' => '{a: b}', // invalid JSON
             'name' => 'export-bad-query',
+            'mapping' => [
+                'name' => [
+                    'type' => 'column',
+                    'mapping' => [
+                        'destination' => 'name'
+                    ]
+                ],
+            ],
         ];
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
@@ -243,6 +291,14 @@ JSON;
             ],
             'query' => '{_id: ObjectId("5716054bee6e764c94fa7ddd")}',
             'name' => 'export-random-database',
+            'mapping' => [
+                'name' => [
+                    'type' => 'column',
+                    'mapping' => [
+                        'destination' => 'name'
+                    ]
+                ],
+            ],
         ];
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
