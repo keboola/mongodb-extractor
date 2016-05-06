@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "216b3f2719c096f736f6655aed155b67",
-    "content-hash": "710a6461931c8608c49df8ed3eda0b7a",
+    "hash": "a4930afd87767eeac32fd22e6ebfcd91",
+    "content-hash": "576c790123948d70bb53facbc97bbc4a",
     "packages": [
         {
             "name": "keboola/csv",
-            "version": "1.1.3",
+            "version": "1.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-csv.git",
-                "reference": "113735ad9f4f7e0ef5545ebfb5fcd62528035841"
+                "reference": "d7e257096c42eab09b54b7b46a905ca953a8eb6f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-csv/zipball/113735ad9f4f7e0ef5545ebfb5fcd62528035841",
-                "reference": "113735ad9f4f7e0ef5545ebfb5fcd62528035841",
+                "url": "https://api.github.com/repos/keboola/php-csv/zipball/d7e257096c42eab09b54b7b46a905ca953a8eb6f",
+                "reference": "d7e257096c42eab09b54b7b46a905ca953a8eb6f",
                 "shasum": ""
             },
             "require-dev": {
@@ -36,7 +36,55 @@
             ],
             "description": "Keboola CSV reader and writer",
             "homepage": "http://keboola.com",
-            "time": "2014-01-31 14:10:34"
+            "time": "2016-04-21 20:46:22"
+        },
+        {
+            "name": "keboola/csvmap",
+            "version": "0.2.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/keboola/php-csvmap.git",
+                "reference": "5ed1be3e3e21eb9037ba150e2ac08ef7cc62f3e2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/keboola/php-csvmap/zipball/5ed1be3e3e21eb9037ba150e2ac08ef7cc62f3e2",
+                "reference": "5ed1be3e3e21eb9037ba150e2ac08ef7cc62f3e2",
+                "shasum": ""
+            },
+            "require": {
+                "keboola/csv": "~1.1.4",
+                "keboola/php-csvtable": "~0.1.6",
+                "keboola/php-utils": "~0.1.20",
+                "php": ">=5.6.0"
+            },
+            "require-dev": {
+                "codeclimate/php-test-reporter": "dev-master",
+                "phpunit/phpunit": "^5.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Keboola\\CsvMap": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ondrej Vana",
+                    "email": "kachna@keboola.cz"
+                }
+            ],
+            "description": "Flatten an object into a CSV file(s)",
+            "keywords": [
+                "csv",
+                "flatten",
+                "object"
+            ],
+            "time": "2016-04-21 22:57:20"
         },
         {
             "name": "keboola/db-extractor-common",
@@ -78,57 +126,6 @@
                 }
             ],
             "time": "2016-04-21 14:24:18"
-        },
-        {
-            "name": "keboola/json-parser",
-            "version": "1.0.11",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/keboola/php-jsonparser.git",
-                "reference": "5f437e51130e02ce4d660f4db2f9c566f0095c96"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-jsonparser/zipball/5f437e51130e02ce4d660f4db2f9c566f0095c96",
-                "reference": "5f437e51130e02ce4d660f4db2f9c566f0095c96",
-                "shasum": ""
-            },
-            "require": {
-                "keboola/php-csvtable": "~0.1.0",
-                "keboola/php-temp": "~0.1.0",
-                "keboola/php-utils": "~0.1.18",
-                "monolog/monolog": "~1.8",
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "codeclimate/php-test-reporter": "dev-master",
-                "phpunit/phpunit": "^5.2"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Keboola\\Json": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Ondrej Vana",
-                    "email": "kachna@keboola.cz"
-                }
-            ],
-            "description": "Keboola JSON to CSV parser",
-            "keywords": [
-                "converter",
-                "csv",
-                "json",
-                "json2csv",
-                "parser"
-            ],
-            "time": "2016-03-17 03:53:26"
         },
         {
             "name": "keboola/php-csvtable",
