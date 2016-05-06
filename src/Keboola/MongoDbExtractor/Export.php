@@ -23,6 +23,12 @@ class Export
     /** @var string */
     private $name;
 
+    /** @var array */
+    private $mapping;
+
+    /** @var Filesystem */
+    private $fs;
+
     /**
      * Mapping:
      * - compatibility with db-extractor-common
@@ -35,12 +41,14 @@ class Export
         '#password' => 'password',
     ];
 
-    public function __construct(array $connectionOptions, array $exportOptions, $path, $name)
+    public function __construct(array $connectionOptions, array $exportOptions, $path, $name, $mapping)
     {
         $this->connectionOptions = $connectionOptions;
         $this->exportOptions = $exportOptions;
         $this->path = $path;
         $this->name = $name;
+        $this->mapping = $mapping;
+        $this->fs = new Filesystem;
 
         foreach ($this->connectionOptionsMapping as $from => $to) {
             if (isset($this->connectionOptions[$from])) {

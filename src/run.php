@@ -37,7 +37,13 @@ try {
 
     $exports = [];
     foreach ($parameters['exports'] as $exportOptions) {
-        $exports[] = new Export($parameters['db'], $exportOptions, $outputPath, $exportOptions['name']);
+        $exports[] = new Export(
+            $parameters['db'],
+            $exportOptions,
+            $outputPath,
+            $exportOptions['name'],
+            $exportOptions['mapping']
+        );
     }
 
     $extractor = new Extractor($parameters, new Logger('keboola.ex-mongodb'));

@@ -33,7 +33,13 @@ abstract class ExtractorTestCase extends \PHPUnit_Framework_TestCase
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
         $export = $extractor->export([
-            new Export($this->getConfig()['parameters']['db'], $exportParams, $this->path, $exportParams['name']),
+            new Export(
+                $this->getConfig()['parameters']['db'],
+                $exportParams,
+                $this->path,
+                $exportParams['name'],
+                $exportParams['mapping']
+            ),
         ]);
 
         $this->assertTrue($export, 'Command successful');
@@ -62,7 +68,13 @@ abstract class ExtractorTestCase extends \PHPUnit_Framework_TestCase
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
         $export = $extractor->export([
-            new Export($this->getConfig()['parameters']['db'], $exportParams, $this->path, $exportParams['name']),
+            new Export(
+                $this->getConfig()['parameters']['db'],
+                $exportParams,
+                $this->path,
+                $exportParams['name'],
+                $exportParams['mapping']
+            ),
         ]);
 
         $this->assertTrue($export, 'Command successful');
@@ -93,7 +105,13 @@ JSON;
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
         $export = $extractor->export([
-            new Export($this->getConfig()['parameters']['db'], $exportParams, $this->path, $exportParams['name']),
+            new Export(
+                $this->getConfig()['parameters']['db'],
+                $exportParams,
+                $this->path,
+                $exportParams['name'],
+                $exportParams['mapping']
+            ),
         ]);
 
         $this->assertTrue($export, 'Command successful');
@@ -126,7 +144,13 @@ JSON;
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
         $export = $extractor->export([
-            new Export($this->getConfig()['parameters']['db'], $exportParams, $this->path, $exportParams['name']),
+            new Export(
+                $this->getConfig()['parameters']['db'],
+                $exportParams,
+                $this->path,
+                $exportParams['name'],
+                $exportParams['mapping']
+            ),
         ]);
 
         $this->assertTrue($export, 'Command successful');
@@ -160,7 +184,13 @@ JSON;
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
         $export = $extractor->export([
-            new Export($this->getConfig()['parameters']['db'], $exportParams, $this->path, $exportParams['name']),
+            new Export(
+                $this->getConfig()['parameters']['db'],
+                $exportParams,
+                $this->path,
+                $exportParams['name'],
+                $exportParams['mapping']
+            ),
         ]);
 
         $this->assertTrue($export, 'Command successful');
@@ -192,7 +222,13 @@ JSON;
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
         $extractor->export([
-            new Export($this->getConfig()['parameters']['db'], $exportParams, $this->path, $exportParams['name']),
+            new Export(
+                $this->getConfig()['parameters']['db'],
+                $exportParams,
+                $this->path,
+                $exportParams['name'],
+                $exportParams['mapping']
+            ),
         ]);
     }
 
@@ -211,7 +247,13 @@ JSON;
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
         $export = $extractor->export([
-            new Export($this->getConfig()['parameters']['db'], $exportParams, $this->path, $exportParams['name']),
+            new Export(
+                $this->getConfig()['parameters']['db'],
+                $exportParams,
+                $this->path,
+                $exportParams['name'],
+                $exportParams['mapping']
+            ),
         ]);
 
         $this->assertTrue($export, 'Command successful');

@@ -47,7 +47,8 @@ YAML;
             $config['parameters']['db'],
             $config['parameters']['exports'][0],
             $this->path,
-            $config['parameters']['exports'][0]['name']
+            $config['parameters']['exports'][0]['name'],
+            $config['parameters']['exports'][0]['mapping']
         );
 
         $export->createManifest();
@@ -87,7 +88,8 @@ YAML;
             $config['parameters']['db'],
             $config['parameters']['exports'][0],
             $this->path,
-            $config['parameters']['exports'][0]['name']
+            $config['parameters']['exports'][0]['name'],
+            $config['parameters']['exports'][0]['mapping']
         );
 
         $export->createManifest();

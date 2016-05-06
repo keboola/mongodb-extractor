@@ -28,6 +28,8 @@ parameters:
       primaryKey:
         - _id
       incremental: false
+      mapping:
+        _id:
 YAML;
 
         $config = Yaml::parse($yaml);
