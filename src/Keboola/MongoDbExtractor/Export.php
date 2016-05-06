@@ -2,6 +2,7 @@
 
 namespace Keboola\MongoDbExtractor;
 
+use Keboola\CsvMap\Mapper;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Yaml\Yaml;
@@ -66,6 +67,38 @@ class Export
     {
         $process = new Process($this->exportCommand->getCommand(), null, null, null, null);
         $process->mustRun();
+    }
+
+    /**
+     * Parses exported json and creates .csv and .manifest files
+     * @throws \Keboola\CsvMap\Exception\BadDataException
+     * @throws \Keboola\Csv\Exception
+     */
+    public function parseAndCreateManifest()
+    {
+        $data = json_decode(file_get_contents($this->getOutputFilename()));
+
+        $parser = new Mapper($this->mapping, $this->name);
+        $parser->parse($data);
+
+        foreach ($parser->getCsvFiles() as $file) {
+            $outputCsv = $this->path . '/' . $file->getName() . '.csv';
+            $this->fs->copy($file->getPathname(), $outputCsv);
+
+            if (isset($this->exportOptions['incremental'])) {
+                $config['incremental'] = (bool) $this->exportOptions['incremental'];
+            }
+
+            $manifest = [
+                'primary_key' => $file->getPrimaryKey(true),
+                'incremental' => isset($this->exportOptions['incremental'])
+                    ? (bool) $this->exportOptions['incremental']
+                    : false,
+            ];
+
+            $this->fs->dumpFile($outputCsv . '.manifest', Yaml::dump($manifest));
+            $this->fs->remove($file->getPathname());
+        }
     }
 
     /**
