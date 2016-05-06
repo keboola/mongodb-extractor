@@ -102,17 +102,6 @@ class Export
     }
 
     /**
-     * Creates manifest file
-     */
-    public function createManifest()
-    {
-        (new Filesystem)->dumpFile(
-            $this->getOutputFilename() . '.manifest',
-            Yaml::dump($this->getManifestOptions())
-        );
-    }
-
-    /**
      * Creates command
      */
     private function createCommand()
