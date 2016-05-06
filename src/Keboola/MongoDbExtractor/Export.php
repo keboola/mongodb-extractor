@@ -85,10 +85,6 @@ class Export
             $outputCsv = $this->path . '/' . $file->getName() . '.csv';
             $this->fs->copy($file->getPathname(), $outputCsv);
 
-            if (isset($this->exportOptions['incremental'])) {
-                $config['incremental'] = (bool) $this->exportOptions['incremental'];
-            }
-
             $manifest = [
                 'primary_key' => $file->getPrimaryKey(true),
                 'incremental' => isset($this->exportOptions['incremental'])
@@ -119,25 +115,5 @@ class Export
     public function getOutputFilename()
     {
         return $this->path . '/' . $this->name . '.json';
-    }
-
-    /**
-     * Gets manifest file options
-     * @return array
-     */
-    public function getManifestOptions()
-    {
-        $config = [
-            'incremental' => true,
-        ];
-
-        if (isset($this->exportOptions['incremental'])) {
-            $config['incremental'] = (bool) $this->exportOptions['incremental'];
-        }
-        if (isset($this->exportOptions['primaryKey'])) {
-            $config['primary_key'] = $this->exportOptions['primaryKey'];
-        }
-
-        return $config;
     }
 }
