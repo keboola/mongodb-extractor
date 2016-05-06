@@ -29,7 +29,7 @@ class Extractor extends \Keboola\DbExtractor\Extractor\Extractor
     {
         foreach ($exports as $export) {
             $export->export();
-            $export->createManifest();
+            $export->parseAndCreateManifest();
         }
 
         return true;
