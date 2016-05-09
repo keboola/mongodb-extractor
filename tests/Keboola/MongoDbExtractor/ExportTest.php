@@ -38,6 +38,7 @@ parameters:
     - name: bakeries
       collection: restaurants
       query: '{borough: "Bronx", "address.street": "Westchester Avenue"}'
+      incremental: true
       mapping:
         '_id.\$oid':
           type: column
@@ -108,7 +109,7 @@ CSV;
         $expectedYamlMain = <<<YAML
 primary_key:
     - id
-incremental: false\n
+incremental: true\n
 YAML;
         $this->assertFileExists($expectedYamlFileMain);
         $this->assertEquals($expectedYamlMain, file_get_contents($expectedYamlFileMain));
@@ -133,7 +134,7 @@ CSV;
 primary_key:
     - zipcode
     - street
-incremental: false\n
+incremental: true\n
 YAML;
         $this->assertFileExists($expectedYamlFileRelated);
         $this->assertEquals($expectedYamlRelated, file_get_contents($expectedYamlFileRelated));
