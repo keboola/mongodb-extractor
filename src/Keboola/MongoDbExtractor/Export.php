@@ -82,22 +82,23 @@ class Export
         $parser->parse($data);
 
         foreach ($parser->getCsvFiles() as $file) {
-            $outputCsv = $this->path . '/' . $file->getName() . '.csv';
-            $this->fs->copy($file->getPathname(), $outputCsv);
+            if ($file !== null) {
+                $outputCsv = $this->path . '/' . $file->getName() . '.csv';
+                $this->fs->copy($file->getPathname(), $outputCsv);
 
-            $manifest = [
-                'primary_key' => $file->getPrimaryKey(true),
-                'incremental' => isset($this->exportOptions['incremental'])
-                    ? (bool) $this->exportOptions['incremental']
-                    : false,
-            ];
+                $manifest = [
+                    'primary_key' => $file->getPrimaryKey(true),
+                    'incremental' => isset($this->exportOptions['incremental'])
+                        ? (bool) $this->exportOptions['incremental']
+                        : false,
+                ];
 
-            $this->fs->dumpFile($outputCsv . '.manifest', Yaml::dump($manifest));
-            $this->fs->remove([
-                $this->getOutputFilename(),
-                $file->getPathname()
-            ]);
+                $this->fs->dumpFile($outputCsv . '.manifest', Yaml::dump($manifest));
+                $this->fs->remove($file->getPathname());
+            }
         }
+
+        $this->fs->remove($this->getOutputFilename());
     }
 
     /**
