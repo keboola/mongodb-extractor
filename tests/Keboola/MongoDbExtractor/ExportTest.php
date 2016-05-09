@@ -44,24 +44,15 @@ parameters:
           mapping:
             destination: id
             primaryKey: true
-        name:
-          type: column
-          mapping:
-            destination: name
+        name: name
         address:
           type: table
           destination: bakeries-coords
           parentKey:
             destination: bakeries_id
           tableMapping:
-            coord.0:
-              type: column
-              mapping:
-                destination: w
-            coord.1:
-              type: column
-              mapping:
-                destination: n
+            coord.0: w
+            coord.1: n
             zipcode:
               type: column
               mapping:

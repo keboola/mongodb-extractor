@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a4930afd87767eeac32fd22e6ebfcd91",
-    "content-hash": "576c790123948d70bb53facbc97bbc4a",
+    "hash": "2fe19f7543b8b53bf00e9020b8e0a81d",
+    "content-hash": "57a5cd63aad7f42aa2731b164deaba3c",
     "packages": [
         {
             "name": "keboola/csv",
@@ -40,16 +40,16 @@
         },
         {
             "name": "keboola/csvmap",
-            "version": "0.2.3",
+            "version": "0.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-csvmap.git",
-                "reference": "5ed1be3e3e21eb9037ba150e2ac08ef7cc62f3e2"
+                "reference": "fc1d43c015214dbf4de2c9c3414a14c0623b1346"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-csvmap/zipball/5ed1be3e3e21eb9037ba150e2ac08ef7cc62f3e2",
-                "reference": "5ed1be3e3e21eb9037ba150e2ac08ef7cc62f3e2",
+                "url": "https://api.github.com/repos/keboola/php-csvmap/zipball/fc1d43c015214dbf4de2c9c3414a14c0623b1346",
+                "reference": "fc1d43c015214dbf4de2c9c3414a14c0623b1346",
                 "shasum": ""
             },
             "require": {
@@ -84,7 +84,7 @@
                 "flatten",
                 "object"
             ],
-            "time": "2016-04-21 22:57:20"
+            "time": "2016-05-08 04:08:31"
         },
         {
             "name": "keboola/db-extractor-common",
