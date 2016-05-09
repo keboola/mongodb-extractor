@@ -128,6 +128,7 @@ Which is shorthand definition for:
 
 ## Tips
 
+- Use combination of `limit` and `query` while playing with configuration or mapping
 - Check `mongoexport` command documentation to learn more about
 [query](https://docs.mongodb.org/v3.2/reference/program/mongoexport/#cmdoption--query),
 [sort](https://docs.mongodb.org/v3.2/reference/program/mongoexport/#cmdoption--sort)
