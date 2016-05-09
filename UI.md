@@ -23,12 +23,7 @@
                         "primaryKey": true
                     }
                 },
-                "name": {
-                    "type": "column",
-                    "mapping": {
-                    "destination": "name"
-                    }
-                }
+                "name": "name"
             }
         },
         {
@@ -43,12 +38,7 @@
                         "primaryKey": true
                     }
                 },
-                "name": {
-                    "type": "column",
-                    "mapping": {
-                    "destination": "name"
-                    }
-                }
+                "name": "name"
             }
         }
     ]
@@ -97,12 +87,48 @@ key to this field by defining first item in mapping section:
     }
 }
 ```
-*Note: Column with primary key should be named `id` no `_id` to prevent problems with data import.*
+*Note: Column with primary key should be named `id` not `_id` to prevent problems with data import.*
 
+## Handling MongoDB data types
+
+To handle MongoDB data types correctly, define mapping similar way as following example (`MongoId`, `ISODate` and `NumberLong`):
+
+```json
+{
+    "_id.$oid": "id",
+    "publishedAt.$date": "publishedAt",
+    "views.$numberLong": "views"
+}
+```
+
+Which is shorthand definition for:
+
+```json
+{
+    "_id.$oid": {
+        "type": "column",
+        "mapping": {
+            "destination": "id"
+        }
+    },
+    "publishedAt.$date": {
+        "type": "column",
+        "mapping": {
+            "destination": "publishedAt"
+        }
+    },
+    "views.$numberLong": {
+        "type": "column",
+        "mapping": {
+            "destination": "views"
+        }
+    }
+}
+```
 
 ## Tips
 
 - Check `mongoexport` command documentation to learn more about
-[query](https://docs.mongodb.org/v3.2/reference/program/mongoexport/#cmdoption--query)
+[query](https://docs.mongodb.org/v3.2/reference/program/mongoexport/#cmdoption--query),
 [sort](https://docs.mongodb.org/v3.2/reference/program/mongoexport/#cmdoption--sort)
 or [MongoDB Extended JSON](https://docs.mongodb.org/v3.2/reference/mongodb-extended-json/)
