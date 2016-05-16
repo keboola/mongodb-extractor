@@ -43,6 +43,7 @@ abstract class ExtractorTestCase extends \PHPUnit_Framework_TestCase
             'collection' => 'restaurants',
             'name' => 'export-all',
             'mapping' => $this->getMapping(),
+            'enabled' => true,
         ];
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
@@ -74,6 +75,7 @@ abstract class ExtractorTestCase extends \PHPUnit_Framework_TestCase
             'query' => '{_id: ObjectId("5716054bee6e764c94fa7ddd")}',
             'name' => 'export-one',
             'mapping' => $this->getMapping(),
+            'enabled' => true,
         ];
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
@@ -107,6 +109,7 @@ CSV;
             'query' => '{borough : "Bronx", cuisine: "Bakery", "address.zipcode": "10452"}',
             'name' => 'export-multi',
             'mapping' => $this->getMapping(),
+            'enabled' => true,
         ];
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
@@ -142,6 +145,7 @@ CSV;
             'query' => '{borough : "Bronx", cuisine: "Bakery", "address.zipcode": "10452"}',
             'name' => 'export-multi-fields-paths',
             'mapping' => $this->getMapping(),
+            'enabled' => true,
         ];
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
@@ -180,6 +184,7 @@ CSV;
             'limit' => 3,
             'name' => 'export-multi-with-sort-and-limit',
             'mapping' => $this->getMapping(),
+            'enabled' => true,
         ];
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
@@ -217,6 +222,7 @@ CSV;
             'query' => '{a: b}', // invalid JSON
             'name' => 'export-bad-query',
             'mapping' => $this->getMapping(),
+            'enabled' => true,
         ];
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
@@ -238,6 +244,7 @@ CSV;
             'query' => '{_id: ObjectId("5716054bee6e764c94fa7ddd")}',
             'name' => 'export-random-database',
             'mapping' => $this->getMapping(),
+            'enabled' => true,
         ];
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);

@@ -24,12 +24,22 @@ class Extractor extends \Keboola\DbExtractor\Extractor\Extractor
      * Perform execution of all export commands
      * @param Export[] $exports
      * @return bool
+     * @throws \Exception
      */
     public function export(array $exports)
     {
+        $count = 0;
+
         foreach ($exports as $export) {
-            $export->export();
-            $export->parseAndCreateManifest();
+            if ($export->isEnabled()) {
+                $count++;
+                $export->export();
+                $export->parseAndCreateManifest();
+            }
+        }
+
+        if ($count === 0) {
+            throw new \Exception('Please enable at least one export');
         }
 
         return true;
