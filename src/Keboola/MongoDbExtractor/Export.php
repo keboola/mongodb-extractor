@@ -120,4 +120,13 @@ class Export
     {
         return $this->path . '/' . $this->name . '.json';
     }
+
+    /**
+     * Returns if export is enabled
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return isset($this->exportOptions['enabled']) && $this->exportOptions['enabled'] === true;
+    }
 }
