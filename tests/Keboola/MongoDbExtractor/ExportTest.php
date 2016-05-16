@@ -36,6 +36,7 @@ parameters:
     database: test
   exports:
     - name: bakeries
+      id: 123
       collection: restaurants
       query: '{borough: "Bronx", "address.street": "Westchester Avenue"}'
       incremental: true

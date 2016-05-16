@@ -20,6 +20,7 @@ parameters:
     password: password
   exports:
     - name: bronx-bakeries
+      id: 123
       collection: 'restaurants'
       query: '{borough: "Bronx"}'
       incremental: false

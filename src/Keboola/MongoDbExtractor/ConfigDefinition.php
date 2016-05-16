@@ -37,6 +37,7 @@ class ConfigDefinition extends DbExtractorConfigDefinition
                 ->arrayNode('exports')
                     ->prototype('array')
                         ->children()
+                            ->scalarNode('id')->end()
                             ->scalarNode('name')
                                 ->isRequired()
                                 ->cannotBeEmpty()
