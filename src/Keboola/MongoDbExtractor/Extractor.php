@@ -7,6 +7,9 @@ use MongoDB\Driver\Command;
 
 class Extractor extends \Keboola\DbExtractor\Extractor\Extractor
 {
+    /** @var Manager */
+    protected $db;
+
     /**
      * Tries to ping database server
      * @param $params
@@ -18,6 +21,14 @@ class Extractor extends \Keboola\DbExtractor\Extractor\Extractor
         $manager->executeCommand('local', new Command(['ping' => 1]));
 
         return $manager;
+    }
+
+    /**
+     * Tests connection
+     */
+    public function testConnection()
+    {
+        $this->db->executeCommand('local', new Command(['ping' => 1]));
     }
 
     /**
