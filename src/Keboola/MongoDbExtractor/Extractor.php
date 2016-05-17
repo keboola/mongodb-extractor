@@ -18,7 +18,6 @@ class Extractor extends \Keboola\DbExtractor\Extractor\Extractor
     public function createConnection($params)
     {
         $manager = new Manager('mongodb://' . $params['host'] .':' . $params['port']);
-        $manager->executeCommand('local', new Command(['ping' => 1]));
 
         return $manager;
     }
