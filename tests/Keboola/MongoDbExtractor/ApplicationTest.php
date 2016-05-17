@@ -10,7 +10,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     /** @var Filesystem */
     private $fs;
 
-    protected $path = '/tmp/export';
+    protected $path = '/tmp/application-test';
 
     protected function setUp()
     {
@@ -168,5 +168,36 @@ incremental: true\n
 YAML;
         $this->assertFileExists($expectedYamlFileRelated);
         $this->assertEquals($expectedYamlRelated, file_get_contents($expectedYamlFileRelated));
+    }
+
+    public function testActionRunDuplicateExportNames()
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Please remove duplicate export names');
+
+        $yaml = <<<YAML
+parameters:
+  db:
+    host: locahost # different host
+    port: 27017
+    database: test
+  exports:
+    - name: bakeries
+      id: 123
+      collection: restaurants
+      incremental: true
+      mapping:
+        '_id.\$oid': id
+    - name: bakeries
+      id: 123
+      collection: restaurants
+      incremental: true
+      mapping:
+        '_id.\$oid': id
+YAML;
+        $config =  Yaml::parse($yaml);
+
+        $application = new Application($config);
+        $application->actionRun($this->path);
     }
 }
