@@ -6,6 +6,7 @@ use Keboola\CsvMap\Mapper;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Yaml\Yaml;
+use Nette\Utils\Strings;
 
 class Export
 {

@@ -5,6 +5,7 @@ namespace Keboola\MongoDbExtractor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\Command;
 use Keboola\DbExtractor\Logger;
+use Nette\Utils\Strings;
 
 class Extractor extends \Keboola\DbExtractor\Extractor\Extractor
 {
@@ -75,20 +76,17 @@ class Extractor extends \Keboola\DbExtractor\Extractor\Extractor
      */
     public function extract($outputPath)
     {
-        $exports = [];
+        $count = 0;
+
         foreach ($this->parameters['exports'] as $exportOptions) {
-            $exports[] = new Export(
+            $export = new Export(
                 $this->parameters['db'],
                 $exportOptions,
                 $outputPath,
-                $exportOptions['name'],
+                Strings::webalize($exportOptions['name']),
                 $exportOptions['mapping']
             );
-        }
 
-        $count = 0;
-
-        foreach ($exports as $export) {
             if ($export->isEnabled()) {
                 $count++;
                 $export->export();

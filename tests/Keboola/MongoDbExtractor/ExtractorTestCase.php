@@ -92,6 +92,35 @@ CSV;
 
     }
 
+    public function testExportOneWebalizedName()
+    {
+        $exportParams = [
+            'collection' => 'restaurants',
+            'query' => '{_id: ObjectId("5716054bee6e764c94fa7ddd")}',
+            'name' => '_Reštaurácia s IDčkom 5716054bee6e764c94fa7ddd',
+            'mapping' => $this->getMapping(),
+            'enabled' => true,
+        ];
+
+        $parameters = $this->getConfig()['parameters'];
+        $parameters['exports'][] = $exportParams;
+
+        $extractor = new Extractor($parameters, $this->logger);
+        $export = $extractor->extract($this->path);
+
+        $this->assertTrue($export, 'Command successful');
+
+        $expectedJson = <<<CSV
+"id","name"
+"5716054bee6e764c94fa7ddd","Morris Park Bake Shop"\n
+CSV;
+        $expectedFile = $this->path . '/' . 'restauracia-s-idckom-5716054bee6e764c94fa7ddd.csv';
+
+        $this->assertFileExists($expectedFile);
+        $this->assertEquals($expectedJson, file_get_contents($expectedFile));
+
+    }
+
     public function testExportMulti()
     {
         $exportParams = [
