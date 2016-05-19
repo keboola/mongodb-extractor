@@ -46,16 +46,11 @@ abstract class ExtractorTestCase extends \PHPUnit_Framework_TestCase
             'enabled' => true,
         ];
 
-        $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
-        $export = $extractor->export([
-            new Export(
-                $this->getConfig()['parameters']['db'],
-                $exportParams,
-                $this->path,
-                $exportParams['name'],
-                $exportParams['mapping']
-            ),
-        ]);
+        $parameters = $this->getConfig()['parameters'];
+        $parameters['exports'][] = $exportParams;
+
+        $extractor = new Extractor($parameters, $this->logger);
+        $export = $extractor->extract($this->path);
 
         $this->assertTrue($export, 'Command successful');
 
@@ -78,16 +73,11 @@ abstract class ExtractorTestCase extends \PHPUnit_Framework_TestCase
             'enabled' => true,
         ];
 
-        $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
-        $export = $extractor->export([
-            new Export(
-                $this->getConfig()['parameters']['db'],
-                $exportParams,
-                $this->path,
-                $exportParams['name'],
-                $exportParams['mapping']
-            ),
-        ]);
+        $parameters = $this->getConfig()['parameters'];
+        $parameters['exports'][] = $exportParams;
+
+        $extractor = new Extractor($parameters, $this->logger);
+        $export = $extractor->extract($this->path);
 
         $this->assertTrue($export, 'Command successful');
 
@@ -112,16 +102,11 @@ CSV;
             'enabled' => true,
         ];
 
-        $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
-        $export = $extractor->export([
-            new Export(
-                $this->getConfig()['parameters']['db'],
-                $exportParams,
-                $this->path,
-                $exportParams['name'],
-                $exportParams['mapping']
-            ),
-        ]);
+        $parameters = $this->getConfig()['parameters'];
+        $parameters['exports'][] = $exportParams;
+
+        $extractor = new Extractor($parameters, $this->logger);
+        $export = $extractor->extract($this->path);
 
         $this->assertTrue($export, 'Command successful');
 
@@ -148,16 +133,11 @@ CSV;
             'enabled' => true,
         ];
 
-        $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
-        $export = $extractor->export([
-            new Export(
-                $this->getConfig()['parameters']['db'],
-                $exportParams,
-                $this->path,
-                $exportParams['name'],
-                $exportParams['mapping']
-            ),
-        ]);
+        $parameters = $this->getConfig()['parameters'];
+        $parameters['exports'][] = $exportParams;
+
+        $extractor = new Extractor($parameters, $this->logger);
+        $export = $extractor->extract($this->path);
 
         $this->assertTrue($export, 'Command successful');
 
@@ -187,16 +167,11 @@ CSV;
             'enabled' => true,
         ];
 
-        $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
-        $export = $extractor->export([
-            new Export(
-                $this->getConfig()['parameters']['db'],
-                $exportParams,
-                $this->path,
-                $exportParams['name'],
-                $exportParams['mapping']
-            ),
-        ]);
+        $parameters = $this->getConfig()['parameters'];
+        $parameters['exports'][] = $exportParams;
+
+        $extractor = new Extractor($parameters, $this->logger);
+        $export = $extractor->extract($this->path);
 
         $this->assertTrue($export, 'Command successful');
 
@@ -225,16 +200,11 @@ CSV;
             'enabled' => true,
         ];
 
-        $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
-        $extractor->export([
-            new Export(
-                $this->getConfig()['parameters']['db'],
-                $exportParams,
-                $this->path,
-                $exportParams['name'],
-                $exportParams['mapping']
-            ),
-        ]);
+        $parameters = $this->getConfig()['parameters'];
+        $parameters['exports'][] = $exportParams;
+
+        $extractor = new Extractor($parameters, $this->logger);
+        $export = $extractor->extract($this->path);
     }
 
     public function testExportRandomCollection()
@@ -247,16 +217,11 @@ CSV;
             'enabled' => true,
         ];
 
-        $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
-        $export = $extractor->export([
-            new Export(
-                $this->getConfig()['parameters']['db'],
-                $exportParams,
-                $this->path,
-                $exportParams['name'],
-                $exportParams['mapping']
-            ),
-        ]);
+        $parameters = $this->getConfig()['parameters'];
+        $parameters['exports'][] = $exportParams;
+
+        $extractor = new Extractor($parameters, $this->logger);
+        $export = $extractor->extract($this->path);
 
         $this->assertTrue($export, 'Command successful');
 

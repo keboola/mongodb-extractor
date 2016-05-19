@@ -50,7 +50,7 @@ YAML;
         $this->assertSame(['status' => 'ok'], $application->actionTestConnection());
     }
 
-    public function testActionTestConnectionFail()
+    public function testActionTestConnectionFailWrongHost()
     {
         $this->expectException(\MongoDB\Driver\Exception\ConnectionTimeoutException::class);
 
@@ -60,6 +60,32 @@ parameters:
     host: locahost # different host
     port: 27017
     database: test
+  exports:
+    - name: bakeries
+      id: 123
+      collection: restaurants
+      incremental: true
+      mapping:
+        '_id.\$oid': id
+YAML;
+        $config =  Yaml::parse($yaml);
+
+        $application = new Application($config);
+        $application->actionTestConnection();
+    }
+
+    public function testActionTestConnectionFailWrongPassword()
+    {
+        $this->expectException(\MongoDB\Driver\Exception\AuthenticationException::class);
+
+        $yaml = <<<YAML
+parameters:
+  db:
+    host: mongodb
+    port: 27017
+    database: test
+    user: user
+    password: random-password
   exports:
     - name: bakeries
       id: 123
