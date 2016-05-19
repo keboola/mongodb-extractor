@@ -4,40 +4,88 @@ namespace Keboola\MongoDbExtractor;
 
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\Command;
+use Keboola\DbExtractor\Logger;
 
 class Extractor extends \Keboola\DbExtractor\Extractor\Extractor
 {
     /** @var Manager */
     protected $db;
 
+    /** @var array */
+    private $parameters;
+
     /**
-     * Tries to ping database server
+     * Mapping:
+     * - compatibility with db-extractor-common
+     * - encrypted password
+     * @var array
+     */
+    private $dbParamsMapping = [
+        'user' => 'username',
+        'database' => 'db',
+        '#password' => 'password',
+    ];
+
+    public function __construct($parameters, Logger $logger)
+    {
+        $this->parameters = $parameters;
+
+        foreach ($this->dbParamsMapping as $from => $to) {
+            if (isset($this->parameters['db'][$from])) {
+                $this->parameters['db'][$to] = $this->parameters['db'][$from];
+            }
+        }
+
+        parent::__construct($this->parameters, $logger);
+    }
+
+    /**
+     * Creates connection
      * @param $params
      * @return Manager
      */
     public function createConnection($params)
     {
-        $manager = new Manager('mongodb://' . $params['host'] .':' . $params['port']);
+        $uri = ['mongodb://'];
+
+        if (isset($params['username'], $params['password'])) {
+            $uri[] = $params['username'] . ':' . $params['password'] . '@';
+        }
+
+        $uri[] = $params['host'] .':' . $params['port'] . '/' . $params['db'];
+
+        $manager = new Manager(implode('', $uri));
 
         return $manager;
     }
 
     /**
-     * Tests connection
+     * Sends ping command to database
      */
     public function testConnection()
     {
-        $this->db->executeCommand('local', new Command(['ping' => 1]));
+        $this->db->executeCommand($this->parameters['db']['database'], new Command(['ping' => 1]));
     }
 
     /**
-     * Perform execution of all export commands
-     * @param Export[] $exports
+     * Creates exports and runs extraction
+     * @param $outputPath
      * @return bool
      * @throws \Exception
      */
-    public function export(array $exports)
+    public function extract($outputPath)
     {
+        $exports = [];
+        foreach ($this->parameters['exports'] as $exportOptions) {
+            $exports[] = new Export(
+                $this->parameters['db'],
+                $exportOptions,
+                $outputPath,
+                $exportOptions['name'],
+                $exportOptions['mapping']
+            );
+        }
+
         $count = 0;
 
         foreach ($exports as $export) {

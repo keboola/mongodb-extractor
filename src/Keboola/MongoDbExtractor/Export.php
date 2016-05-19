@@ -30,18 +30,6 @@ class Export
     /** @var Filesystem */
     private $fs;
 
-    /**
-     * Mapping:
-     * - compatibility with db-extractor-common
-     * - encrypted password
-     * @var array
-     */
-    private $connectionOptionsMapping = [
-        'user' => 'username',
-        'database' => 'db',
-        '#password' => 'password',
-    ];
-
     public function __construct(array $connectionOptions, array $exportOptions, $path, $name, $mapping)
     {
         $this->connectionOptions = $connectionOptions;
@@ -50,12 +38,6 @@ class Export
         $this->name = $name;
         $this->mapping = $mapping;
         $this->fs = new Filesystem;
-
-        foreach ($this->connectionOptionsMapping as $from => $to) {
-            if (isset($this->connectionOptions[$from])) {
-                $this->connectionOptions[$to] = $this->connectionOptions[$from];
-            }
-        }
 
         $this->createCommand();
     }
