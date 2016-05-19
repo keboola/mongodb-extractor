@@ -4,9 +4,8 @@ namespace Keboola\MongoDbExtractor;
 
 use Symfony\Component\Yaml\Yaml;
 use Keboola\DbExtractor\Logger;
-use Keboola\DbExtractor\Exception\UserException;
 
-class ExtractorNotEnabledExportsTes extends \PHPUnit_Framework_TestCase
+class ExtractorNotEnabledExportsTest extends \PHPUnit_Framework_TestCase
 {
     private $logger;
 
@@ -41,19 +40,9 @@ YAML;
     public function testWrongConnection()
     {
         $this->expectException(\Exception::class);
-
-        $exportParams = $this->getConfig()['parameters']['exports'][0];
+        $this->expectExceptionMessage('Please enable at least one export');
 
         $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
-
-        $extractor->export([
-            new Export(
-                $this->getConfig()['parameters']['db'],
-                $exportParams,
-                $this->path,
-                $exportParams['name'],
-                $exportParams['mapping']
-            ),
-        ]);
+        $extractor->extract($this->path);
     }
 }
