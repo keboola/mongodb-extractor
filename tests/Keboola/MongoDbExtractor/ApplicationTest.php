@@ -123,7 +123,7 @@ parameters:
         name: name
         address:
           type: table
-          destination: bakeries-coords
+          destination: Bakeries Coords
           parentKey:
             destination: bakeries_id
           tableMapping:

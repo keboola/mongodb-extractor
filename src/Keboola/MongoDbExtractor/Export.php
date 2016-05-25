@@ -66,7 +66,7 @@ class Export
 
         foreach ($parser->getCsvFiles() as $file) {
             if ($file !== null) {
-                $outputCsv = $this->path . '/' . $file->getName() . '.csv';
+                $outputCsv = $this->path . '/' . Strings::webalize($file->getName()) . '.csv';
                 $this->fs->copy($file->getPathname(), $outputCsv);
 
                 $manifest = [
