@@ -84,7 +84,7 @@ class MongoExportCommandJson
         $command[] = '--collection ' . escapeshellarg($this->options['collection']);
 
         foreach (['query', 'sort', 'limit'] as $option) {
-            if (isset($this->options[$option])) {
+            if (isset($this->options[$option]) && !empty(trim($this->options[$option]))) {
                 $command[] = '--' . $option . ' ' . escapeshellarg($this->options[$option]);
             }
         }
