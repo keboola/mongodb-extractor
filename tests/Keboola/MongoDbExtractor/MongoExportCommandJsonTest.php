@@ -45,6 +45,29 @@ BASH;
         $this->assertSame($expectedCommand, $command->getCommand());
     }
 
+    public function testWithEmptyOptionalValues()
+    {
+        $options = [
+            'host' => 'localhost',
+            'port' => 27017,
+            'username' => 'user',
+            'password' => 'pass',
+            'db' => 'myDatabase',
+            'collection' => 'myCollection',
+            'query' => '',
+            'sort' => ' ',
+            'limit' => '  ',
+            'out' => '/tmp/create-test.json',
+        ];
+
+        $command = new MongoExportCommandJson($options);
+        $expectedCommand = <<<BASH
+mongoexport --host 'localhost' --port '27017' --username 'user' --password 'pass' --db 'myDatabase' --collection 'myCollection' --type 'json' --out '/tmp/create-test.json' --jsonArray
+BASH;
+
+        $this->assertSame($expectedCommand, $command->getCommand());
+    }
+
     public function testValidateWithoutUser()
     {
         $this->expectException(MongoExportCommandException::class);
