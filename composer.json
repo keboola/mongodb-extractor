@@ -11,11 +11,11 @@
         }
     ],
     "require": {
-        "symfony/process": "~3.0",
-        "symfony/yaml": "~3.0",
+        "symfony/process": "~3.1",
+        "symfony/yaml": "~3.1",
         "keboola/db-extractor-common": "~3.1",
-        "symfony/filesystem": "~3.0",
-        "symfony/console": "~3.0",
+        "symfony/filesystem": "~3.1",
+        "symfony/console": "~3.1",
         "keboola/csvmap": "~0.2.4",
         "nette/utils": "~2.3"
     },
