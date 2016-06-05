@@ -3,6 +3,7 @@
 namespace Keboola\MongoDbExtractor;
 
 use Keboola\CsvMap\Mapper;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Yaml\Yaml;
@@ -31,6 +32,9 @@ class Export
     /** @var Filesystem */
     private $fs;
 
+    /** @var ConsoleOutput */
+    private $consoleOutput;
+
     public function __construct(array $connectionOptions, array $exportOptions, $path, $name, $mapping)
     {
         $this->connectionOptions = $connectionOptions;
@@ -39,6 +43,7 @@ class Export
         $this->name = $name;
         $this->mapping = $mapping;
         $this->fs = new Filesystem;
+        $this->consoleOutput = new ConsoleOutput;
 
         $this->createCommand();
     }
@@ -49,7 +54,10 @@ class Export
     public function export()
     {
         $process = new Process($this->exportCommand->getCommand(), null, null, null, null);
-        $process->mustRun();
+        $process->mustRun(function ($type, $buffer) {
+            // $type is always Process::ERR here, so we don't check it
+            $this->consoleOutput->write($buffer);
+        });
     }
 
     /**
