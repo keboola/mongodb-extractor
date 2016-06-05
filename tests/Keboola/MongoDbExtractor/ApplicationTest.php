@@ -113,6 +113,7 @@ parameters:
       id: 123
       collection: restaurants
       query: '{borough: "Bronx", "address.street": "Westchester Avenue"}'
+      sort: '{name: 1, _id: 1}'
       incremental: true
       mapping:
         '_id.\$oid':
@@ -150,12 +151,12 @@ YAML;
         $expectedCsvFileMain = $this->path . '/bakeries.csv';
         $expectedCsvMain = <<<CSV
 "id","name"
-"5716054bee6e764c94fa841e","Nacional Bakery #1"
-"5716054bee6e764c94fa8c13","La Nueva Giralda Bakery"
-"5716054bee6e764c94fa8ff6","National Bakery"
 "5716054cee6e764c94fa9f31","1617-A National Bakery"
-"5716054cee6e764c94faa105","National Bakery"
-"5716054cee6e764c94fad66f","Jacqueline'S Bakery Restaurant"\n
+"5716054cee6e764c94fad66f","Jacqueline'S Bakery Restaurant"
+"5716054bee6e764c94fa8c13","La Nueva Giralda Bakery"
+"5716054bee6e764c94fa841e","Nacional Bakery #1"
+"5716054bee6e764c94fa8ff6","National Bakery"
+"5716054cee6e764c94faa105","National Bakery"\n
 CSV;
         $this->assertFileExists($expectedCsvFileMain);
         $this->assertEquals($expectedCsvMain, file_get_contents($expectedCsvFileMain));
@@ -174,12 +175,12 @@ YAML;
         $expectedCsvFileRelated = $this->path . '/bakeries-coords.csv';
         $expectedCsvRelated = <<<CSV
 "w","n","zipcode","street","bakeries_id"
-"-73.8806669","40.8283447","10472","Westchester Avenue","5716054bee6e764c94fa841e"
-"-73.885417","40.82766","10459","Westchester Avenue","5716054bee6e764c94fa8c13"
-"-73.8789604","40.8286012","10472","Westchester Avenue","5716054bee6e764c94fa8ff6"
 "-73.8747516","40.829474","10472","Westchester Avenue","5716054cee6e764c94fa9f31"
-"-73.8510158","40.8342588","10462","Westchester Avenue","5716054cee6e764c94faa105"
-"-73.8767078","40.8290734","10472","Westchester Avenue","5716054cee6e764c94fad66f"\n
+"-73.8767078","40.8290734","10472","Westchester Avenue","5716054cee6e764c94fad66f"
+"-73.885417","40.82766","10459","Westchester Avenue","5716054bee6e764c94fa8c13"
+"-73.8806669","40.8283447","10472","Westchester Avenue","5716054bee6e764c94fa841e"
+"-73.8789604","40.8286012","10472","Westchester Avenue","5716054bee6e764c94fa8ff6"
+"-73.8510158","40.8342588","10462","Westchester Avenue","5716054cee6e764c94faa105"\n
 CSV;
         $this->assertFileExists($expectedCsvFileRelated);
         $this->assertEquals($expectedCsvRelated, file_get_contents($expectedCsvFileRelated));
