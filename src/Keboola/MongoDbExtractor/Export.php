@@ -74,7 +74,11 @@ class Export
 
         foreach ($parser->getCsvFiles() as $file) {
             if ($file !== null) {
-                $outputCsv = $this->path . '/' . Strings::webalize($file->getName()) . '.csv';
+                $name = Strings::webalize($file->getName());
+
+                $this->consoleOutput->writeln(date('Y-m-d\TH:i:sO') . "\t" . 'Parsing "' . $name . '"');
+
+                $outputCsv = $this->path . '/' . $name . '.csv';
                 $this->fs->copy($file->getPathname(), $outputCsv);
 
                 $manifest = [
@@ -86,6 +90,8 @@ class Export
 
                 $this->fs->dumpFile($outputCsv . '.manifest', Yaml::dump($manifest));
                 $this->fs->remove($file->getPathname());
+
+                $this->consoleOutput->writeln(date('Y-m-d\TH:i:sO') . "\t" . 'Done "' . $name . '"');
             }
         }
 
