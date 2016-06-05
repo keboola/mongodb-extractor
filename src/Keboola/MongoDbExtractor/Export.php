@@ -3,6 +3,7 @@
 namespace Keboola\MongoDbExtractor;
 
 use Keboola\CsvMap\Mapper;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Yaml\Yaml;
@@ -31,6 +32,9 @@ class Export
     /** @var Filesystem */
     private $fs;
 
+    /** @var ConsoleOutput */
+    private $consoleOutput;
+
     public function __construct(array $connectionOptions, array $exportOptions, $path, $name, $mapping)
     {
         $this->connectionOptions = $connectionOptions;
@@ -39,6 +43,7 @@ class Export
         $this->name = $name;
         $this->mapping = $mapping;
         $this->fs = new Filesystem;
+        $this->consoleOutput = new ConsoleOutput;
 
         $this->createCommand();
     }
@@ -49,7 +54,10 @@ class Export
     public function export()
     {
         $process = new Process($this->exportCommand->getCommand(), null, null, null, null);
-        $process->mustRun();
+        $process->mustRun(function ($type, $buffer) {
+            // $type is always Process::ERR here, so we don't check it
+            $this->consoleOutput->write($buffer);
+        });
     }
 
     /**
@@ -66,7 +74,11 @@ class Export
 
         foreach ($parser->getCsvFiles() as $file) {
             if ($file !== null) {
-                $outputCsv = $this->path . '/' . Strings::webalize($file->getName()) . '.csv';
+                $name = Strings::webalize($file->getName());
+
+                $this->consoleOutput->writeln(date('Y-m-d\TH:i:sO') . "\t" . 'Parsing "' . $name . '"');
+
+                $outputCsv = $this->path . '/' . $name . '.csv';
                 $this->fs->copy($file->getPathname(), $outputCsv);
 
                 $manifest = [
@@ -78,6 +90,8 @@ class Export
 
                 $this->fs->dumpFile($outputCsv . '.manifest', Yaml::dump($manifest));
                 $this->fs->remove($file->getPathname());
+
+                $this->consoleOutput->writeln(date('Y-m-d\TH:i:sO') . "\t" . 'Done "' . $name . '"');
             }
         }
 
