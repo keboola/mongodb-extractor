@@ -189,7 +189,7 @@ CSV;
         $exportParams = [
             'collection' => 'restaurants',
             'query' => '{name: "National Bakery"}',
-            'sort' => '{"address.street": 1}',
+            'sort' => '{"_id": 1}',
             'limit' => 3,
             'name' => 'export-multi-with-sort-and-limit',
             'mapping' => $this->getMapping(),
@@ -206,9 +206,9 @@ CSV;
 
         $expectedJson = <<<CSV
 "id","name"
-"5716054bee6e764c94fa9620","National Bakery"
+"5716054bee6e764c94fa8ff6","National Bakery"
 "5716054bee6e764c94fa93f9","National Bakery"
-"5716054bee6e764c94fa8ff6","National Bakery"\n
+"5716054bee6e764c94fa9620","National Bakery"\n
 CSV;
 
         $expectedFile = $this->path . '/' . 'export-multi-with-sort-and-limit.csv';
