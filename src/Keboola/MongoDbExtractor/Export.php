@@ -31,7 +31,7 @@ class Export
     private $mapping;
 
     /** @var Filesystem */
-    private $fs;
+    private $filesystem;
 
     /** @var ConsoleOutput */
     private $consoleOutput;
@@ -43,7 +43,7 @@ class Export
         $this->path = $path;
         $this->name = $name;
         $this->mapping = $mapping;
-        $this->fs = new Filesystem;
+        $this->filesystem = new Filesystem;
         $this->consoleOutput = new ConsoleOutput;
 
         $this->createCommand();
@@ -68,70 +68,79 @@ class Export
      */
     public function parseAndCreateManifest()
     {
-        $this->writeOutput('Parsing "' . $this->getOutputFilename() . '"');
+        $this->logToConsoleOutput('Parsing "' . $this->getOutputFilename() . '"');
 
         $handle = fopen($this->getOutputFilename(), 'r');
         $skipHeader = false;
 
-        $i = 1;
+        $parsedRecordsCount = 1;
         while (!feof($handle)) {
             $line = fgets($handle);
-
             $data = trim($line) !== '' ? [json_decode($line)] : [];
 
             $parser = new Mapper($this->mapping, $this->name);
             $parser->parse($data);
 
-            foreach ($parser->getCsvFiles() as $file) {
-                if ($file !== null) {
-                    $name = Strings::webalize($file->getName());
-                    $outputCsv = $this->path . '/' . $name . '.csv';
-
-                    $content = file_get_contents($file->getPathname());
-
-                    // csv-map don't have option to skip header yet
-                    if ($skipHeader) {
-                        $contentArr = explode("\n", $content);
-                        array_shift($contentArr);
-                        $content = implode("\n", $contentArr);
-                    }
-
-                    $this->appendContentToFile($outputCsv, $content);
-
-                    $manifest = [
-                        'primary_key' => $file->getPrimaryKey(true),
-                        'incremental' => isset($this->exportOptions['incremental'])
-                            ? (bool) $this->exportOptions['incremental']
-                            : false,
-                    ];
-
-                    if (!$this->fs->exists($outputCsv . '.manifest')) {
-                        $this->fs->dumpFile($outputCsv . '.manifest', Yaml::dump($manifest));
-                    }
-
-                    $this->fs->remove($file->getPathname());
-                }
-            }
+            $this->writeCsvAndManifestFiles($parser->getCsvFiles(), $skipHeader);
 
             $skipHeader = true;
 
-            if ($i % 5e3 === 0) {
-                $this->writeOutput('Parsed ' . $i . ' records.');
+            if ($parsedRecordsCount % 5e3 === 0) {
+                $this->logToConsoleOutput('Parsed ' . $parsedRecordsCount . ' records.');
             }
 
-            $i++;
+            $parsedRecordsCount++;
         }
 
-        $this->fs->remove($this->getOutputFilename());
+        $this->filesystem->remove($this->getOutputFilename());
 
-        $this->writeOutput('Done "' . $this->getOutputFilename() . '"');
+        $this->logToConsoleOutput('Done "' . $this->getOutputFilename() . '"');
+    }
+
+    /**
+     * Writes .csv and .manifest files
+     * @param array $csvFiles
+     * @param bool $skipHeader
+     */
+    private function writeCsvAndManifestFiles(array $csvFiles, $skipHeader = true)
+    {
+        foreach ($csvFiles as $file) {
+            if ($file !== null) {
+                $name = Strings::webalize($file->getName());
+                $outputCsv = $this->path . '/' . $name . '.csv';
+
+                $content = file_get_contents($file->getPathname());
+
+                // csv-map don't have option to skip header yet
+                if ($skipHeader) {
+                    $contentArr = explode("\n", $content);
+                    array_shift($contentArr);
+                    $content = implode("\n", $contentArr);
+                }
+
+                $this->appendContentToFile($outputCsv, $content);
+
+                $manifest = [
+                    'primary_key' => $file->getPrimaryKey(true),
+                    'incremental' => isset($this->exportOptions['incremental'])
+                        ? (bool) $this->exportOptions['incremental']
+                        : false,
+                ];
+
+                if (!$this->filesystem->exists($outputCsv . '.manifest')) {
+                    $this->filesystem->dumpFile($outputCsv . '.manifest', Yaml::dump($manifest));
+                }
+
+                $this->filesystem->remove($file->getPathname());
+            }
+        }
     }
 
     /**
      * Outputs text to console prefixed with actual time (to look similar as MongoDB log)
      * @param $text
      */
-    private function writeOutput($text)
+    private function logToConsoleOutput($text)
     {
         $this->consoleOutput->writeln(
             date('Y-m-d\TH:i:s\.')
