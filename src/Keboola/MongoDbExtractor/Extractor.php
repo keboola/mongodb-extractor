@@ -5,7 +5,6 @@ namespace Keboola\MongoDbExtractor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\Command;
 use Keboola\DbExtractor\Logger;
-use Nette\Utils\Strings;
 
 class Extractor extends \Keboola\DbExtractor\Extractor\Extractor
 {
@@ -83,7 +82,7 @@ class Extractor extends \Keboola\DbExtractor\Extractor\Extractor
                 $this->parameters['db'],
                 $exportOptions,
                 $outputPath,
-                Strings::webalize($exportOptions['name']),
+                $exportOptions['name'],
                 $exportOptions['mapping']
             );
 

@@ -40,7 +40,7 @@ class Export
         $this->connectionOptions = $connectionOptions;
         $this->exportOptions = $exportOptions;
         $this->path = $path;
-        $this->name = $name;
+        $this->name = Strings::webalize($name);
         $this->mapping = $mapping;
         $this->filesystem = new Filesystem;
         $this->consoleOutput = new ConsoleOutput;
