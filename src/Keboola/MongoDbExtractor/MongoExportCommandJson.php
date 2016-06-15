@@ -40,13 +40,13 @@ class MongoExportCommandJson
     /**
      * Validates export options
      * @return bool
-     * @throws MongoExportCommandException
+     * @throws Exception
      */
     private function validate()
     {
         array_walk($this->requiredOptions, function ($option) {
             if (!isset($this->options[$option])) {
-                throw new MongoExportCommandException('Please provide all required params: '
+                throw new Exception('Please provide all required params: '
                     . implode(', ', $this->requiredOptions));
             }
         });
@@ -54,7 +54,7 @@ class MongoExportCommandJson
         // validate auth options: both or none
         if (isset($this->options['username']) && !isset($this->options['password'])
             || !isset($this->options['username']) && isset($this->options['password'])) {
-            throw new MongoExportCommandException('When passing authentication details,'
+            throw new Exception('When passing authentication details,'
                 . ' both "user" and "password" params are required');
         }
 

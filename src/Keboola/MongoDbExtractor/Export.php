@@ -8,7 +8,6 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Yaml\Yaml;
 use Nette\Utils\Strings;
-use Symfony\Component\Filesystem\Exception\IOException;
 
 class Export
 {
@@ -153,11 +152,12 @@ class Export
      * Append content to specified file
      * @param $filename
      * @param $content
+     * @throws Exception
      */
     private function appendContentToFile($filename, $content)
     {
         if (false === @file_put_contents($filename, $content, FILE_APPEND | LOCK_EX)) {
-            throw new IOException(sprintf('Failed to write file "%s".', $filename), 0, null, $filename);
+            throw new Exception(sprintf('Failed to write file "%s".', $filename), 0, null, $filename);
         }
     }
 

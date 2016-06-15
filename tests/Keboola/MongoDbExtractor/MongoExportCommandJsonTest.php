@@ -70,7 +70,7 @@ BASH;
 
     public function testValidateWithoutUser()
     {
-        $this->expectException(MongoExportCommandException::class);
+        $this->expectException(Exception::class);
 
         $options = [
             'host' => 'localhost',
@@ -86,7 +86,7 @@ BASH;
 
     public function testValidateWithoutPassword()
     {
-        $this->expectException(MongoExportCommandException::class);
+        $this->expectException(Exception::class);
 
         $options = [
             'host' => 'localhost',
@@ -102,7 +102,7 @@ BASH;
 
     public function testCreateWithMissingRequiredParam()
     {
-        $this->expectException(MongoExportCommandException::class);
+        $this->expectException(Exception::class);
 
         new MongoExportCommandJson([]);
     }
