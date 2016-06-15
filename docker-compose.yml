@@ -2,13 +2,9 @@ version: "2"
 
 services:
 
-  php-base:
+  php:
     build: .
     image: keboola/mongodb-extractor
-
-  php:
-    extends:
-      service: php-base
     tty: true
     stdin_open: true
     links:
@@ -25,8 +21,9 @@ services:
       - ./:/code
 
   php-tests:
-    extends:
-      service: php-base
+    build:
+      context: .
+      dockerfile: Dockerfile-tests
     links:
       - mongodb
       - mongodb-auth
@@ -39,8 +36,9 @@ services:
              '
 
   php-tests-with-report:
-    extends:
-      service: php-base
+    build:
+      context: .
+      dockerfile: Dockerfile-tests
     links:
       - mongodb
       - mongodb-auth

@@ -1,5 +1,6 @@
 FROM php:7.0
 MAINTAINER Vladimír Kriška <vlado@keboola.com>
+
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927 \
@@ -24,3 +25,6 @@ WORKDIR /code
 RUN composer install --prefer-dist --no-interaction
 
 CMD php ./src/run.php --data=/data
+
+RUN pecl install xdebug \
+  && docker-php-ext-enable xdebug
