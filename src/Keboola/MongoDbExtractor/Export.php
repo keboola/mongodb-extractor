@@ -8,6 +8,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Yaml\Yaml;
 use Nette\Utils\Strings;
+use Symfony\Component\Filesystem\Exception\IOException;
 
 class Export
 {
@@ -67,35 +68,72 @@ class Export
      */
     public function parseAndCreateManifest()
     {
-        $data = json_decode(file_get_contents($this->getOutputFilename()));
+        $this->consoleOutput->writeln(
+            date('Y-m-d\TH:i:sO') . "\t" . 'Parsing "' . $this->getOutputFilename() . '"'
+        );
 
-        $parser = new Mapper($this->mapping, $this->name);
-        $parser->parse($data);
+        $handle = fopen($this->getOutputFilename(), 'r');
+        $skipHeader = false;
 
-        foreach ($parser->getCsvFiles() as $file) {
-            if ($file !== null) {
-                $name = Strings::webalize($file->getName());
+        while (!feof($handle)) {
+            $line = fgets($handle);
 
-                $this->consoleOutput->writeln(date('Y-m-d\TH:i:sO') . "\t" . 'Parsing "' . $name . '"');
+            $data = trim($line) !== '' ? [json_decode($line)] : [];
 
-                $outputCsv = $this->path . '/' . $name . '.csv';
-                $this->fs->copy($file->getPathname(), $outputCsv);
+            $parser = new Mapper($this->mapping, $this->name);
+            $parser->parse($data);
 
-                $manifest = [
-                    'primary_key' => $file->getPrimaryKey(true),
-                    'incremental' => isset($this->exportOptions['incremental'])
-                        ? (bool) $this->exportOptions['incremental']
-                        : false,
-                ];
+            foreach ($parser->getCsvFiles() as $file) {
+                if ($file !== null) {
+                    $name = Strings::webalize($file->getName());
+                    $outputCsv = $this->path . '/' . $name . '.csv';
 
-                $this->fs->dumpFile($outputCsv . '.manifest', Yaml::dump($manifest));
-                $this->fs->remove($file->getPathname());
+                    $content = file_get_contents($file->getPathname());
 
-                $this->consoleOutput->writeln(date('Y-m-d\TH:i:sO') . "\t" . 'Done "' . $name . '"');
+                    // csv-map don't have option to skip header yet
+                    if ($skipHeader) {
+                        $contentArr = explode("\n", $content);
+                        array_shift($contentArr);
+                        $content = implode("\n", $contentArr);
+                    }
+
+                    $this->appendContentToFile($outputCsv, $content);
+
+                    $manifest = [
+                        'primary_key' => $file->getPrimaryKey(true),
+                        'incremental' => isset($this->exportOptions['incremental'])
+                            ? (bool) $this->exportOptions['incremental']
+                            : false,
+                    ];
+
+                    if (!$this->fs->exists($outputCsv . '.manifest')) {
+                        $this->fs->dumpFile($outputCsv . '.manifest', Yaml::dump($manifest));
+                    }
+
+                    $this->fs->remove($file->getPathname());
+                }
             }
+
+            $skipHeader = true;
         }
 
         $this->fs->remove($this->getOutputFilename());
+
+        $this->consoleOutput->writeln(
+            date('Y-m-d\TH:i:sO') . "\t" . 'Done "' . $this->getOutputFilename() . '"'
+        );
+    }
+
+    /**
+     *
+     * @param $filename
+     * @param $content
+     */
+    private function appendContentToFile($filename, $content)
+    {
+        if (false === @file_put_contents($filename, $content, FILE_APPEND | LOCK_EX)) {
+            throw new IOException(sprintf('Failed to write file "%s".', $filename), 0, null, $filename);
+        }
     }
 
     /**
