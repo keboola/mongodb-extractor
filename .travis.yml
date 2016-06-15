@@ -21,7 +21,7 @@ install:
 before_script:
   - docker -v
   - docker-compose -v
-  - docker-compose build php-base php-tests-with-report
+  - docker-compose build php php-tests-with-report
 
 script:
   - >
