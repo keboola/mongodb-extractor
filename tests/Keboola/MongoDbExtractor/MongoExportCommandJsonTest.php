@@ -16,7 +16,7 @@ class MongoExportCommandJsonTest extends \PHPUnit_Framework_TestCase
 
         $command = new MongoExportCommandJson($options);
         $expectedCommand = <<<BASH
-mongoexport --host 'localhost' --port '27017' --db 'myDatabase' --collection 'myCollection' --type 'json' --out '/tmp/create-test.json' --jsonArray
+mongoexport --host 'localhost' --port '27017' --db 'myDatabase' --collection 'myCollection' --type 'json' --out '/tmp/create-test.json'
 BASH;
 
         $this->assertSame($expectedCommand, $command->getCommand());
@@ -39,7 +39,7 @@ BASH;
 
         $command = new MongoExportCommandJson($options);
         $expectedCommand = <<<BASH
-mongoexport --host 'localhost' --port '27017' --username 'user' --password 'pass' --db 'myDatabase' --collection 'myCollection' --query '{a: "b"}' --sort '{a: 1, b: -1}' --limit '10' --type 'json' --out '/tmp/create-test.json' --jsonArray
+mongoexport --host 'localhost' --port '27017' --username 'user' --password 'pass' --db 'myDatabase' --collection 'myCollection' --query '{a: "b"}' --sort '{a: 1, b: -1}' --limit '10' --type 'json' --out '/tmp/create-test.json'
 BASH;
 
         $this->assertSame($expectedCommand, $command->getCommand());
@@ -62,7 +62,7 @@ BASH;
 
         $command = new MongoExportCommandJson($options);
         $expectedCommand = <<<BASH
-mongoexport --host 'localhost' --port '27017' --username 'user' --password 'pass' --db 'myDatabase' --collection 'myCollection' --type 'json' --out '/tmp/create-test.json' --jsonArray
+mongoexport --host 'localhost' --port '27017' --username 'user' --password 'pass' --db 'myDatabase' --collection 'myCollection' --type 'json' --out '/tmp/create-test.json'
 BASH;
 
         $this->assertSame($expectedCommand, $command->getCommand());
