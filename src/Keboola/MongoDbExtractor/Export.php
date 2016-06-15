@@ -68,13 +68,12 @@ class Export
      */
     public function parseAndCreateManifest()
     {
-        $this->consoleOutput->writeln(
-            date('Y-m-d\TH:i:sO') . "\t" . 'Parsing "' . $this->getOutputFilename() . '"'
-        );
+        $this->writeOutput('Parsing "' . $this->getOutputFilename() . '"');
 
         $handle = fopen($this->getOutputFilename(), 'r');
         $skipHeader = false;
 
+        $i = 1;
         while (!feof($handle)) {
             $line = fgets($handle);
 
@@ -115,17 +114,34 @@ class Export
             }
 
             $skipHeader = true;
+
+            if ($i % 5e3 === 0) {
+                $this->writeOutput('Parsed ' . $i . ' records.');
+            }
+
+            $i++;
         }
 
         $this->fs->remove($this->getOutputFilename());
 
+        $this->writeOutput('Done "' . $this->getOutputFilename() . '"');
+    }
+
+    /**
+     * Outputs text to console prefixed with actual time (to look similar as MongoDB log)
+     * @param $text
+     */
+    private function writeOutput($text)
+    {
         $this->consoleOutput->writeln(
-            date('Y-m-d\TH:i:sO') . "\t" . 'Done "' . $this->getOutputFilename() . '"'
+            date('Y-m-d\TH:i:s\.')
+            . str_pad(round(microtime(true) - time(), 3) * 1000, 3, '0', STR_PAD_LEFT)
+            . date('O') . "\t" . $text
         );
     }
 
     /**
-     *
+     * Append content to specified file
      * @param $filename
      * @param $content
      */
