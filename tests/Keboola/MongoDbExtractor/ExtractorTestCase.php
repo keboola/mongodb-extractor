@@ -60,7 +60,7 @@ abstract class ExtractorTestCase extends \PHPUnit_Framework_TestCase
         $process = new Process('wc -l ' . $expectedFile);
         $process->mustRun();
 
-        $this->assertSame(72, (int) $process->getOutput());
+        $this->assertSame(74, (int) $process->getOutput());
     }
 
     public function testExportOne()
