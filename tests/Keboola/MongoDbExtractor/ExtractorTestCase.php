@@ -60,7 +60,7 @@ abstract class ExtractorTestCase extends \PHPUnit_Framework_TestCase
         $process = new Process('wc -l ' . $expectedFile);
         $process->mustRun();
 
-        $this->assertSame(72, (int) $process->getOutput());
+        $this->assertSame(74, (int) $process->getOutput());
     }
 
     public function testExportOne()
@@ -263,5 +263,76 @@ CSV;
         $this->assertFileExists($expectedFile);
         $this->assertEquals($expectedJson, file_get_contents($expectedFile));
 
+    }
+
+    public function testExportRelatedTableFirstItemEmpty()
+    {
+        $exportParams = [
+            'collection' => 'restaurants',
+            'query' => <<<JSON
+{
+  "_id": {
+    "\$in":[
+      {"\$oid":"5716054cee6e764c94fadb21"},
+      {"\$oid":"5716054cee6e764c94fadb22"},
+      {"\$oid":"5716054cee6e764c94fadb23"}
+    ]
+  }
+}
+JSON
+            ,
+            'sort' => '{"_id": -1}',
+            'limit' => 3,
+            'name' => 'export-related-table-first-item-empty',
+            'mapping' => [
+                '_id.$oid' => [
+                    'type' => 'column',
+                    'mapping' => [
+                        'destination' => 'id',
+                        'primaryKey' => true
+                    ]
+                ],
+                'coords' => [
+                    'type' => 'table',
+                    'destination' => 'export-related-table-first-item-empty-coord',
+                    'tableMapping' => [
+                        'w' => 'w',
+                        'n' => 'n'
+                    ]
+                ],
+            ],
+            'enabled' => true,
+        ];
+
+        $parameters = $this->getConfig()['parameters'];
+        $parameters['exports'][] = $exportParams;
+
+        $extractor = new Extractor($parameters, $this->logger);
+        $export = $extractor->extract($this->path);
+
+        $this->assertTrue($export, 'Command successful');
+
+        $expectedJson = <<<CSV
+"id"
+"5716054cee6e764c94fadb23"
+"5716054cee6e764c94fadb22"
+"5716054cee6e764c94fadb21"\n
+CSV;
+
+        $expectedFile = $this->path . '/' . 'export-related-table-first-item-empty.csv';
+
+        $this->assertFileExists($expectedFile);
+        $this->assertEquals($expectedJson, file_get_contents($expectedFile));
+
+
+        $expectedJsonCoord = <<<CSV
+"w","n","export-related-table-first-item-empty_pk"
+"-73.887492","40.8556246","5716054cee6e764c94fadb21"\n
+CSV;
+
+        $expectedFileCoord = $this->path . '/' . 'export-related-table-first-item-empty-coord.csv';
+
+        $this->assertFileExists($expectedFileCoord);
+        $this->assertEquals($expectedJsonCoord, file_get_contents($expectedFileCoord));
     }
 }

@@ -70,7 +70,6 @@ class Export
         $this->logToConsoleOutput('Parsing "' . $this->getOutputFilename() . '"');
 
         $handle = fopen($this->getOutputFilename(), 'r');
-        $skipHeader = false;
 
         $parsedRecordsCount = 1;
         while (!feof($handle)) {
@@ -80,9 +79,7 @@ class Export
             $parser = new Mapper($this->mapping, $this->name);
             $parser->parse($data);
 
-            $this->writeCsvAndManifestFiles($parser->getCsvFiles(), $skipHeader);
-
-            $skipHeader = true;
+            $this->writeCsvAndManifestFiles($parser->getCsvFiles());
 
             if ($parsedRecordsCount % 5e3 === 0) {
                 $this->logToConsoleOutput('Parsed ' . $parsedRecordsCount . ' records.');
@@ -99,9 +96,8 @@ class Export
     /**
      * Writes .csv and .manifest files
      * @param array $csvFiles
-     * @param bool $skipHeader
      */
-    private function writeCsvAndManifestFiles(array $csvFiles, $skipHeader = true)
+    private function writeCsvAndManifestFiles(array $csvFiles)
     {
         foreach ($csvFiles as $file) {
             if ($file !== null) {
@@ -110,8 +106,9 @@ class Export
 
                 $content = file_get_contents($file->getPathname());
 
-                // csv-map don't have option to skip header yet
-                if ($skipHeader) {
+                // csv-map doesn't have option to skip header yet,
+                // so we skip header if file exists
+                if ($this->filesystem->exists($outputCsv)) {
                     $contentArr = explode("\n", $content);
                     array_shift($contentArr);
                     $content = implode("\n", $contentArr);
