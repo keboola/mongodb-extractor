@@ -1,6 +1,5 @@
 FROM php:7.0
 MAINTAINER Vladimír Kriška <vlado@keboola.com>
-
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927 \
