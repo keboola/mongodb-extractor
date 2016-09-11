@@ -327,6 +327,7 @@ CSV;
 
         $expectedJsonCoord = <<<CSV
 "w","n","export-related-table-first-item-empty_pk"
+"","","5716054cee6e764c94fadb23"
 "-73.887492","40.8556246","5716054cee6e764c94fadb21"\n
 CSV;
 
