@@ -162,14 +162,12 @@ CSV;
         $this->assertEquals($expectedCsvMain, file_get_contents($expectedCsvFileMain));
 
         // main manifest
-        $expectedYamlFileMain = $this->path . '/bakeries.csv.manifest';
-        $expectedYamlMain = <<<YAML
-primary_key:
-    - id
-incremental: true\n
-YAML;
-        $this->assertFileExists($expectedYamlFileMain);
-        $this->assertEquals($expectedYamlMain, file_get_contents($expectedYamlFileMain));
+        $actualJsonFileMain = $this->path . '/bakeries.csv.manifest';
+        $expectedJsonMain = <<<JSON
+{"primary_key":["id"],"incremental":true}
+JSON;
+        $this->assertFileExists($actualJsonFileMain);
+        $this->assertEquals($expectedJsonMain, file_get_contents($actualJsonFileMain));
 
         // related csv
         $expectedCsvFileRelated = $this->path . '/bakeries-coords.csv';
@@ -186,15 +184,12 @@ CSV;
         $this->assertEquals($expectedCsvRelated, file_get_contents($expectedCsvFileRelated));
 
         // related manifest
-        $expectedYamlFileRelated = $this->path . '/bakeries-coords.csv.manifest';
-        $expectedYamlRelated = <<<YAML
-primary_key:
-    - zipcode
-    - street
-incremental: true\n
-YAML;
-        $this->assertFileExists($expectedYamlFileRelated);
-        $this->assertEquals($expectedYamlRelated, file_get_contents($expectedYamlFileRelated));
+        $actualJsonFileRelated = $this->path . '/bakeries-coords.csv.manifest';
+        $expectedJsonRelated = <<<JSON
+{"primary_key":["zipcode","street"],"incremental":true}
+JSON;
+        $this->assertFileExists($actualJsonFileRelated);
+        $this->assertEquals($expectedJsonRelated, file_get_contents($actualJsonFileRelated));
     }
 
     public function testActionRunDuplicateExportNames()
