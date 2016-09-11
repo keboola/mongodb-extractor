@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f8396b4c63107c212a7d470afc037174",
-    "content-hash": "578bfe5adcf52e5bb7fd1f53a0a528b1",
+    "hash": "b31f847e0348890d30e7090b892bffd7",
+    "content-hash": "daad8cf1732b9178a9613d171ca69065",
     "packages": [
         {
             "name": "keboola/csv",
@@ -40,16 +40,16 @@
         },
         {
             "name": "keboola/csvmap",
-            "version": "0.2.5",
+            "version": "0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-csvmap.git",
-                "reference": "3379c2e0256998be39fd313aba771b7cc1c36814"
+                "reference": "58f89e5d7795306ed72d5b1ee62f42697dd2cbb2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-csvmap/zipball/3379c2e0256998be39fd313aba771b7cc1c36814",
-                "reference": "3379c2e0256998be39fd313aba771b7cc1c36814",
+                "url": "https://api.github.com/repos/keboola/php-csvmap/zipball/58f89e5d7795306ed72d5b1ee62f42697dd2cbb2",
+                "reference": "58f89e5d7795306ed72d5b1ee62f42697dd2cbb2",
                 "shasum": ""
             },
             "require": {
@@ -60,7 +60,8 @@
             },
             "require-dev": {
                 "codeclimate/php-test-reporter": "dev-master",
-                "phpunit/phpunit": "^5.2"
+                "phpunit/phpunit": "^5.2",
+                "squizlabs/php_codesniffer": "~2.7"
             },
             "type": "library",
             "autoload": {
@@ -84,7 +85,7 @@
                 "flatten",
                 "object"
             ],
-            "time": "2016-05-23 13:30:15"
+            "time": "2016-09-11 13:39:55"
         },
         {
             "name": "keboola/db-extractor-common",
@@ -1056,6 +1057,7 @@
                 "rest",
                 "web service"
             ],
+            "abandoned": "guzzlehttp/guzzle",
             "time": "2015-03-18 18:23:50"
         },
         {
