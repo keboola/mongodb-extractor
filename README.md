@@ -103,7 +103,7 @@ Application is prepared for run in container, you can start development same way
 After seeing all tests green, continue:
 
 1. Create data dir: `mkdir -p data`
-2. Follow configuration sample and create `config.yml` file and place it to your data directory (`data/config.yml`):
+2. Follow configuration sample and create `config.json` file and place it to your data directory (`data/config.json`):
 3. Run service: `docker-compose run --rm php` (starts container with `bash`)
 4. Simulate real run: `php src/run.php --data=./data`
 
