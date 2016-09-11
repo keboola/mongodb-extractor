@@ -4,31 +4,40 @@ namespace Keboola\MongoDbExtractor;
 
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
-use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Serializer\Encoder\JsonDecode;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
 class ConfigDefinitionTest extends \PHPUnit_Framework_TestCase
 {
     public function testValidConfig()
     {
-        $yaml = <<<YAML
-parameters:
-  db:
-    host: 127.0.0.1
-    port: 27017
-    database: test
-    user: user
-    password: password
-  exports:
-    - name: bronx-bakeries
-      id: 123
-      collection: 'restaurants'
-      query: '{borough: "Bronx"}'
-      incremental: false
-      mapping:
-        _id:
-YAML;
+        $json = <<<JSON
+{
+  "parameters": {
+    "db": {
+      "host": "127.0.0.1",
+      "port": 27017,
+      "database": "test",
+      "user": "user",
+      "password": "password"
+    },
+    "exports": [
+      {
+        "name": "bronx-bakeries",
+        "id": 123,
+        "collection": "restaurants",
+        "query": "{borough: \"Bronx\"}",
+        "incremental": false,
+        "mapping": {
+          "_id": null
+        }
+      }
+    ]
+  }
+}
+JSON;
 
-        $config = Yaml::parse($yaml);
+        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
         $processor = new Processor;
         $processedConfig = $processor->processConfiguration(new ConfigDefinition, [$config['parameters']]);
 
@@ -39,17 +48,24 @@ YAML;
     {
         $this->expectException(InvalidConfigurationException::class);
 
-        $yaml = <<<YAML
-parameters:
-  db:
-    host: 127.0.0.1
-    database: test
-  exports:
-    - name: bronx-bakeries
-      collection: 'restaurants'
-YAML;
+        $json = <<<JSON
+{
+  "parameters": {
+    "db": {
+      "host": "127.0.0.1",
+      "database": "test"
+    },
+    "exports": [
+      {
+        "name": "bronx-bakeries",
+        "collection": "restaurants"
+      }
+    ]
+  }
+}
+JSON;
 
-        $config = Yaml::parse($yaml);
+        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
         (new Processor())->processConfiguration(new ConfigDefinition, [$config['parameters']]);
     }
 }

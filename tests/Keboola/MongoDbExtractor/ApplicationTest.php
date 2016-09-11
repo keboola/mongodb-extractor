@@ -2,7 +2,8 @@
 
 namespace Keboola\MongoDbExtractor;
 
-use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Serializer\Encoder\JsonDecode;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Filesystem\Filesystem;
 
 class ApplicationTest extends \PHPUnit_Framework_TestCase
@@ -28,21 +29,29 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
 
     public function testActionTestConnectionOk()
     {
-        $yaml = <<<YAML
-parameters:
-  db:
-    host: mongodb
-    port: 27017
-    database: test
-  exports:
-    - name: bakeries
-      id: 123
-      collection: restaurants
-      incremental: true
-      mapping:
-        '_id.\$oid': id
-YAML;
-        $config =  Yaml::parse($yaml);
+        $json = <<<JSON
+{
+  "parameters": {
+    "db": {
+      "host": "mongodb",
+      "port": 27017,
+      "database": "test"
+    },
+    "exports": [
+      {
+        "name": "bakeries",
+        "id": 123,
+        "collection": "restaurants",
+        "incremental": true,
+        "mapping": {
+          "_id.\$oid": "id"
+        }
+      }
+    ]
+  }
+}
+JSON;
+        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
 
         $application = new Application($config);
         $application->actionTestConnection();
@@ -54,21 +63,29 @@ YAML;
     {
         $this->expectException(\MongoDB\Driver\Exception\ConnectionTimeoutException::class);
 
-        $yaml = <<<YAML
-parameters:
-  db:
-    host: locahost # different host
-    port: 27017
-    database: test
-  exports:
-    - name: bakeries
-      id: 123
-      collection: restaurants
-      incremental: true
-      mapping:
-        '_id.\$oid': id
-YAML;
-        $config =  Yaml::parse($yaml);
+        $json = <<<JSON
+{
+  "parameters": {
+    "db": {
+      "host": "locahost",
+      "port": 27017,
+      "database": "test"
+    },
+    "exports": [
+      {
+        "name": "bakeries",
+        "id": 123,
+        "collection": "restaurants",
+        "incremental": true,
+        "mapping": {
+          "_id.\$oid": "id"
+        }
+      }
+    ]
+  }
+}
+JSON;
+        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
 
         $application = new Application($config);
         $application->actionTestConnection();
@@ -78,23 +95,31 @@ YAML;
     {
         $this->expectException(\MongoDB\Driver\Exception\AuthenticationException::class);
 
-        $yaml = <<<YAML
-parameters:
-  db:
-    host: mongodb
-    port: 27017
-    database: test
-    user: user
-    password: random-password
-  exports:
-    - name: bakeries
-      id: 123
-      collection: restaurants
-      incremental: true
-      mapping:
-        '_id.\$oid': id
-YAML;
-        $config =  Yaml::parse($yaml);
+        $json = <<<JSON
+{
+  "parameters": {
+    "db": {
+      "host": "mongodb",
+      "port": 27017,
+      "database": "test",
+      "user": "user",
+      "password": "random-password"
+    },
+    "exports": [
+      {
+        "name": "bakeries",
+        "id": 123,
+        "collection": "restaurants",
+        "incremental": true,
+        "mapping": {
+          "_id.\$oid": "id"
+        }
+      }
+    ]
+  }
+}
+JSON;
+        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
 
         $application = new Application($config);
         $application->actionTestConnection();
@@ -102,47 +127,64 @@ YAML;
 
     public function testActionRunFull()
     {
-        $yaml = <<<YAML
-parameters:
-  db:
-    host: mongodb
-    port: 27017
-    database: test
-  exports:
-    - name: bakeries
-      id: 123
-      collection: restaurants
-      query: '{borough: "Bronx", "address.street": "Westchester Avenue"}'
-      sort: '{name: 1, _id: 1}'
-      incremental: true
-      mapping:
-        '_id.\$oid':
-          type: column
-          mapping:
-            destination: id
-            primaryKey: true
-        name: name
-        address:
-          type: table
-          destination: Bakeries Coords
-          parentKey:
-            destination: bakeries_id
-          tableMapping:
-            coord.0: w
-            coord.1: n
-            zipcode:
-              type: column
-              mapping:
-                destination: zipcode
-                primaryKey: true
-            street:
-              type: column
-              mapping:
-                destination: street
-                primaryKey: true
-YAML;
+        $json = <<<JSON
+{
+  "parameters": {
+    "db": {
+      "host": "mongodb",
+      "port": 27017,
+      "database": "test"
+    },
+    "exports": [
+      {
+        "name": "bakeries",
+        "id": 123,
+        "collection": "restaurants",
+        "query": "{borough: \"Bronx\", \"address.street\": \"Westchester Avenue\"}",
+        "sort": "{name: 1, _id: 1}",
+        "incremental": true,
+        "mapping": {
+          "_id.\$oid": {
+            "type": "column",
+            "mapping": {
+              "destination": "id",
+              "primaryKey": true
+            }
+          },
+          "name": "name",
+          "address": {
+            "type": "table",
+            "destination": "Bakeries Coords",
+            "parentKey": {
+              "destination": "bakeries_id"
+            },
+            "tableMapping": {
+              "coord.0": "w",
+              "coord.1": "n",
+              "zipcode": {
+                "type": "column",
+                "mapping": {
+                  "destination": "zipcode",
+                  "primaryKey": true
+                }
+              },
+              "street": {
+                "type": "column",
+                "mapping": {
+                  "destination": "street",
+                  "primaryKey": true
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}
+JSON;
 
-        $config = Yaml::parse($yaml);
+        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
 
         $application = new Application($config);
         $application->actionRun($this->path);
@@ -162,14 +204,12 @@ CSV;
         $this->assertEquals($expectedCsvMain, file_get_contents($expectedCsvFileMain));
 
         // main manifest
-        $expectedYamlFileMain = $this->path . '/bakeries.csv.manifest';
-        $expectedYamlMain = <<<YAML
-primary_key:
-    - id
-incremental: true\n
-YAML;
-        $this->assertFileExists($expectedYamlFileMain);
-        $this->assertEquals($expectedYamlMain, file_get_contents($expectedYamlFileMain));
+        $actualJsonFileMain = $this->path . '/bakeries.csv.manifest';
+        $expectedJsonMain = <<<JSON
+{"primary_key":["id"],"incremental":true}
+JSON;
+        $this->assertFileExists($actualJsonFileMain);
+        $this->assertEquals($expectedJsonMain, file_get_contents($actualJsonFileMain));
 
         // related csv
         $expectedCsvFileRelated = $this->path . '/bakeries-coords.csv';
@@ -186,15 +226,12 @@ CSV;
         $this->assertEquals($expectedCsvRelated, file_get_contents($expectedCsvFileRelated));
 
         // related manifest
-        $expectedYamlFileRelated = $this->path . '/bakeries-coords.csv.manifest';
-        $expectedYamlRelated = <<<YAML
-primary_key:
-    - zipcode
-    - street
-incremental: true\n
-YAML;
-        $this->assertFileExists($expectedYamlFileRelated);
-        $this->assertEquals($expectedYamlRelated, file_get_contents($expectedYamlFileRelated));
+        $actualJsonFileRelated = $this->path . '/bakeries-coords.csv.manifest';
+        $expectedJsonRelated = <<<JSON
+{"primary_key":["zipcode","street"],"incremental":true}
+JSON;
+        $this->assertFileExists($actualJsonFileRelated);
+        $this->assertEquals($expectedJsonRelated, file_get_contents($actualJsonFileRelated));
     }
 
     public function testActionRunDuplicateExportNames()
@@ -202,27 +239,38 @@ YAML;
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Please remove duplicate export names');
 
-        $yaml = <<<YAML
-parameters:
-  db:
-    host: locahost # different host
-    port: 27017
-    database: test
-  exports:
-    - name: bakeries
-      id: 123
-      collection: restaurants
-      incremental: true
-      mapping:
-        '_id.\$oid': id
-    - name: bakeries
-      id: 123
-      collection: restaurants
-      incremental: true
-      mapping:
-        '_id.\$oid': id
-YAML;
-        $config =  Yaml::parse($yaml);
+        $json = <<<JSON
+{
+  "parameters": {
+    "db": {
+      "host": "locahost",
+      "port": 27017,
+      "database": "test"
+    },
+    "exports": [
+      {
+        "name": "bakeries",
+        "id": 123,
+        "collection": "restaurants",
+        "incremental": true,
+        "mapping": {
+          "_id.$oid": "id"
+        }
+      },
+      {
+        "name": "bakeries",
+        "id": 123,
+        "collection": "restaurants",
+        "incremental": true,
+        "mapping": {
+          "_id.$oid": "id"
+        }
+      }
+    ]
+  }
+}
+JSON;
+        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
 
         $application = new Application($config);
         $application->actionRun($this->path);

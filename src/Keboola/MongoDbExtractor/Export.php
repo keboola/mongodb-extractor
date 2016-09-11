@@ -6,7 +6,8 @@ use Keboola\CsvMap\Mapper;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
-use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Serializer\Encoder\JsonEncode;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Nette\Utils\Strings;
 
 class Export
@@ -35,6 +36,9 @@ class Export
     /** @var ConsoleOutput */
     private $consoleOutput;
 
+    /** @var JsonEncode */
+    private $jsonEncode;
+
     public function __construct(array $connectionOptions, array $exportOptions, $path, $name, $mapping)
     {
         $this->connectionOptions = $connectionOptions;
@@ -44,6 +48,7 @@ class Export
         $this->mapping = $mapping;
         $this->filesystem = new Filesystem;
         $this->consoleOutput = new ConsoleOutput;
+        $this->jsonEncode = new JsonEncode;
 
         $this->createCommand();
     }
@@ -124,7 +129,10 @@ class Export
                 ];
 
                 if (!$this->filesystem->exists($outputCsv . '.manifest')) {
-                    $this->filesystem->dumpFile($outputCsv . '.manifest', Yaml::dump($manifest));
+                    $this->filesystem->dumpFile(
+                        $outputCsv . '.manifest',
+                        $this->jsonEncode->encode($manifest, JsonEncoder::FORMAT)
+                    );
                 }
 
                 $this->filesystem->remove($file->getPathname());

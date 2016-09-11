@@ -3,7 +3,8 @@
 namespace Keboola\MongoDbExtractor;
 
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Serializer\Encoder\JsonDecode;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
 class ExtractorDirectConnectionTest extends ExtractorTestCase
 {
@@ -28,14 +29,18 @@ class ExtractorDirectConnectionTest extends ExtractorTestCase
 
     protected function getConfig()
     {
-        $config = <<<YAML
-parameters:
-  db:
-    host: mongodb
-    port: 27017
-    database: test
-YAML;
-        return Yaml::parse($config);
+        $config = <<<JSON
+{
+  "parameters": {
+    "db": {
+      "host": "mongodb",
+      "port": 27017,
+      "database": "test"
+    }
+  }
+}
+JSON;
+        return (new JsonDecode(true))->decode($config, JsonEncoder::FORMAT);
 
     }
 }

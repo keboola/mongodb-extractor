@@ -13,54 +13,68 @@ command, which exports data from specified database and collection. Then those d
 
 ## Configuration
 
-```yaml
-parameters:
-  db:
-    host: 127.0.0.1 # can be real host behind firewall, will be replaced by 127.0.0.1
-    port: 27017 # can be real port behind firewall, will be replaced by ssh.localPort
-    database: test
-    user: username # optional
-    password: password # optional (can be encrypted)
-    ssh: # optional section
-      enabled: true
-      sshHost: mongodb
-      sshPort: 22 # optional, default 22
-      user: root
-      localPort: 27017 # optional, default 33006
-      remoteHost: 127.0.0.1 # optional, default to initial value db.host
-      remotePort: 27017 # optional, default to initial value db.port
-      keys:
-        public: ssh-rsa ...your public key...
-        private: |
-          -----BEGIN RSA PRIVATE KEY-----
-          ...your private key...
-          -----END RSA PRIVATE KEY-----
-  exports:
-    - name: bronx-bakeries-westchester
-      collection: restaurants
-      query: '{borough: "Bronx", "address.street": "Westchester Avenue"}' # optional
-      incremental: true # optional, default false
-      mapping:
-        '_id.\$oid':
-          type: column
-          mapping:
-            destination: id
-            primaryKey: true
-        name: name
-        address:
-          type: table
-          destination: bakeries-coords
-          parentKey:
-            destination: bakeries_id
-          tableMapping:
-            coord.0: w
-            coord.1: n
-            zipcode:
-              type: column
-              mapping:
-                destination: zipcode
-                primaryKey: true
-            street: street
+```json
+{
+  "parameters": {
+    "db": {
+      "host": "127.0.0.1",
+      "port": 27017,
+      "database": "test",
+      "user": "username",
+      "password": "password",
+      "ssh": {
+        "enabled": true,
+        "sshHost": "mongodb",
+        "sshPort": 22,
+        "user": "root",
+        "localPort": 27017,
+        "remoteHost": "127.0.0.1",
+        "remotePort": 27017,
+        "keys": {
+          "public": "ssh-rsa ...your public key...",
+          "private": "-----BEGIN RSA PRIVATE KEY-----\n...your private key...\n-----END RSA PRIVATE KEY-----\n"
+        }
+      }
+    },
+    "exports": [
+      {
+        "name": "bronx-bakeries-westchester",
+        "collection": "restaurants",
+        "query": "{borough: \"Bronx\", \"address.street\": \"Westchester Avenue\"}",
+        "incremental": true,
+        "mapping": {
+          "_id.$oid": {
+            "type": "column",
+            "mapping": {
+              "destination": "id",
+              "primaryKey": true
+            }
+          },
+          "name": "name",
+          "address": {
+            "type": "table",
+            "destination": "bakeries-coords",
+            "parentKey": {
+              "destination": "bakeries_id"
+            },
+            "tableMapping": {
+              "coord.0": "w",
+              "coord.1": "n",
+              "zipcode": {
+                "type": "column",
+                "mapping": {
+                  "destination": "zipcode",
+                  "primaryKey": true
+                }
+              },
+              "street": "street"
+            }
+          }
+        }
+      }
+    ]
+  }
+}
 ```
 For more information about SSH tunnel creation see [`createSshTunnel` function](https://github.com/keboola/db-extractor-common/blob/8e66dc9/src/Keboola/DbExtractor/Extractor/Extractor.php#L47)
 
@@ -89,7 +103,7 @@ Application is prepared for run in container, you can start development same way
 After seeing all tests green, continue:
 
 1. Create data dir: `mkdir -p data`
-2. Follow configuration sample and create `config.yml` file and place it to your data directory (`data/config.yml`):
+2. Follow configuration sample and create `config.json` file and place it to your data directory (`data/config.json`):
 3. Run service: `docker-compose run --rm php` (starts container with `bash`)
 4. Simulate real run: `php src/run.php --data=./data`
 

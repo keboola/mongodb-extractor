@@ -2,8 +2,9 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use Symfony\Component\Yaml\Yaml;
 use Keboola\MongoDbExtractor\Application;
+use Symfony\Component\Serializer\Encoder\JsonDecode;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
 $arguments = getopt('', ['data:']);
 if (!isset($arguments['data'])) {
@@ -11,7 +12,7 @@ if (!isset($arguments['data'])) {
     exit(2);
 }
 
-$configFile = $arguments['data'] . '/config.yml';
+$configFile = $arguments['data'] . '/config.json';
 if (!file_exists($configFile)) {
     echo 'Config file not found' . "\n";
     exit(2);
@@ -20,7 +21,11 @@ if (!file_exists($configFile)) {
 define('ROOT_PATH', __DIR__ . '/..');
 
 try {
-    $config = Yaml::parse(file_get_contents($arguments['data'] . '/config.yml'));
+    $jsonDecode = new JsonDecode(true);
+    $config = $jsonDecode->decode(
+        file_get_contents($arguments['data'] . '/config.json'),
+        JsonEncoder::FORMAT
+    );
     $outputPath = $arguments['data'] . '/out/tables';
 
     $application = new Application($config);
