@@ -2,8 +2,9 @@
 
 namespace Keboola\MongoDbExtractor;
 
-use Symfony\Component\Yaml\Yaml;
 use Keboola\DbExtractor\Logger;
+use Symfony\Component\Serializer\Encoder\JsonDecode;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
 class ExtractorNotEnabledExportsTest extends \PHPUnit_Framework_TestCase
 {
@@ -18,22 +19,30 @@ class ExtractorNotEnabledExportsTest extends \PHPUnit_Framework_TestCase
 
     protected function getConfig()
     {
-        $config = <<<YAML
-parameters:
-  db:
-    host: mongodb
-    port: 27017
-    database: test
-  exports:
-    - name: bakeries
-      id: 123
-      enabled: false
-      collection: restaurants
-      incremental: true
-      mapping:
-        '_id.\$oid': id
-YAML;
-        return Yaml::parse($config);
+        $config = <<<JSON
+{
+  "parameters": {
+    "db": {
+      "host": "mongodb",
+      "port": 27017,
+      "database": "test"
+    },
+    "exports": [
+      {
+        "name": "bakeries",
+        "id": 123,
+        "enabled": false,
+        "collection": "restaurants",
+        "incremental": true,
+        "mapping": {
+          "_id.\$oid": "id"
+        }
+      }
+    ]
+  }
+}
+JSON;
+        return (new JsonDecode(true))->decode($config, JsonEncoder::FORMAT);
 
     }
 
