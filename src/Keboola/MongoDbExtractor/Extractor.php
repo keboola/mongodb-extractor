@@ -37,6 +37,11 @@ class Extractor extends \Keboola\DbExtractor\Extractor\Extractor
         }
 
         parent::__construct($this->parameters, $logger);
+
+        if (isset($this->parameters['db']['ssh']['enabled']) && $this->parameters['db']['ssh']['enabled'] === true) {
+            $this->parameters['db']['host'] = '127.0.0.1';
+            $this->parameters['db']['port'] = '33006';
+        }
     }
 
     /**
