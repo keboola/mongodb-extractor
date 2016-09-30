@@ -9,7 +9,9 @@ services:
     stdin_open: true
     links:
       - mongodb
+      - mongodb-ssh
       - mongodb-auth
+      - mongodb-auth-ssh
     command: >
              sh -c '
              sleep 4
@@ -26,7 +28,9 @@ services:
       dockerfile: Dockerfile-tests
     links:
       - mongodb
+      - mongodb-ssh
       - mongodb-auth
+      - mongodb-auth-ssh
     command: >
              sh -c '
              sleep 4
@@ -41,7 +45,9 @@ services:
       dockerfile: Dockerfile-tests
     links:
       - mongodb
+      - mongodb-ssh
       - mongodb-auth
+      - mongodb-auth-ssh
     volumes:
       - ./.git:/code/.git
     command: >
@@ -70,3 +76,13 @@ services:
              && mongod --shutdown
              && mongod --auth
              '
+
+  mongodb-ssh:
+    build: ./docker/ssh
+    links:
+      - mongodb:mongodb-behind-ssh
+
+  mongodb-auth-ssh:
+    build: ./docker/ssh
+    links:
+      - mongodb-auth:mongodb-auth-behind-ssh
