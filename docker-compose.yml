@@ -9,7 +9,9 @@ services:
     stdin_open: true
     links:
       - mongodb
+      - mongodb-ssh
       - mongodb-auth
+      - mongodb-auth-ssh
     command: >
              sh -c '
              sleep 4
@@ -26,7 +28,9 @@ services:
       dockerfile: Dockerfile-tests
     links:
       - mongodb
+      - mongodb-ssh
       - mongodb-auth
+      - mongodb-auth-ssh
     command: >
              sh -c '
              sleep 4
@@ -41,7 +45,9 @@ services:
       dockerfile: Dockerfile-tests
     links:
       - mongodb
+      - mongodb-ssh
       - mongodb-auth
+      - mongodb-auth-ssh
     volumes:
       - ./.git:/code/.git
     command: >
@@ -54,7 +60,7 @@ services:
              '
 
   mongodb:
-    image: quay.io/keboola/mongodb-extractor-mongodb
+    image: mongo:3.2
 
   mongodb-auth:
     extends:
@@ -63,10 +69,19 @@ services:
       - ./docker/mongodb/init.js:/init.js
     command: >
              sh -c '
-             service ssh start
-             && sh -c "mongod &"
+             sh -c "mongod &"
              && sleep 2
              && mongo < /init.js
              && mongod --shutdown
              && mongod --auth
              '
+
+  mongodb-ssh:
+    build: ./docker/ssh
+    links:
+      - mongodb:mongodb-behind-ssh
+
+  mongodb-auth-ssh:
+    build: ./docker/ssh
+    links:
+      - mongodb-auth:mongodb-auth-behind-ssh

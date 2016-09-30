@@ -1,0 +1,11 @@
+--- ssh.service	2016-09-30 19:28:54.319444769 +0800
++++ ssh.service	2016-09-30 19:30:04.571527561 +0800
+@@ -5,7 +5,7 @@
+ 
+ [Service]
+ EnvironmentFile=-/etc/default/ssh
+-ExecStart=/usr/sbin/sshd -D $SSHD_OPTS
++ExecStart=/usr/sbin/sshd -D $SSHD_OPTS -E /var/log/sshd.log
+ ExecReload=/bin/kill -HUP $MAINPID
+ KillMode=process
+ Restart=on-failure
