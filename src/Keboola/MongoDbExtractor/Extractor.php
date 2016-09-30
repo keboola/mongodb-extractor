@@ -60,7 +60,7 @@ class Extractor extends \Keboola\DbExtractor\Extractor\Extractor
     }
 
     /**
-     * Sends ping command to database
+     * Sends listCollections command to test connection/credentials
      */
     public function testConnection()
     {
