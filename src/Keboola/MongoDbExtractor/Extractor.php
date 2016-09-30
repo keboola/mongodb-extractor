@@ -64,7 +64,7 @@ class Extractor extends \Keboola\DbExtractor\Extractor\Extractor
      */
     public function testConnection()
     {
-        $this->db->executeCommand($this->parameters['db']['database'], new Command(['ping' => 1]));
+        $this->db->executeCommand($this->parameters['db']['database'], new Command(['listCollections' => 1]));
     }
 
     /**
