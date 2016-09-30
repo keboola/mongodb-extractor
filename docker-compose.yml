@@ -77,11 +77,11 @@ services:
              '
 
   mongodb-ssh:
-    build: ./docker/ssh
+    image: quay.io/keboola/mongodb-extractor-ssh
     links:
       - mongodb:mongodb-behind-ssh
 
   mongodb-auth-ssh:
-    build: ./docker/ssh
+    image: quay.io/keboola/mongodb-extractor-ssh
     links:
       - mongodb-auth:mongodb-auth-behind-ssh
