@@ -99,7 +99,7 @@ JSON;
 {
   "parameters": {
     "db": {
-      "host": "mongodb",
+      "host": "mongodb-auth",
       "port": 27017,
       "database": "test",
       "user": "user",
