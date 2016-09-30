@@ -37,14 +37,14 @@ class ExtractorSshConnectionWithAuthTest extends ExtractorTestCase
 {
   "parameters": {
     "db": {
-      "host": "mongodb-auth",
+      "host": "mongodb-auth-behind-ssh",
       "port": 27017,
       "database": "test",
       "user": "user",
       "password": "user",
       "ssh": {
         "enabled": true,
-        "sshHost": "mongodb-auth",
+        "sshHost": "mongodb-auth-ssh",
         "sshPort": 22,
         "user": "root",
         "keys": {

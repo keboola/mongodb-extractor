@@ -37,12 +37,12 @@ class ExtractorSshConnectionTest extends ExtractorTestCase
 {
   "parameters": {
     "db": {
-      "host": "mongodb",
+      "host": "mongodb-behind-ssh",
       "port": 27017,
       "database": "test",
       "ssh": {
         "enabled": true,
-        "sshHost": "mongodb",
+        "sshHost": "mongodb-ssh",
         "sshPort": 22,
         "user": "root",
         "keys": {
