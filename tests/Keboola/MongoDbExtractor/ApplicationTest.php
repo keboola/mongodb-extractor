@@ -91,6 +91,39 @@ JSON;
         $application->actionTestConnection();
     }
 
+    public function testActionTestConnectionFailWithoutPassword()
+    {
+        $this->expectException(\MongoDB\Driver\Exception\RuntimeException::class);
+        $this->expectExceptionMessageRegExp('~not authorized~');
+
+        $json = <<<JSON
+{
+  "parameters": {
+    "db": {
+      "host": "mongodb-auth",
+      "port": 27017,
+      "database": "test"
+    },
+    "exports": [
+      {
+        "name": "bakeries",
+        "id": 123,
+        "collection": "restaurants",
+        "incremental": true,
+        "mapping": {
+          "_id.\$oid": "id"
+        }
+      }
+    ]
+  }
+}
+JSON;
+        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+
+        $application = new Application($config);
+        $application->actionTestConnection();
+    }
+
     public function testActionTestConnectionFailWrongPassword()
     {
         $this->expectException(\MongoDB\Driver\Exception\AuthenticationException::class);
@@ -99,7 +132,7 @@ JSON;
 {
   "parameters": {
     "db": {
-      "host": "mongodb",
+      "host": "mongodb-auth",
       "port": 27017,
       "database": "test",
       "user": "user",
