@@ -27,9 +27,6 @@ command, which exports data from specified database and collection. Then those d
         "sshHost": "mongodb",
         "sshPort": 22,
         "user": "root",
-        "localPort": 27017,
-        "remoteHost": "127.0.0.1",
-        "remotePort": 27017,
         "keys": {
           "public": "ssh-rsa ...your public key...",
           "private": "-----BEGIN RSA PRIVATE KEY-----\n...your private key...\n-----END RSA PRIVATE KEY-----\n"
