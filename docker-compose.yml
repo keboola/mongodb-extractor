@@ -60,7 +60,7 @@ services:
              '
 
   mongodb:
-    image: quay.io/keboola/mongodb-extractor-mongodb
+    image: mongo:3.2
 
   mongodb-auth:
     extends:
@@ -69,8 +69,7 @@ services:
       - ./docker/mongodb/init.js:/init.js
     command: >
              sh -c '
-             service ssh start
-             && sh -c "mongod &"
+             sh -c "mongod &"
              && sleep 2
              && mongo < /init.js
              && mongod --shutdown
