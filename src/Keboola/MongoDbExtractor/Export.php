@@ -161,8 +161,10 @@ class Export
      */
     private function appendContentToFile($filename, $content)
     {
-        if (false === @file_put_contents($filename, $content, FILE_APPEND | LOCK_EX)) {
-            throw new Exception(sprintf('Failed to write file "%s".', $filename), 0, null, $filename);
+        if (@file_put_contents($filename, $content, FILE_APPEND | LOCK_EX) === false) {
+            $message = 'Failed write to file "' . $filename . '". Free space '
+                . disk_free_space(dirname($filename)) . '.';
+            throw new Exception($message, 0, null);
         }
     }
 
