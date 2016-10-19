@@ -58,8 +58,6 @@ class ConfigDefinition extends DbExtractorConfigDefinition
                             ->end()
                             ->booleanNode('incremental')->end()
                             ->variableNode('mapping')
-                                ->isRequired()
-                                ->cannotBeEmpty()
                             ->end()
                         ->end()
                     ->end()

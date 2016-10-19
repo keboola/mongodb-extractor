@@ -39,8 +39,13 @@ class Export
     /** @var JsonEncode */
     private $jsonEncode;
 
-    public function __construct(array $connectionOptions, array $exportOptions, $path, $name, $mapping)
+    public function __construct(array $connectionOptions, array $exportOptions, string $path, string $name, array $mapping)
     {
+        // check mapping section
+        if ($exportOptions['mode'] === 'mapping' && empty($mapping)) {
+            throw new Exception('Mapping cannot be empty in "mapping" export mode.');
+        }
+
         $this->connectionOptions = $connectionOptions;
         $this->exportOptions = $exportOptions;
         $this->path = $path;
