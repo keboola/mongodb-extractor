@@ -308,4 +308,34 @@ JSON;
         $application = new Application($config);
         $application->actionRun($this->path);
     }
+
+    public function testMissingMappingSection()
+    {
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessageRegExp('~Mapping cannot be empty~');
+
+        $json = <<<JSON
+{
+  "parameters": {
+    "db": {
+      "host": "mongodb",
+      "port": 27017,
+      "database": "test"
+    },
+    "exports": [
+      {
+        "name": "restaurants",
+        "id": 123,
+        "collection": "restaurants"
+      }
+    ]
+  }
+}
+JSON;
+
+        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+
+        $application = new Application($config);
+        $application->actionRun($this->path);
+    }
 }
