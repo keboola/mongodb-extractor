@@ -2,12 +2,12 @@
 
 namespace Keboola\MongoDbExtractor;
 
-use Keboola\CsvMap\Mapper;
+use Keboola\MongoDbExtractor\Parser\Mapping;
+use Keboola\MongoDbExtractor\Parser\Raw;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Serializer\Encoder\JsonEncode;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Nette\Utils\Strings;
 
 class Export
@@ -74,6 +74,16 @@ class Export
     {
         $this->logToConsoleOutput('Parsing "' . $this->getOutputFilename() . '"');
 
+        $manifestOptions = [
+            'incremental' => (bool) ($this->exportOptions['incremental'] ?? false)
+        ];
+
+        if ($this->exportOptions['mode'] === 'raw') {
+            $parser = new Raw($this->name, $this->path, $manifestOptions);
+        } else {
+            $parser = new Mapping($this->name, $this->mapping, $this->path, $manifestOptions);
+        }
+
         $handle = fopen($this->getOutputFilename(), 'r');
 
         $parsedRecordsCount = 1;
@@ -81,10 +91,7 @@ class Export
             $line = fgets($handle);
             $data = trim($line) !== '' ? [json_decode($line)] : [];
 
-            $parser = new Mapper($this->mapping, $this->name);
             $parser->parse($data);
-
-            $this->writeCsvAndManifestFiles($parser->getCsvFiles());
 
             if ($parsedRecordsCount % 5e3 === 0) {
                 $this->logToConsoleOutput('Parsed ' . $parsedRecordsCount . ' records.');
@@ -99,48 +106,6 @@ class Export
     }
 
     /**
-     * Writes .csv and .manifest files
-     * @param array $csvFiles
-     */
-    private function writeCsvAndManifestFiles(array $csvFiles)
-    {
-        foreach ($csvFiles as $file) {
-            if ($file !== null) {
-                $name = Strings::webalize($file->getName());
-                $outputCsv = $this->path . '/' . $name . '.csv';
-
-                $content = file_get_contents($file->getPathname());
-
-                // csv-map doesn't have option to skip header yet,
-                // so we skip header if file exists
-                if ($this->filesystem->exists($outputCsv)) {
-                    $contentArr = explode("\n", $content);
-                    array_shift($contentArr);
-                    $content = implode("\n", $contentArr);
-                }
-
-                $this->appendContentToFile($outputCsv, $content);
-
-                $manifest = [
-                    'primary_key' => $file->getPrimaryKey(true),
-                    'incremental' => isset($this->exportOptions['incremental'])
-                        ? (bool) $this->exportOptions['incremental']
-                        : false,
-                ];
-
-                if (!$this->filesystem->exists($outputCsv . '.manifest')) {
-                    $this->filesystem->dumpFile(
-                        $outputCsv . '.manifest',
-                        $this->jsonEncode->encode($manifest, JsonEncoder::FORMAT)
-                    );
-                }
-
-                $this->filesystem->remove($file->getPathname());
-            }
-        }
-    }
-
-    /**
      * Outputs text to console prefixed with actual time (to look similar as MongoDB log)
      * @param $text
      */
@@ -151,21 +116,6 @@ class Export
             . str_pad(round(microtime(true) - time(), 3) * 1000, 3, '0', STR_PAD_LEFT)
             . date('O') . "\t" . $text
         );
-    }
-
-    /**
-     * Append content to specified file
-     * @param $filename
-     * @param $content
-     * @throws Exception
-     */
-    private function appendContentToFile($filename, $content)
-    {
-        if (@file_put_contents($filename, $content, FILE_APPEND | LOCK_EX) === false) {
-            $message = 'Failed write to file "' . $filename . '". Free space '
-                . disk_free_space(dirname($filename)) . '.';
-            throw new Exception($message, 0, null);
-        }
     }
 
     /**
