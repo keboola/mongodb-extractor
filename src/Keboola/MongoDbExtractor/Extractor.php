@@ -88,7 +88,7 @@ class Extractor extends \Keboola\DbExtractor\Extractor\Extractor
                 $exportOptions,
                 $outputPath,
                 $exportOptions['name'],
-                $exportOptions['mapping']
+                $exportOptions['mapping'] ?? []
             );
 
             if ($export->isEnabled()) {
