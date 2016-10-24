@@ -7,7 +7,6 @@ use Keboola\MongoDbExtractor\Parser\Raw;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
-use Symfony\Component\Serializer\Encoder\JsonEncode;
 use Nette\Utils\Strings;
 
 class Export
@@ -36,9 +35,6 @@ class Export
     /** @var ConsoleOutput */
     private $consoleOutput;
 
-    /** @var JsonEncode */
-    private $jsonEncode;
-
     public function __construct(array $connectionOptions, array $exportOptions, string $path, string $name, array $mapping)
     {
         // check mapping section
@@ -53,7 +49,6 @@ class Export
         $this->mapping = $mapping;
         $this->filesystem = new Filesystem;
         $this->consoleOutput = new ConsoleOutput;
-        $this->jsonEncode = new JsonEncode;
 
         $this->createCommand();
     }
