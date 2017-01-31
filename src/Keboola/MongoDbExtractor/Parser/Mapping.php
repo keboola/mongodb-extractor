@@ -51,38 +51,40 @@ class Mapping
         $mapper->parse($data);
 
         foreach ($mapper->getCsvFiles() as $file) {
-            $name = Strings::webalize($file->getName());
-            $outputCsv = $this->path . '/' . $name . '.csv';
+            if ($file !== null) {
+                $name = Strings::webalize($file->getName());
+                $outputCsv = $this->path . '/' . $name . '.csv';
 
-            $content = file_get_contents($file->getPathname());
+                $content = file_get_contents($file->getPathname());
 
-            // csv-map doesn't have option to skip header yet,
-            // so we skip header if file exists
-            if ($this->filesystem->exists($outputCsv)) {
-                $contentArr = explode("\n", $content);
-                array_shift($contentArr);
-                $content = implode("\n", $contentArr);
+                // csv-map doesn't have option to skip header yet,
+                // so we skip header if file exists
+                if ($this->filesystem->exists($outputCsv)) {
+                    $contentArr = explode("\n", $content);
+                    array_shift($contentArr);
+                    $content = implode("\n", $contentArr);
+                }
+
+                if (@file_put_contents($outputCsv, $content, FILE_APPEND | LOCK_EX) === false) {
+                    throw new Exception('Failed write to file "' . $outputCsv);
+                }
+
+                $manifest = [
+                    'primary_key' => $file->getPrimaryKey(true),
+                    'incremental' => isset($this->manifestOptions['incremental'])
+                        ? (bool) $this->manifestOptions['incremental']
+                        : false,
+                ];
+
+                if (!$this->filesystem->exists($outputCsv . '.manifest')) {
+                    $this->filesystem->dumpFile(
+                        $outputCsv . '.manifest',
+                        $this->jsonEncode->encode($manifest, JsonEncoder::FORMAT)
+                    );
+                }
+
+                $this->filesystem->remove($file->getPathname());
             }
-
-            if (@file_put_contents($outputCsv, $content, FILE_APPEND | LOCK_EX) === false) {
-                throw new Exception('Failed write to file "' . $outputCsv);
-            }
-
-            $manifest = [
-                'primary_key' => $file->getPrimaryKey(true),
-                'incremental' => isset($this->manifestOptions['incremental'])
-                    ? (bool) $this->manifestOptions['incremental']
-                    : false,
-            ];
-
-            if (!$this->filesystem->exists($outputCsv . '.manifest')) {
-                $this->filesystem->dumpFile(
-                    $outputCsv . '.manifest',
-                    $this->jsonEncode->encode($manifest, JsonEncoder::FORMAT)
-                );
-            }
-
-            $this->filesystem->remove($file->getPathname());
         }
     }
 }
