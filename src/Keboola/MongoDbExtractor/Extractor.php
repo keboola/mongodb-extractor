@@ -2,6 +2,7 @@
 
 namespace Keboola\MongoDbExtractor;
 
+use Keboola\SSHTunnel\SSH;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\Command;
 use Keboola\DbExtractor\Logger;
@@ -36,12 +37,20 @@ class Extractor extends \Keboola\DbExtractor\Extractor\Extractor
             }
         }
 
-        parent::__construct($this->parameters, $logger);
-
         if (isset($this->parameters['db']['ssh']['enabled']) && $this->parameters['db']['ssh']['enabled'] === true) {
+            $sshOptions = $this->parameters['db']['ssh'];
+            $sshOptions['localPort'] = '33006';
+            $sshOptions['privateKey'] = $sshOptions['keys']['private'];
+            $sshOptions['remoteHost'] = $this->parameters['db']['host'];
+            $sshOptions['remotePort'] = $this->parameters['db']['port'];
+
+            (new SSH())->openTunnel($sshOptions);
+
             $this->parameters['db']['host'] = '127.0.0.1';
-            $this->parameters['db']['port'] = '33006';
+            $this->parameters['db']['port'] = $sshOptions['localPort'];
         }
+
+        $this->db = $this->createConnection($this->parameters['db']);
     }
 
     /**
