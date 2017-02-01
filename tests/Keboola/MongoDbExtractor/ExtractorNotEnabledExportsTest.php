@@ -36,7 +36,8 @@ class ExtractorNotEnabledExportsTest extends \PHPUnit_Framework_TestCase
         "incremental": true,
         "mapping": {
           "_id.\$oid": "id"
-        }
+        },
+        "mode": "mapping"
       }
     ]
   }

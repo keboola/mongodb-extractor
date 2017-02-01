@@ -44,6 +44,7 @@ abstract class ExtractorTestCase extends \PHPUnit_Framework_TestCase
             'name' => 'export-all',
             'mapping' => $this->getMapping(),
             'enabled' => true,
+            'mode' => 'mapping',
         ];
 
         $parameters = $this->getConfig()['parameters'];
@@ -71,6 +72,7 @@ abstract class ExtractorTestCase extends \PHPUnit_Framework_TestCase
             'name' => 'export-one',
             'mapping' => $this->getMapping(),
             'enabled' => true,
+            'mode' => 'mapping',
         ];
 
         $parameters = $this->getConfig()['parameters'];
@@ -100,6 +102,7 @@ CSV;
             'name' => '_Reštaurácia s IDčkom 5716054bee6e764c94fa7ddd',
             'mapping' => $this->getMapping(),
             'enabled' => true,
+            'mode' => 'mapping',
         ];
 
         $parameters = $this->getConfig()['parameters'];
@@ -129,6 +132,7 @@ CSV;
             'name' => 'export-multi',
             'mapping' => $this->getMapping(),
             'enabled' => true,
+            'mode' => 'mapping',
         ];
 
         $parameters = $this->getConfig()['parameters'];
@@ -160,6 +164,7 @@ CSV;
             'name' => 'export-multi-fields-paths',
             'mapping' => $this->getMapping(),
             'enabled' => true,
+            'mode' => 'mapping',
         ];
 
         $parameters = $this->getConfig()['parameters'];
@@ -194,6 +199,7 @@ CSV;
             'name' => 'export-multi-with-sort-and-limit',
             'mapping' => $this->getMapping(),
             'enabled' => true,
+            'mode' => 'mapping',
         ];
 
         $parameters = $this->getConfig()['parameters'];
@@ -227,6 +233,7 @@ CSV;
             'name' => 'export-bad-query',
             'mapping' => $this->getMapping(),
             'enabled' => true,
+            'mode' => 'mapping',
         ];
 
         $parameters = $this->getConfig()['parameters'];
@@ -244,6 +251,7 @@ CSV;
             'name' => 'export-random-database',
             'mapping' => $this->getMapping(),
             'enabled' => true,
+            'mode' => 'mapping',
         ];
 
         $parameters = $this->getConfig()['parameters'];
@@ -301,6 +309,7 @@ JSON
                     ]
                 ],
             ],
+            'mode' => 'mapping',
             'enabled' => true,
         ];
 

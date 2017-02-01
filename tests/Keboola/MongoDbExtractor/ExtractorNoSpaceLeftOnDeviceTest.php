@@ -42,6 +42,7 @@ class ExtractorNoSpaceLeftOnDeviceTest extends \PHPUnit_Framework_TestCase
             'name' => 'export-one',
             'mapping' => $this->getMapping(),
             'enabled' => true,
+            'mode' => 'mapping',
         ];
 
         $parameters = $this->getConfig()['parameters'];
