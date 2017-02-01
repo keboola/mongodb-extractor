@@ -21,6 +21,7 @@ services:
              '
     volumes:
       - ./:/code
+      - ./docker/php/php.ini:/usr/local/etc/php/php.ini
 
   php-tests:
     build:
@@ -38,6 +39,8 @@ services:
              && mongoimport --host mongodb-auth --username user --password user --db test --collection restaurants --drop --file tests/dataset.json
              && ./tests.sh
              '
+    volumes:
+      - ./docker/php/php.ini:/usr/local/etc/php/php.ini
 
   php-tests-with-report:
     build:
@@ -48,8 +51,6 @@ services:
       - mongodb-ssh
       - mongodb-auth
       - mongodb-auth-ssh
-    volumes:
-      - ./.git:/code/.git
     command: >
              sh -c '
              sleep 4
@@ -58,6 +59,9 @@ services:
              && ./tests.sh
              && ./vendor/bin/test-reporter
              '
+    volumes:
+      - ./.git:/code/.git
+      - ./docker/php/php.ini:/usr/local/etc/php/php.ini
 
   mongodb:
     image: mongo:3.2
