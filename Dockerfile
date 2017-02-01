@@ -16,7 +16,7 @@ WORKDIR /root
 RUN curl -sS https://getcomposer.org/installer | php \
   && mv composer.phar /usr/local/bin/composer
 
-COPY ./docker/php/php.ini /usr/local/etc/php/php.ini
+COPY ./docker/php/php-prod.ini /usr/local/etc/php/php.ini
 COPY . /code
 
 WORKDIR /code
