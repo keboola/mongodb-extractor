@@ -40,7 +40,12 @@ class Extractor extends \Keboola\DbExtractor\Extractor\Extractor
         if (isset($this->parameters['db']['ssh']['enabled']) && $this->parameters['db']['ssh']['enabled'] === true) {
             $sshOptions = $this->parameters['db']['ssh'];
             $sshOptions['localPort'] = '33006';
-            $sshOptions['privateKey'] = $sshOptions['keys']['private'];
+
+            $privateKey = isset($sshOptions['keys']['#private'])
+                ? $sshOptions['keys']['#private']
+                : $sshOptions['keys']['private'];
+            $sshOptions['privateKey'] = $privateKey;
+
             $sshOptions['remoteHost'] = $this->parameters['db']['host'];
             $sshOptions['remotePort'] = $this->parameters['db']['port'];
 
