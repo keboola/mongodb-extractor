@@ -5,9 +5,8 @@ namespace Keboola\MongoDbExtractor;
 use Keboola\SSHTunnel\SSH;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\Command;
-use Keboola\DbExtractor\Logger;
 
-class Extractor extends \Keboola\DbExtractor\Extractor\Extractor
+class Extractor
 {
     /** @var Manager */
     protected $db;
@@ -27,7 +26,7 @@ class Extractor extends \Keboola\DbExtractor\Extractor\Extractor
         '#password' => 'password',
     ];
 
-    public function __construct($parameters, Logger $logger)
+    public function __construct($parameters)
     {
         $this->parameters = $parameters;
 

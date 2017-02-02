@@ -2,7 +2,6 @@
 
 namespace Keboola\MongoDbExtractor;
 
-use Keboola\DbExtractor\Logger;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
@@ -17,12 +16,8 @@ class ExtractorNoSpaceLeftOnDeviceTest extends \PHPUnit_Framework_TestCase
 
     private $file = 'export-one.csv';
 
-    private $logger;
-
     protected function setUp()
     {
-        $this->logger = new Logger('keboola.ex-mongodb');
-
         $this->fs = new Filesystem;
         $this->fs->remove($this->path);
         $this->fs->mkdir($this->path);
@@ -48,7 +43,7 @@ class ExtractorNoSpaceLeftOnDeviceTest extends \PHPUnit_Framework_TestCase
         $parameters = $this->getConfig()['parameters'];
         $parameters['exports'][] = $exportParams;
 
-        $extractor = new Extractor($parameters, $this->logger);
+        $extractor = new Extractor($parameters);
         $extractor->extract($this->path);
     }
 

@@ -2,19 +2,15 @@
 
 namespace Keboola\MongoDbExtractor;
 
-use Keboola\DbExtractor\Logger;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
 class ExtractorNotEnabledExportsTest extends \PHPUnit_Framework_TestCase
 {
-    private $logger;
-
     protected $path = '/tmp/extractor-not-enabled-exports';
 
     protected function setUp()
     {
-        $this->logger = new Logger('keboola.ex-mongodb');
     }
 
     protected function getConfig()
@@ -52,7 +48,7 @@ JSON;
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Please enable at least one export');
 
-        $extractor = new Extractor($this->getConfig()['parameters'], $this->logger);
+        $extractor = new Extractor($this->getConfig()['parameters']);
         $extractor->extract($this->path);
     }
 }
