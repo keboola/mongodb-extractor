@@ -18,8 +18,6 @@ if (!file_exists($configFile)) {
     exit(2);
 }
 
-define('ROOT_PATH', __DIR__ . '/..');
-
 try {
     $jsonDecode = new JsonDecode(true);
     $config = $jsonDecode->decode(
