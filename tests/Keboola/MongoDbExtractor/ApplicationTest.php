@@ -363,7 +363,7 @@ JSON;
 
     public function testMissingMappingSection()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(UserException::class);
         $this->expectExceptionMessageRegExp('~Mapping cannot be empty~');
 
         $json = <<<JSON

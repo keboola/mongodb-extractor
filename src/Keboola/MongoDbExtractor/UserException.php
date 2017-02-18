@@ -2,6 +2,6 @@
 
 namespace Keboola\MongoDbExtractor;
 
-class Exception extends \Exception
+class UserException extends \Exception
 {
 }

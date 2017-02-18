@@ -39,7 +39,7 @@ class Export
     {
         // check mapping section
         if ($exportOptions['mode'] === 'mapping' && empty($mapping)) {
-            throw new Exception('Mapping cannot be empty in "mapping" export mode.');
+            throw new UserException('Mapping cannot be empty in "mapping" export mode.');
         }
 
         $this->connectionOptions = $connectionOptions;
