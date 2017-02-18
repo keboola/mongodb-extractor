@@ -29,7 +29,7 @@ class ExtractorNoSpaceLeftOnDeviceTest extends \PHPUnit_Framework_TestCase
 
     public function testExportNoSpaceLeftOnDevice()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(\Exception::class);
 
         $exportParams = [
             'collection' => 'restaurants',

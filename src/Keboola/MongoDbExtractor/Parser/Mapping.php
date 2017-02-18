@@ -3,7 +3,6 @@
 namespace Keboola\MongoDbExtractor\Parser;
 
 use Keboola\CsvMap\Mapper;
-use Keboola\MongoDbExtractor\Exception;
 use Nette\Utils\Strings;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Serializer\Encoder\JsonEncode;
@@ -43,7 +42,7 @@ class Mapping
     /**
      * Parses provided data and writes to output files
      * @param array $data
-     * @throws Exception
+     * @throws \Exception
      */
     public function parse(array $data)
     {
@@ -66,7 +65,7 @@ class Mapping
                 }
 
                 if (@file_put_contents($outputCsv, $content, FILE_APPEND | LOCK_EX) === false) {
-                    throw new Exception('Failed write to file "' . $outputCsv);
+                    throw new \Exception('Failed write to file "' . $outputCsv);
                 }
 
                 $manifest = [
