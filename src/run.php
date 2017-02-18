@@ -1,6 +1,7 @@
 <?php
 
 require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/common.php';
 
 use Keboola\MongoDbExtractor\Application;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
