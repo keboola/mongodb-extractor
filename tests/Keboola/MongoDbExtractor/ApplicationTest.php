@@ -287,7 +287,7 @@ JSON;
         "collection": "restaurants",
         "incremental": true,
         "mapping": {
-          "_id.$oid": "id"
+          "_id.\$oid": "id"
         }
       },
       {
@@ -296,7 +296,7 @@ JSON;
         "collection": "restaurants",
         "incremental": true,
         "mapping": {
-          "_id.$oid": "id"
+          "_id.\$oid": "id"
         }
       }
     ]

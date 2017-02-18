@@ -2,7 +2,6 @@
 
 namespace Keboola\MongoDbExtractor;
 
-use Keboola\DbExtractor\Logger;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
@@ -10,11 +9,8 @@ abstract class ExtractorTestCase extends \PHPUnit_Framework_TestCase
 {
     protected $path;
 
-    protected $logger;
-
     protected function setUp()
     {
-        $this->logger = new Logger('keboola.ex-mongodb');
     }
 
     abstract protected function getConfig();
@@ -44,12 +40,13 @@ abstract class ExtractorTestCase extends \PHPUnit_Framework_TestCase
             'name' => 'export-all',
             'mapping' => $this->getMapping(),
             'enabled' => true,
+            'mode' => 'mapping',
         ];
 
         $parameters = $this->getConfig()['parameters'];
         $parameters['exports'][] = $exportParams;
 
-        $extractor = new Extractor($parameters, $this->logger);
+        $extractor = new Extractor($parameters);
         $export = $extractor->extract($this->path);
 
         $this->assertTrue($export, 'Command successful');
@@ -71,12 +68,13 @@ abstract class ExtractorTestCase extends \PHPUnit_Framework_TestCase
             'name' => 'export-one',
             'mapping' => $this->getMapping(),
             'enabled' => true,
+            'mode' => 'mapping',
         ];
 
         $parameters = $this->getConfig()['parameters'];
         $parameters['exports'][] = $exportParams;
 
-        $extractor = new Extractor($parameters, $this->logger);
+        $extractor = new Extractor($parameters);
         $export = $extractor->extract($this->path);
 
         $this->assertTrue($export, 'Command successful');
@@ -100,12 +98,13 @@ CSV;
             'name' => '_Reštaurácia s IDčkom 5716054bee6e764c94fa7ddd',
             'mapping' => $this->getMapping(),
             'enabled' => true,
+            'mode' => 'mapping',
         ];
 
         $parameters = $this->getConfig()['parameters'];
         $parameters['exports'][] = $exportParams;
 
-        $extractor = new Extractor($parameters, $this->logger);
+        $extractor = new Extractor($parameters);
         $export = $extractor->extract($this->path);
 
         $this->assertTrue($export, 'Command successful');
@@ -129,12 +128,13 @@ CSV;
             'name' => 'export-multi',
             'mapping' => $this->getMapping(),
             'enabled' => true,
+            'mode' => 'mapping',
         ];
 
         $parameters = $this->getConfig()['parameters'];
         $parameters['exports'][] = $exportParams;
 
-        $extractor = new Extractor($parameters, $this->logger);
+        $extractor = new Extractor($parameters);
         $export = $extractor->extract($this->path);
 
         $this->assertTrue($export, 'Command successful');
@@ -160,12 +160,13 @@ CSV;
             'name' => 'export-multi-fields-paths',
             'mapping' => $this->getMapping(),
             'enabled' => true,
+            'mode' => 'mapping',
         ];
 
         $parameters = $this->getConfig()['parameters'];
         $parameters['exports'][] = $exportParams;
 
-        $extractor = new Extractor($parameters, $this->logger);
+        $extractor = new Extractor($parameters);
         $export = $extractor->extract($this->path);
 
         $this->assertTrue($export, 'Command successful');
@@ -194,12 +195,13 @@ CSV;
             'name' => 'export-multi-with-sort-and-limit',
             'mapping' => $this->getMapping(),
             'enabled' => true,
+            'mode' => 'mapping',
         ];
 
         $parameters = $this->getConfig()['parameters'];
         $parameters['exports'][] = $exportParams;
 
-        $extractor = new Extractor($parameters, $this->logger);
+        $extractor = new Extractor($parameters);
         $export = $extractor->extract($this->path);
 
         $this->assertTrue($export, 'Command successful');
@@ -227,12 +229,13 @@ CSV;
             'name' => 'export-bad-query',
             'mapping' => $this->getMapping(),
             'enabled' => true,
+            'mode' => 'mapping',
         ];
 
         $parameters = $this->getConfig()['parameters'];
         $parameters['exports'][] = $exportParams;
 
-        $extractor = new Extractor($parameters, $this->logger);
+        $extractor = new Extractor($parameters);
         $export = $extractor->extract($this->path);
     }
 
@@ -244,12 +247,13 @@ CSV;
             'name' => 'export-random-database',
             'mapping' => $this->getMapping(),
             'enabled' => true,
+            'mode' => 'mapping',
         ];
 
         $parameters = $this->getConfig()['parameters'];
         $parameters['exports'][] = $exportParams;
 
-        $extractor = new Extractor($parameters, $this->logger);
+        $extractor = new Extractor($parameters);
         $export = $extractor->extract($this->path);
 
         $this->assertTrue($export, 'Command successful');
@@ -301,13 +305,14 @@ JSON
                     ]
                 ],
             ],
+            'mode' => 'mapping',
             'enabled' => true,
         ];
 
         $parameters = $this->getConfig()['parameters'];
         $parameters['exports'][] = $exportParams;
 
-        $extractor = new Extractor($parameters, $this->logger);
+        $extractor = new Extractor($parameters);
         $export = $extractor->extract($this->path);
 
         $this->assertTrue($export, 'Command successful');

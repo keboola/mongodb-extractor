@@ -3,7 +3,6 @@
 namespace Keboola\MongoDbExtractor;
 
 use Symfony\Component\Config\Definition\Processor;
-use Keboola\DbExtractor\Logger;
 
 class Application
 {
@@ -33,7 +32,7 @@ class Application
      */
     public function actionRun($outputPath)
     {
-        $extractor = new Extractor($this->parameters, new Logger('keboola.ex-mongodb'));
+        $extractor = new Extractor($this->parameters);
         return $extractor->extract($outputPath);
     }
 
@@ -43,7 +42,7 @@ class Application
      */
     public function actionTestConnection()
     {
-        $extractor = new Extractor($this->parameters, new Logger('keboola.ex-mongodb'));
+        $extractor = new Extractor($this->parameters);
         $extractor->testConnection();
         return [
             'status' => 'ok'
