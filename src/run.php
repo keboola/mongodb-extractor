@@ -7,6 +7,7 @@ use Keboola\MongoDbExtractor\Application;
 use Monolog\Logger;
 use Monolog\Handler\ErrorLogHandler;
 use Keboola\MongoDbExtractor\UserException;
+use Keboola\CsvMap\Exception\BadDataException;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
@@ -49,6 +50,10 @@ try {
     exit(1);
 } catch (MongoDB\Driver\Exception\ConnectionTimeoutException $e) {
     echo $e->getMessage();
+    exit(1);
+} catch (BadDataException $e) {
+    echo $e->getMessage()
+        . '. Please check mapping section.';
     exit(1);
 } catch (\Exception $e) {
     $logger->error($e->getMessage(), [
