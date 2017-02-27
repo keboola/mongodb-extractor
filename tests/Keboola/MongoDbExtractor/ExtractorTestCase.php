@@ -2,6 +2,7 @@
 
 namespace Keboola\MongoDbExtractor;
 
+use Keboola\CsvMap\Exception\BadDataException;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
@@ -237,6 +238,28 @@ CSV;
 
         $extractor = new Extractor($parameters);
         $export = $extractor->extract($this->path);
+    }
+
+    public function testExportInvalidMapping()
+    {
+        $this->expectException(BadDataException::class);
+        $this->expectExceptionMessage('Error writing \'id\' column: Cannot write object into a column');
+
+        $exportParams = [
+            'collection' => 'restaurants',
+            'name' => 'export-bad-query',
+            'mapping' => [
+                '_id' => 'id' // _id is object
+            ],
+            'enabled' => true,
+            'mode' => 'mapping',
+        ];
+
+        $parameters = $this->getConfig()['parameters'];
+        $parameters['exports'][] = $exportParams;
+
+        $extractor = new Extractor($parameters);
+        $extractor->extract($this->path);
     }
 
     public function testExportRandomCollection()
