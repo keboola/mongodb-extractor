@@ -9,7 +9,7 @@ Docker application for exporting data from MongoDB. Basically, it's a simple wra
 command, which exports data from specified database and collection. Then those data are processed by
 [php-csvmap](https://github.com/keboola/php-csvmap).
 
-**[For documentation about configuring in Keboola Connection follow this link](https://help.keboola.com/extractors/mongodb/).**
+**[For documentation about configuring in Keboola Connection follow this link](https://help.keboola.com/extractors/database/mongodb/).**
 
 ## Configuration
 
@@ -73,7 +73,6 @@ command, which exports data from specified database and collection. Then those d
   }
 }
 ```
-For more information about SSH tunnel creation see [`createSshTunnel` function](https://github.com/keboola/db-extractor-common/blob/8e66dc9/src/Keboola/DbExtractor/Extractor/Extractor.php#L47)
 
 ## Output
 
