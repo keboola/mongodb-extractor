@@ -112,7 +112,7 @@ class Extractor
         }
 
         if ($count === 0) {
-            throw new \Exception('Please enable at least one export');
+            throw new UserException('Please enable at least one export');
         }
 
         return true;
