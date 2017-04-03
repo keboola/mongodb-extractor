@@ -86,8 +86,7 @@ Also, there is manifest file for each of the export.
 
 Requirements:
 
-- Docker Engine `~1.10.0`
-- Docker Compose `~1.6.0`
+- Docker Engine + Docker Compose which support compose v2 file
 
 Application is prepared for run in container, you can start development same way:
 
