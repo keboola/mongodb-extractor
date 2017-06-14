@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "3e9d0ba6cd54dcf9a963f22b8b2be3c9",
+    "content-hash": "a2f5ffd354fd08859038db8036154222",
     "packages": [
         {
             "name": "keboola/csv",
@@ -228,16 +228,16 @@
         },
         {
             "name": "keboola/ssh-tunnel",
-            "version": "1.0.1",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/ssh-tunnel.git",
-                "reference": "8d91dd49f009509388b51ef414215ff89598ada9"
+                "reference": "10f5cf523a47e1067a2f20dcac9090cf2f67a839"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/ssh-tunnel/zipball/8d91dd49f009509388b51ef414215ff89598ada9",
-                "reference": "8d91dd49f009509388b51ef414215ff89598ada9",
+                "url": "https://api.github.com/repos/keboola/ssh-tunnel/zipball/10f5cf523a47e1067a2f20dcac9090cf2f67a839",
+                "reference": "10f5cf523a47e1067a2f20dcac9090cf2f67a839",
                 "shasum": ""
             },
             "require": {
@@ -263,7 +263,7 @@
                 }
             ],
             "description": "Simple class for SSH tunneling",
-            "time": "2016-09-24T08:57:31+00:00"
+            "time": "2017-06-07T05:37:12+00:00"
         },
         {
             "name": "monolog/monolog",
