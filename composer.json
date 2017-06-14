@@ -17,7 +17,7 @@
         "keboola/csvmap": "~0.3",
         "nette/utils": "~2.3",
         "symfony/serializer": "~3.1",
-        "keboola/ssh-tunnel": "~1.0",
+        "keboola/ssh-tunnel": "^1.0.3",
         "monolog/monolog": "~1.22"
     },
     "require-dev": {
