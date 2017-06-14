@@ -51,6 +51,9 @@ try {
 } catch (MongoDB\Driver\Exception\ConnectionTimeoutException $e) {
     echo $e->getMessage();
     exit(1);
+} catch (Symfony\Component\Config\Definition\Exception\InvalidConfigurationException $e) {
+    echo $e->getMessage() . '. Please check connection settings.';
+    exit(1);
 } catch (BadDataException $e) {
     echo $e->getMessage()
         . '. Please check mapping section.';
