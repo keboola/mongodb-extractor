@@ -70,7 +70,7 @@ services:
     extends:
       service: mongodb
     volumes:
-      - ./docker/mongodb/init.js:/init.js
+      - ./docker/mongodb/init-auth.js:/init.js
     command: >
              sh -c '
              sh -c "mongod &"
