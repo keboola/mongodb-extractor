@@ -1,6 +1,9 @@
 <?php
 
-namespace Keboola\MongoDbExtractor;
+namespace Keboola\MongoDbExtractor\Unit;
+
+use Keboola\MongoDbExtractor\MongoExportCommandJson;
+use Keboola\MongoDbExtractor\UserException;
 
 class MongoExportCommandJsonTest extends \PHPUnit_Framework_TestCase
 {
