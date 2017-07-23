@@ -1,0 +1,3 @@
+{ "_id" : "5716054bee6e764c94fa7ddd" , "address" : { "building" : "1007", "coord" : [ -73.856077, 40.848447 ], "street" : "Morris Park Ave", "zipcode" : "10462" }, "borough" : "Bronx", "cuisine" : "Bakery", "name" : "Morris Park Bake Shop" }
+{ "_id" : "5716054bee6e764c94fa8181" , "address" : { "building" : "4202", "coord" : [ -73.85694079999999, 40.8936238 ], "street" : "White Plains Road", "zipcode" : "10466" }, "borough" : "Bronx", "cuisine" : "Bakery", "name" : "E & L Bakery & Coffee Shop" }
+{ "_id" : "5716054bee6e764c94fa8213" , "address" : { "building" : "29", "coord" : [ -73.86119219999999, 40.8338023 ], "street" : "Hugh Grant Circle", "zipcode" : "10462" }, "borough" : "Bronx", "cuisine" : "Bakery", "name" : "Zaro'S Bread Basket" }
