@@ -78,4 +78,54 @@ JSON;
         $this->assertEquals($expectedJsonMain, file_get_contents($actualJsonFileMain));
 
     }
+
+    public function testActionRunRawModeIdAsString()
+    {
+        $json = <<<JSON
+{
+  "parameters": {
+    "db": {
+      "host": "mongodb",
+      "port": 27017,
+      "database": "test"
+    },
+    "exports": [
+      {
+        "name": "restaurants-id-as-string",
+        "id": 123,
+        "collection": "restaurantsIdAsString",
+        "sort": "{_id: 1}",
+        "incremental": true,
+        "mode": "raw"
+      }
+    ]
+  }
+}
+JSON;
+
+        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+
+        $application = new Application($config);
+        $application->actionRun($this->path);
+
+        // csv
+        $expectedCsvFileMain = $this->path . '/restaurants-id-as-string.csv';
+        $expectedCsvMain = <<<CSV
+"id","data"
+"5716054bee6e764c94fa7ddd","{""_id"":""5716054bee6e764c94fa7ddd"",""address"":{""building"":""1007"",""coord"":[-73.856077,40.848447],""street"":""Morris Park Ave"",""zipcode"":""10462""},""borough"":""Bronx"",""cuisine"":""Bakery"",""name"":""Morris Park Bake Shop""}"
+"5716054bee6e764c94fa8181","{""_id"":""5716054bee6e764c94fa8181"",""address"":{""building"":""4202"",""coord"":[-73.8569408,40.8936238],""street"":""White Plains Road"",""zipcode"":""10466""},""borough"":""Bronx"",""cuisine"":""Bakery"",""name"":""E & L Bakery & Coffee Shop""}"
+"5716054bee6e764c94fa8213","{""_id"":""5716054bee6e764c94fa8213"",""address"":{""building"":""29"",""coord"":[-73.8611922,40.8338023],""street"":""Hugh Grant Circle"",""zipcode"":""10462""},""borough"":""Bronx"",""cuisine"":""Bakery"",""name"":""Zaro'S Bread Basket""}"\n
+CSV;
+        $this->assertFileExists($expectedCsvFileMain);
+        $this->assertEquals($expectedCsvMain, file_get_contents($expectedCsvFileMain));
+
+        // manifest
+        $actualJsonFileMain = $this->path . '/restaurants-id-as-string.csv.manifest';
+        $expectedJsonMain = <<<JSON
+{"primary_key":["id"],"incremental":true}
+JSON;
+        $this->assertFileExists($actualJsonFileMain);
+        $this->assertEquals($expectedJsonMain, file_get_contents($actualJsonFileMain));
+
+    }
 }

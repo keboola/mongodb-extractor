@@ -16,6 +16,7 @@ services:
              sh -c '
              sleep 4
              && mongoimport --host mongodb --db test --collection restaurants --drop --file tests/dataset.json
+             && mongoimport --host mongodb --db test --collection restaurantsIdAsString --drop --file tests/dataset-id-as-string.json
              && mongoimport --host mongodb-auth --username user --password user --db test --collection restaurants --drop --file tests/dataset.json
              && bash
              '
@@ -36,6 +37,7 @@ services:
              sh -c '
              sleep 4
              && mongoimport --host mongodb --db test --collection restaurants --drop --file tests/dataset.json
+             && mongoimport --host mongodb --db test --collection restaurantsIdAsString --drop --file tests/dataset-id-as-string.json
              && mongoimport --host mongodb-auth --username user --password user --db test --collection restaurants --drop --file tests/dataset.json
              && ./tests.sh
              '
@@ -55,6 +57,7 @@ services:
              sh -c '
              sleep 4
              && mongoimport --host mongodb --db test --collection restaurants --drop --file tests/dataset.json
+             && mongoimport --host mongodb --db test --collection restaurantsIdAsString --drop --file tests/dataset-id-as-string.json
              && mongoimport --host mongodb-auth --username user --password user --db test --collection restaurants --drop --file tests/dataset.json
              && ./tests.sh
              && ./vendor/bin/test-reporter

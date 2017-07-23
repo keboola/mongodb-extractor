@@ -42,10 +42,19 @@ class Raw
         $item = reset($data);
 
         if (!empty($data)) {
-            $this->outputFile->writeRow([
-                $item->{'_id'}->{'$oid'},
-                \json_encode($item)
-            ]);
+            $type = gettype($item->{'_id'});
+
+            if ($type === 'object') {
+                $this->outputFile->writeRow([
+                    $item->{'_id'}->{'$oid'},
+                    \json_encode($item)
+                ]);
+            } else {
+                $this->outputFile->writeRow([
+                    $item->{'_id'},
+                    \json_encode($item)
+                ]);
+            }
 
             $manifest = [
                 'primary_key' => ['id'],
