@@ -3,12 +3,7 @@
 DP_VENDOR_ID='keboola'
 DP_APP_ID='keboola.ex-mongodb'
 
-docker login -u="$QUAY_USERNAME" -p="$QUAY_PASSWORD" quay.io \
-&& docker tag keboola/mongodb-extractor quay.io/keboola/mongodb-extractor:$TRAVIS_TAG \
-&& docker images \
-&& docker push quay.io/keboola/mongodb-extractor:$TRAVIS_TAG \
-&& docker logout \
-&& docker pull quay.io/keboola/developer-portal-cli-v2:latest \
+docker pull quay.io/keboola/developer-portal-cli-v2:latest \
 && export REPOSITORY=`docker run --rm \
   -e KBC_DEVELOPERPORTAL_USERNAME=$DP_USERNAME \
   -e KBC_DEVELOPERPORTAL_PASSWORD=$DP_PASSWORD \
