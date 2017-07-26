@@ -1,7 +1,7 @@
 #!/bin/bash
 
-DP_VENDOR_ID='keboola'
-DP_APP_ID='keboola.ex-mongodb'
+DP_VENDOR_ID="keboola"
+DP_APP_ID="keboola.ex-mongodb"
 
 docker pull quay.io/keboola/developer-portal-cli-v2:latest \
 && export REPOSITORY=`docker run --rm \
