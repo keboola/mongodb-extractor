@@ -42,7 +42,7 @@ class ExtractorSshConnectionTest extends ExtractorTestCase
       "database": "test",
       "ssh": {
         "enabled": true,
-        "sshHost": "mongodb-ssh",
+        "sshHost": "ssh-tunnel",
         "sshPort": 22,
         "user": "root",
         "keys": {

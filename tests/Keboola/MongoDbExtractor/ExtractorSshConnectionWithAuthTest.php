@@ -44,7 +44,7 @@ class ExtractorSshConnectionWithAuthTest extends ExtractorTestCase
       "password": "user",
       "ssh": {
         "enabled": true,
-        "sshHost": "mongodb-auth-ssh",
+        "sshHost": "ssh-tunnel-for-auth",
         "sshPort": 22,
         "user": "root",
         "keys": {

@@ -9,9 +9,9 @@ services:
     stdin_open: true
     links:
       - mongodb
-      - mongodb-ssh
+      - ssh-tunnel
       - mongodb-auth
-      - mongodb-auth-ssh
+      - ssh-tunnel-for-auth
     command: >
              sh -c '
              sleep 4
@@ -30,9 +30,9 @@ services:
       dockerfile: Dockerfile-tests
     links:
       - mongodb
-      - mongodb-ssh
+      - ssh-tunnel
       - mongodb-auth
-      - mongodb-auth-ssh
+      - ssh-tunnel-for-auth
     command: >
              sh -c '
              sleep 4
@@ -50,9 +50,9 @@ services:
       dockerfile: Dockerfile-tests
     links:
       - mongodb
-      - mongodb-ssh
+      - ssh-tunnel
       - mongodb-auth
-      - mongodb-auth-ssh
+      - ssh-tunnel-for-auth
     command: >
              sh -c '
              sleep 4
@@ -83,12 +83,12 @@ services:
              && mongod --auth
              '
 
-  mongodb-ssh:
+  ssh-tunnel:
     image: quay.io/keboola/mongodb-extractor-ssh
     links:
       - mongodb:mongodb-behind-ssh
 
-  mongodb-auth-ssh:
+  ssh-tunnel-for-auth:
     image: quay.io/keboola/mongodb-extractor-ssh
     links:
       - mongodb-auth:mongodb-auth-behind-ssh
