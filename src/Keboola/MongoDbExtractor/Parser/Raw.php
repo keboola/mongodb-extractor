@@ -21,6 +21,9 @@ class Raw
     /** @var array */
     private $manifestOptions;
 
+    /** @var bool */
+    private $setIdAsPrimaryKey = true;
+
     public function __construct(string $name, string $outputPath, array $manifestOptions)
     {
         // create csv file and its header
@@ -42,33 +45,52 @@ class Raw
         $item = reset($data);
 
         if (!empty($data)) {
-            $type = gettype($item->{'_id'});
+            $this->writerRowToOutputFile($item);
+        }
+    }
 
-            if ($type === 'object') {
+    public function writeManifestFile()
+    {
+        $manifest = [
+            'primary_key' => $this->setIdAsPrimaryKey ? ['id']: [],
+            'incremental' => $this->manifestOptions['incremental'],
+        ];
+
+        $outputCsv = $this->outputFile->getPathname();
+
+        $this->filesystem->dumpFile(
+            $outputCsv . '.manifest',
+            $this->jsonEncode->encode($manifest, JsonEncoder::FORMAT)
+        );
+    }
+
+    private function writerRowToOutputFile($item)
+    {
+        if (property_exists($item, '_id')) {
+            $type = gettype($item->{'_id'});
+            if ($type === 'object' && property_exists($item->{'_id'}, '$oid')) {
                 $this->outputFile->writeRow([
                     $item->{'_id'}->{'$oid'},
                     \json_encode($item)
                 ]);
-            } else {
+            } else if (in_array($type, ['double', 'string', 'integer'])) {
                 $this->outputFile->writeRow([
                     $item->{'_id'},
                     \json_encode($item)
                 ]);
+            } else {
+                $this->outputFile->writeRow([
+                    '',
+                    \json_encode($item)
+                ]);
+                $this->setIdAsPrimaryKey = false;
             }
-
-            $manifest = [
-                'primary_key' => ['id'],
-                'incremental' => $this->manifestOptions['incremental'],
-            ];
-
-            $outputCsv = $this->outputFile->getPathname();
-
-            if (!$this->filesystem->exists($outputCsv . '.manifest')) {
-                $this->filesystem->dumpFile(
-                    $outputCsv . '.manifest',
-                    $this->jsonEncode->encode($manifest, JsonEncoder::FORMAT)
-                );
-            }
+        } else {
+            $this->outputFile->writeRow([
+                '',
+                \json_encode($item)
+            ]);
+            $this->setIdAsPrimaryKey = false;
         }
     }
 }
