@@ -63,7 +63,8 @@ try {
     exit(1);
 } catch (\Exception $e) {
     $logger->error($e->getMessage(), [
-        'trace' => $e->getTraceAsString()
+        'class' => get_class($e),
+        'trace' => $e->getTraceAsString(),
     ]);
     exit(2);
 }
