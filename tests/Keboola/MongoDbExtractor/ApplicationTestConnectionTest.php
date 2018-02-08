@@ -7,29 +7,9 @@ use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Driver\Exception\ConnectionTimeoutException;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Filesystem\Filesystem;
 
 class ApplicationTestConnectionTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var Filesystem */
-    private $fs;
-
-    protected $path = '/tmp/application-test-connection-test';
-
-    protected function setUp()
-    {
-        $this->fs = new Filesystem;
-        $this->fs->remove($this->path);
-        $this->fs->mkdir($this->path);
-
-        parent::setUp();
-    }
-
-    protected function tearDown()
-    {
-        $this->fs->remove($this->path);
-    }
-
     public function testActionTestConnectionOk()
     {
         $json = <<<JSON
