@@ -100,6 +100,11 @@ class Export
             $parsedRecordsCount++;
         }
 
+        // TODO: refactor this to be able to write manifest here for both export types
+        if ($this->exportOptions['mode'] === 'raw') {
+            $parser->writeManifestFile();
+        }
+
         $this->filesystem->remove($this->getOutputFilename());
 
         $this->logToConsoleOutput('Done "' . $this->getOutputFilename() . '"');

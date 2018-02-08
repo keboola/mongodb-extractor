@@ -9,6 +9,7 @@ services:
     stdin_open: true
     links:
       - mongodb
+      - mongodb-3
       - ssh-tunnel
       - mongodb-auth
       - ssh-tunnel-for-auth
@@ -17,6 +18,7 @@ services:
              sleep 4
              && mongoimport --host mongodb --db test --collection restaurants --drop --file tests/dataset.json
              && mongoimport --host mongodb --db test --collection restaurantsIdAsString --drop --file tests/dataset-id-as-string.json
+             && mongoimport --host mongodb-3 --db test --collection mixedIds --drop --file tests/dataset-mixed-ids.json
              && mongoimport --host mongodb-auth --username user --password user --db test --collection restaurants --drop --file tests/dataset.json
              && bash
              '
@@ -30,6 +32,7 @@ services:
       dockerfile: Dockerfile-tests
     links:
       - mongodb
+      - mongodb-3
       - ssh-tunnel
       - mongodb-auth
       - ssh-tunnel-for-auth
@@ -38,6 +41,7 @@ services:
              sleep 4
              && mongoimport --host mongodb --db test --collection restaurants --drop --file tests/dataset.json
              && mongoimport --host mongodb --db test --collection restaurantsIdAsString --drop --file tests/dataset-id-as-string.json
+             && mongoimport --host mongodb-3 --db test --collection mixedIds --drop --file tests/dataset-mixed-ids.json
              && mongoimport --host mongodb-auth --username user --password user --db test --collection restaurants --drop --file tests/dataset.json
              && ./tests.sh
              '
@@ -50,6 +54,7 @@ services:
       dockerfile: Dockerfile-tests
     links:
       - mongodb
+      - mongodb-3
       - ssh-tunnel
       - mongodb-auth
       - ssh-tunnel-for-auth
@@ -58,6 +63,7 @@ services:
              sleep 4
              && mongoimport --host mongodb --db test --collection restaurants --drop --file tests/dataset.json
              && mongoimport --host mongodb --db test --collection restaurantsIdAsString --drop --file tests/dataset-id-as-string.json
+             && mongoimport --host mongodb-3 --db test --collection mixedIds --drop --file tests/dataset-mixed-ids.json
              && mongoimport --host mongodb-auth --username user --password user --db test --collection restaurants --drop --file tests/dataset.json
              && ./tests.sh
              && ./vendor/bin/test-reporter
@@ -92,3 +98,6 @@ services:
     image: quay.io/keboola/mongodb-extractor-ssh
     links:
       - mongodb-auth:mongodb-auth-behind-ssh
+
+  mongodb-3:
+    image: mongo:3.0

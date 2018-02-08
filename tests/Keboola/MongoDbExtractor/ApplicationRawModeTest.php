@@ -128,4 +128,60 @@ JSON;
         $this->assertEquals($expectedJsonMain, file_get_contents($actualJsonFileMain));
 
     }
+
+    public function testActionRunRawModeMixedIds()
+    {
+        $json = <<<JSON
+{
+  "parameters": {
+    "db": {
+      "host": "mongodb-3",
+      "port": 27017,
+      "database": "test"
+    },
+    "exports": [
+      {
+        "name": "dataset-mixed-ids",
+        "id": 123,
+        "collection": "mixedIds",
+        "sort": "{_id: 1}",
+        "incremental": false,
+        "mode": "raw"
+      }
+    ]
+  }
+}
+JSON;
+
+        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+
+        $application = new Application($config);
+        $application->actionRun($this->path);
+
+        // csv
+        $expectedCsvFileMain = $this->path . '/dataset-mixed-ids.csv';
+        $expectedCsvMain = <<<CSV
+"id","data"
+"123","{""_id"":123}"
+"123.456","{""_id"":123.456}"
+"123456","{""_id"":""123456""}"
+"94fa7ddd","{""_id"":""94fa7ddd""}"
+"94fa8181","{""_id"":""94fa8181""}"
+"94fa8213","{""_id"":""94fa8213""}"
+"","{""_id"":{""key"":""value""}}"
+"5716054bee6e764c94fa7ddd","{""_id"":{""\$oid"":""5716054bee6e764c94fa7ddd""}}"
+"5716054bee6e764c94fa8181","{""_id"":{""\$oid"":""5716054bee6e764c94fa8181""}}"\n
+CSV;
+        $this->assertFileExists($expectedCsvFileMain);
+        $this->assertEquals($expectedCsvMain, file_get_contents($expectedCsvFileMain));
+
+        // manifest
+        $actualJsonFileMain = $this->path . '/dataset-mixed-ids.csv.manifest';
+        $expectedJsonMain = <<<JSON
+{"primary_key":[],"incremental":false}
+JSON;
+        $this->assertFileExists($actualJsonFileMain);
+        $this->assertEquals($expectedJsonMain, file_get_contents($actualJsonFileMain));
+
+    }
 }
