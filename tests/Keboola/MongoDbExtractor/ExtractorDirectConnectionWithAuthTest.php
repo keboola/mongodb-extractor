@@ -37,7 +37,7 @@ class ExtractorDirectConnectionWithAuthTest extends ExtractorTestCase
       "port": 27017,
       "database": "test",
       "user": "user",
-      "#password": "user"
+      "#password": "p#a!s@sw:o&r%^d"
     }
   }
 }

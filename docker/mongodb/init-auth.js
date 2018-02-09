@@ -13,7 +13,7 @@ db.createUser({
 use test;
 db.createUser({
     user: 'user',
-    pwd: 'user',
+    pwd: 'p#a!s@sw:o&r%^d',
     roles: [
         {
             role: "readWrite",
