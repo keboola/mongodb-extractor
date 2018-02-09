@@ -3,11 +3,14 @@
 require __DIR__ . '/../vendor/autoload.php';
 require __DIR__ . '/common.php';
 
+use Keboola\CsvMap\Exception\BadDataException;
 use Keboola\MongoDbExtractor\Application;
+use Keboola\MongoDbExtractor\UserException;
+use MongoDB\Driver\Exception\AuthenticationException;
+use MongoDB\Driver\Exception\ConnectionTimeoutException;
 use Monolog\Logger;
 use Monolog\Handler\ErrorLogHandler;
-use Keboola\MongoDbExtractor\UserException;
-use Keboola\CsvMap\Exception\BadDataException;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
@@ -48,10 +51,13 @@ try {
 } catch (UserException $e) {
     echo $e->getMessage();
     exit(1);
-} catch (MongoDB\Driver\Exception\ConnectionTimeoutException $e) {
+} catch (ConnectionTimeoutException $e) {
     echo $e->getMessage();
     exit(1);
-} catch (Symfony\Component\Config\Definition\Exception\InvalidConfigurationException $e) {
+} catch (AuthenticationException $e) {
+    echo $e->getMessage();
+    exit(1);
+} catch (InvalidConfigurationException $e) {
     echo $e->getMessage() . '. Please check connection settings.';
     exit(1);
 } catch (BadDataException $e) {
@@ -60,7 +66,8 @@ try {
     exit(1);
 } catch (\Exception $e) {
     $logger->error($e->getMessage(), [
-        'trace' => $e->getTraceAsString()
+        'class' => get_class($e),
+        'trace' => $e->getTraceAsString(),
     ]);
     exit(2);
 }
