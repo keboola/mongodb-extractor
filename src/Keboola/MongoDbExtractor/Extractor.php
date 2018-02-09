@@ -67,7 +67,7 @@ class Extractor
         $uri = ['mongodb://'];
 
         if (isset($params['username'], $params['password'])) {
-            $uri[] = $params['username'] . ':' . $params['password'] . '@';
+            $uri[] = rawurlencode($params['username']) . ':' . rawurlencode($params['password']) . '@';
         }
 
         $uri[] = $params['host'] .':' . $params['port'] . '/' . $params['db'];
