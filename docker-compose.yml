@@ -15,11 +15,11 @@ services:
       - ssh-tunnel-for-auth
     command: >
              sh -c '
-             sleep 4
+             sleep 6
              && mongoimport --host mongodb --db test --collection restaurants --drop --file tests/dataset.json
              && mongoimport --host mongodb --db test --collection restaurantsIdAsString --drop --file tests/dataset-id-as-string.json
              && mongoimport --host mongodb-3 --db test --collection mixedIds --drop --file tests/dataset-mixed-ids.json
-             && mongoimport --host mongodb-auth --username user --password user --db test --collection restaurants --drop --file tests/dataset.json
+             && mongoimport --host mongodb-auth --username user --password "p#a!s@sw:o&r%^d" --db test --collection restaurants --drop --file tests/dataset.json
              && bash
              '
     volumes:
@@ -38,11 +38,11 @@ services:
       - ssh-tunnel-for-auth
     command: >
              sh -c '
-             sleep 4
+             sleep 6
              && mongoimport --host mongodb --db test --collection restaurants --drop --file tests/dataset.json
              && mongoimport --host mongodb --db test --collection restaurantsIdAsString --drop --file tests/dataset-id-as-string.json
              && mongoimport --host mongodb-3 --db test --collection mixedIds --drop --file tests/dataset-mixed-ids.json
-             && mongoimport --host mongodb-auth --username user --password user --db test --collection restaurants --drop --file tests/dataset.json
+             && mongoimport --host mongodb-auth --username user --password "p#a!s@sw:o&r%^d" --db test --collection restaurants --drop --file tests/dataset.json
              && ./tests.sh
              '
     volumes:
@@ -60,11 +60,11 @@ services:
       - ssh-tunnel-for-auth
     command: >
              sh -c '
-             sleep 4
+             sleep 6
              && mongoimport --host mongodb --db test --collection restaurants --drop --file tests/dataset.json
              && mongoimport --host mongodb --db test --collection restaurantsIdAsString --drop --file tests/dataset-id-as-string.json
              && mongoimport --host mongodb-3 --db test --collection mixedIds --drop --file tests/dataset-mixed-ids.json
-             && mongoimport --host mongodb-auth --username user --password user --db test --collection restaurants --drop --file tests/dataset.json
+             && mongoimport --host mongodb-auth --username user --password "p#a!s@sw:o&r%^d" --db test --collection restaurants --drop --file tests/dataset.json
              && ./tests.sh
              && ./vendor/bin/test-reporter
              '
