@@ -13,6 +13,7 @@ use Monolog\Handler\ErrorLogHandler;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 $logger = new Logger('app-errors', [new ErrorLogHandler]);
 
@@ -56,6 +57,9 @@ try {
     exit(1);
 } catch (AuthenticationException $e) {
     echo $e->getMessage();
+    exit(1);
+} catch (ProcessFailedException $e) {
+    // we do not print exception's message here, it can contain sensitive information
     exit(1);
 } catch (InvalidConfigurationException $e) {
     echo $e->getMessage() . '. Please check connection settings.';
