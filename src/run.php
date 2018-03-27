@@ -14,6 +14,7 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use Keboola\SSHTunnel\SSHException;
 
 $logger = new Logger('app-errors', [new ErrorLogHandler]);
 
@@ -56,6 +57,9 @@ try {
     echo $e->getMessage();
     exit(1);
 } catch (AuthenticationException $e) {
+    echo $e->getMessage();
+    exit(1);
+} catch (SSHException $e) {
     echo $e->getMessage();
     exit(1);
 } catch (ProcessFailedException $e) {
