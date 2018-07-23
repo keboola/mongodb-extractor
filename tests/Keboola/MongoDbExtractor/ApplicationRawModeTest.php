@@ -6,7 +6,7 @@ use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Filesystem\Filesystem;
 
-class ApplicationRawModeTest extends \PHPUnit_Framework_TestCase
+class ApplicationRawModeTest extends \PHPUnit\Framework\TestCase
 {
     /** @var Filesystem */
     private $fs;

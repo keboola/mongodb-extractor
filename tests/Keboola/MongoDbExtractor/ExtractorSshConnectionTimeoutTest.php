@@ -8,7 +8,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 use Keboola\SSHTunnel\SSHException;
 
-class ExtractorSshConnectionTimeoutTest extends \PHPUnit_Framework_TestCase
+class ExtractorSshConnectionTimeoutTest extends \PHPUnit\Framework\TestCase
 {
     private $fs;
 

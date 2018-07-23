@@ -7,7 +7,7 @@ use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
-class ConfigDefinitionTest extends \PHPUnit_Framework_TestCase
+class ConfigDefinitionTest extends \PHPUnit\Framework\TestCase
 {
     public function testValidConfig()
     {

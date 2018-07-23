@@ -8,7 +8,7 @@ use MongoDB\Driver\Exception\ConnectionTimeoutException;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
-class ApplicationTestConnectionTest extends \PHPUnit_Framework_TestCase
+class ApplicationTestConnectionTest extends \PHPUnit\Framework\TestCase
 {
     public function testActionTestConnectionOk()
     {
