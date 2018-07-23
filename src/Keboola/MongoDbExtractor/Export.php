@@ -72,7 +72,7 @@ class Export
      */
     public function parseAndCreateManifest()
     {
-        $this->logToConsoleOutput('Parsing "' . $this->getOutputFilename() . '"');
+        $this->consoleOutput->writeln('Parsing "' . $this->getOutputFilename() . '"');
 
         $manifestOptions = [
             'incremental' => (bool) ($this->exportOptions['incremental'] ?? false)
@@ -94,7 +94,7 @@ class Export
             $parser->parse($data);
 
             if ($parsedRecordsCount % 5e3 === 0) {
-                $this->logToConsoleOutput('Parsed ' . $parsedRecordsCount . ' records.');
+                $this->consoleOutput->writeln('Parsed ' . $parsedRecordsCount . ' records.');
             }
 
             $parsedRecordsCount++;
@@ -107,20 +107,7 @@ class Export
 
         $this->filesystem->remove($this->getOutputFilename());
 
-        $this->logToConsoleOutput('Done "' . $this->getOutputFilename() . '"');
-    }
-
-    /**
-     * Outputs text to console prefixed with actual time (to look similar as MongoDB log)
-     * @param $text
-     */
-    private function logToConsoleOutput($text)
-    {
-        $this->consoleOutput->writeln(
-            date('Y-m-d\TH:i:s\.')
-            . str_pad(round(microtime(true) - time(), 3) * 1000, 3, '0', STR_PAD_LEFT)
-            . date('O') . "\t" . $text
-        );
+        $this->consoleOutput->writeln('Done "' . $this->getOutputFilename() . '"');
     }
 
     /**
