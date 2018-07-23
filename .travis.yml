@@ -14,7 +14,7 @@ script:
   - >
     docker-compose run
     --rm
-    -e CODECLIMATE_REPO_TOKEN=$CODECLIMATE_REPO_TOKEN
+    -e CC_TEST_REPORTER_ID=$CC_TEST_REPORTER_ID
     php-tests-with-report
 
 after_success:
