@@ -4,3 +4,4 @@
 /.*-datadir
 /build
 /ssh.*
+/cc-test-reporter
