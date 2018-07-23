@@ -61,7 +61,6 @@ class ExtractorNoSpaceLeftOnDeviceTest extends \PHPUnit\Framework\TestCase
 }
 JSON;
         return (new JsonDecode(true))->decode($config, JsonEncoder::FORMAT);
-
     }
 
     private function getMapping()

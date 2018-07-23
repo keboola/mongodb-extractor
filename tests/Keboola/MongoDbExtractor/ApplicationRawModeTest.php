@@ -76,7 +76,6 @@ CSV;
 JSON;
         $this->assertFileExists($actualJsonFileMain);
         $this->assertEquals($expectedJsonMain, file_get_contents($actualJsonFileMain));
-
     }
 
     public function testActionRunRawModeIdAsString()
@@ -126,7 +125,6 @@ CSV;
 JSON;
         $this->assertFileExists($actualJsonFileMain);
         $this->assertEquals($expectedJsonMain, file_get_contents($actualJsonFileMain));
-
     }
 
     public function testActionRunRawModeMixedIds()
@@ -182,6 +180,5 @@ CSV;
 JSON;
         $this->assertFileExists($actualJsonFileMain);
         $this->assertEquals($expectedJsonMain, file_get_contents($actualJsonFileMain));
-
     }
 }

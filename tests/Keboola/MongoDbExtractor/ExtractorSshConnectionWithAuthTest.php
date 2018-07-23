@@ -57,6 +57,5 @@ class ExtractorSshConnectionWithAuthTest extends ExtractorTestCase
 }
 JSON;
         return (new JsonDecode(true))->decode($config, JsonEncoder::FORMAT);
-
     }
 }

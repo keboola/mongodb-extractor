@@ -43,6 +43,5 @@ class ExtractorDirectConnectionWithAuthTest extends ExtractorTestCase
 }
 JSON;
         return (new JsonDecode(true))->decode($config, JsonEncoder::FORMAT);
-
     }
 }

@@ -40,7 +40,6 @@ class ExtractorNotEnabledExportsTest extends \PHPUnit\Framework\TestCase
 }
 JSON;
         return (new JsonDecode(true))->decode($config, JsonEncoder::FORMAT);
-
     }
 
     public function testWrongConnection()

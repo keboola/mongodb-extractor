@@ -89,7 +89,6 @@ CSV;
 
         $this->assertFileExists($expectedFile);
         $this->assertEquals($expectedJson, file_get_contents($expectedFile));
-
     }
 
     public function testExportOneWebalizedName()
@@ -119,7 +118,6 @@ CSV;
 
         $this->assertFileExists($expectedFile);
         $this->assertEquals($expectedJson, file_get_contents($expectedFile));
-
     }
 
     public function testExportMulti()
@@ -184,7 +182,6 @@ CSV;
 
         $this->assertFileExists($expectedFile);
         $this->assertEquals($expectedJson, file_get_contents($expectedFile));
-
     }
 
     public function testExportMultiWithSortAndLimit()
@@ -312,7 +309,6 @@ CSV;
 
         $this->assertFileExists($expectedFile);
         $this->assertEquals($expectedJson, file_get_contents($expectedFile));
-
     }
 
     public function testExportRelatedTableFirstItemEmpty()
