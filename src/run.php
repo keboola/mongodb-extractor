@@ -3,7 +3,7 @@
 require __DIR__ . '/../vendor/autoload.php';
 require __DIR__ . '/common.php';
 
-use Keboola\CsvMap\Exception\BadDataException;
+use Keboola\CsvMap\Exception\CsvMapperException;
 use Keboola\MongoDbExtractor\Application;
 use Keboola\MongoDbExtractor\UserException;
 use MongoDB\Driver\Exception\AuthenticationException;
@@ -68,7 +68,7 @@ try {
 } catch (InvalidConfigurationException $e) {
     echo $e->getMessage() . '. Please check connection settings.';
     exit(1);
-} catch (BadDataException $e) {
+} catch (CsvMapperException $e) {
     echo $e->getMessage()
         . '. Please check mapping section.';
     exit(1);

@@ -2,6 +2,7 @@
 
 namespace Keboola\MongoDbExtractor;
 
+use Keboola\CsvMap\Exception\BadConfigException;
 use Keboola\CsvMap\Exception\BadDataException;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
@@ -240,16 +241,38 @@ CSV;
         $export = $extractor->extract($this->path);
     }
 
-    public function testExportInvalidMapping()
+    public function testExportInvalidMappingBadData()
     {
         $this->expectException(BadDataException::class);
         $this->expectExceptionMessage('Error writing \'id\' column: Cannot write object into a column');
 
         $exportParams = [
             'collection' => 'restaurants',
-            'name' => 'export-bad-query',
+            'name' => 'export-bad-mapping',
             'mapping' => [
                 '_id' => 'id' // _id is object
+            ],
+            'enabled' => true,
+            'mode' => 'mapping',
+        ];
+
+        $parameters = $this->getConfig()['parameters'];
+        $parameters['exports'][] = $exportParams;
+
+        $extractor = new Extractor($parameters);
+        $extractor->extract($this->path);
+    }
+
+    public function testExportInvalidMappingBadConfig()
+    {
+        $this->expectException(BadConfigException::class);
+        $this->expectExceptionMessage('Key \'mapping.destination\' is not set for column \'2\'');
+
+        $exportParams = [
+            'collection' => 'restaurants',
+            'name' => 'export-bad-mapping',
+            'mapping' => [
+                '2' => []
             ],
             'enabled' => true,
             'mode' => 'mapping',

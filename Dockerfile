@@ -1,4 +1,4 @@
-FROM php:7.0
+FROM php:7.0.29
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927 \
