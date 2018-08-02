@@ -5,7 +5,7 @@ namespace Keboola\MongoDbExtractor\Unit;
 use Keboola\MongoDbExtractor\MongoExportCommandJson;
 use Keboola\MongoDbExtractor\UserException;
 
-class MongoExportCommandJsonTest extends \PHPUnit_Framework_TestCase
+class MongoExportCommandJsonTest extends \PHPUnit\Framework\TestCase
 {
     public function testCreateMinimal()
     {

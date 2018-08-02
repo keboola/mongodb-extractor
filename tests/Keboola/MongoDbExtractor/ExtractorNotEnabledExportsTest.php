@@ -5,7 +5,7 @@ namespace Keboola\MongoDbExtractor;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
-class ExtractorNotEnabledExportsTest extends \PHPUnit_Framework_TestCase
+class ExtractorNotEnabledExportsTest extends \PHPUnit\Framework\TestCase
 {
     protected $path = '/tmp/extractor-not-enabled-exports';
 
@@ -40,7 +40,6 @@ class ExtractorNotEnabledExportsTest extends \PHPUnit_Framework_TestCase
 }
 JSON;
         return (new JsonDecode(true))->decode($config, JsonEncoder::FORMAT);
-
     }
 
     public function testWrongConnection()

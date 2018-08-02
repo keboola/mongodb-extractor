@@ -8,7 +8,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 use Keboola\SSHTunnel\SSHException;
 
-class ExtractorSshConnectionTimeoutTest extends \PHPUnit_Framework_TestCase
+class ExtractorSshConnectionTimeoutTest extends \PHPUnit\Framework\TestCase
 {
     private $fs;
 
@@ -68,7 +68,6 @@ class ExtractorSshConnectionTimeoutTest extends \PHPUnit_Framework_TestCase
 }
 JSON;
         return (new JsonDecode(true))->decode($config, JsonEncoder::FORMAT);
-
     }
 
     public function testWrongConnection()

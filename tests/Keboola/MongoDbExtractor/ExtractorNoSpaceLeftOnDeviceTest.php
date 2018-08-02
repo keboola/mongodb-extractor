@@ -7,7 +7,7 @@ use Symfony\Component\Process\Process;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
-class ExtractorNoSpaceLeftOnDeviceTest extends \PHPUnit_Framework_TestCase
+class ExtractorNoSpaceLeftOnDeviceTest extends \PHPUnit\Framework\TestCase
 {
     /** @var Filesystem */
     private $fs;
@@ -61,7 +61,6 @@ class ExtractorNoSpaceLeftOnDeviceTest extends \PHPUnit_Framework_TestCase
 }
 JSON;
         return (new JsonDecode(true))->decode($config, JsonEncoder::FORMAT);
-
     }
 
     private function getMapping()
