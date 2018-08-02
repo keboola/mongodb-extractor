@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\MongoDbExtractor\Parser;
 
 use Keboola\CsvMap\Mapper;
@@ -44,7 +46,7 @@ class Mapping
      * @param array $data
      * @throws \Exception
      */
-    public function parse(array $data)
+    public function parse(array $data): void
     {
         $mapper = new Mapper($this->mapping, $this->name);
         $mapper->parse($data);

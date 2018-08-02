@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 require __DIR__ . '/../vendor/autoload.php';
 require __DIR__ . '/common.php';
 
@@ -72,7 +74,7 @@ try {
     echo $e->getMessage()
         . '. Please check mapping section.';
     exit(1);
-} catch (\Exception $e) {
+} catch (\Throwable $e) {
     $logger->error($e->getMessage(), [
         'class' => get_class($e),
         'trace' => $e->getTraceAsString(),

@@ -1,13 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\MongoDbExtractor;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 
 class ConfigDefinition implements ConfigurationInterface
 {
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('parameters');
@@ -68,7 +71,7 @@ class ConfigDefinition implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    private function addSshNode()
+    private function addSshNode(): NodeDefinition
     {
         $builder = new TreeBuilder();
         $node = $builder->root('ssh');

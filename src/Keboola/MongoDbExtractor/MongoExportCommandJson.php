@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\MongoDbExtractor;
 
 class MongoExportCommandJson
@@ -16,7 +18,7 @@ class MongoExportCommandJson
         'port',
         'db',
         'collection',
-        'out'
+        'out',
     ];
 
     public function __construct(array $options)
@@ -32,7 +34,7 @@ class MongoExportCommandJson
      * Gets built command prepared for execution
      * @return string
      */
-    public function getCommand()
+    public function getCommand(): string
     {
         return $this->command;
     }
@@ -42,9 +44,9 @@ class MongoExportCommandJson
      * @return bool
      * @throws UserException
      */
-    private function validate()
+    private function validate(): bool
     {
-        array_walk($this->requiredOptions, function ($option) {
+        array_walk($this->requiredOptions, function ($option): void {
             if (!isset($this->options[$option])) {
                 throw new UserException('Please provide all required params: '
                     . implode(', ', $this->requiredOptions));
@@ -64,10 +66,10 @@ class MongoExportCommandJson
     /**
      * Creates command
      */
-    private function create()
+    private function create(): void
     {
         $command = [
-            'mongoexport'
+            'mongoexport',
         ];
 
         // connection options

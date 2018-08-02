@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\MongoDbExtractor;
 
 use Keboola\MongoDbExtractor\Parser\Mapping;
@@ -35,8 +37,13 @@ class Export
     /** @var ConsoleOutput */
     private $consoleOutput;
 
-    public function __construct(array $connectionOptions, array $exportOptions, string $path, string $name, array $mapping)
-    {
+    public function __construct(
+        array $connectionOptions,
+        array $exportOptions,
+        string $path,
+        string $name,
+        array $mapping
+    ) {
         // check mapping section
         if ($exportOptions['mode'] === 'mapping' && empty($mapping)) {
             throw new UserException('Mapping cannot be empty in "mapping" export mode.');
@@ -56,10 +63,10 @@ class Export
     /**
      * Runs export command
      */
-    public function export()
+    public function export(): void
     {
         $process = new Process($this->exportCommand->getCommand(), null, null, null, null);
-        $process->mustRun(function ($type, $buffer) {
+        $process->mustRun(function ($type, $buffer): void {
             // $type is always Process::ERR here, so we don't check it
             $this->consoleOutput->write($buffer);
         });
@@ -70,12 +77,12 @@ class Export
      * @throws \Keboola\CsvMap\Exception\BadDataException
      * @throws \Keboola\Csv\Exception
      */
-    public function parseAndCreateManifest()
+    public function parseAndCreateManifest(): void
     {
         $this->consoleOutput->writeln('Parsing "' . $this->getOutputFilename() . '"');
 
         $manifestOptions = [
-            'incremental' => (bool) ($this->exportOptions['incremental'] ?? false)
+            'incremental' => (bool) ($this->exportOptions['incremental'] ?? false),
         ];
 
         if ($this->exportOptions['mode'] === 'raw') {
@@ -113,7 +120,7 @@ class Export
     /**
      * Creates command
      */
-    private function createCommand()
+    private function createCommand(): void
     {
         $options = $this->connectionOptions;
         $options['out'] = $this->getOutputFilename();
@@ -125,7 +132,7 @@ class Export
      * Gets output file name
      * @return string
      */
-    public function getOutputFilename()
+    public function getOutputFilename(): string
     {
         return $this->path . '/' . $this->name . '.json';
     }
@@ -134,7 +141,7 @@ class Export
      * Returns if export is enabled
      * @return bool
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return isset($this->exportOptions['enabled']) && $this->exportOptions['enabled'] === true;
     }

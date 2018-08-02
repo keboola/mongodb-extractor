@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\MongoDbExtractor;
 
 use Keboola\SSHTunnel\SSH;
@@ -26,7 +28,7 @@ class Extractor
         '#password' => 'password',
     ];
 
-    public function __construct($parameters)
+    public function __construct(array $parameters)
     {
         $this->parameters = $parameters;
 
@@ -62,7 +64,7 @@ class Extractor
      * @param $params
      * @return Manager
      */
-    public function createConnection($params)
+    public function createConnection(array $params): Manager
     {
         $uri = ['mongodb://'];
 
@@ -80,7 +82,7 @@ class Extractor
     /**
      * Sends listCollections command to test connection/credentials
      */
-    public function testConnection()
+    public function testConnection(): void
     {
         $this->db->executeCommand($this->parameters['db']['database'], new Command(['listCollections' => 1]));
     }
@@ -91,7 +93,7 @@ class Extractor
      * @return bool
      * @throws \Exception
      */
-    public function extract($outputPath)
+    public function extract(string $outputPath): bool
     {
         $count = 0;
 
