@@ -74,7 +74,7 @@ class MongoExportCommandJson
 
         // connection options
         $command[] = '--host ' . escapeshellarg($this->options['host']);
-        $command[] = '--port ' . escapeshellarg($this->options['port']);
+        $command[] = '--port ' . escapeshellarg((string) $this->options['port']);
 
         if (isset($this->options['username'])) {
             $command[] = '--username ' . escapeshellarg($this->options['username']);
@@ -86,8 +86,8 @@ class MongoExportCommandJson
         $command[] = '--collection ' . escapeshellarg($this->options['collection']);
 
         foreach (['query', 'sort', 'limit'] as $option) {
-            if (isset($this->options[$option]) && !empty(trim($this->options[$option]))) {
-                $command[] = '--' . $option . ' ' . escapeshellarg($this->options[$option]);
+            if (isset($this->options[$option]) && !empty(trim((string) $this->options[$option]))) {
+                $command[] = '--' . $option . ' ' . escapeshellarg((string) $this->options[$option]);
             }
         }
 

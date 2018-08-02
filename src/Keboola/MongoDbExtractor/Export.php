@@ -96,7 +96,7 @@ class Export
         $parsedRecordsCount = 1;
         while (!feof($handle)) {
             $line = fgets($handle);
-            $data = trim($line) !== '' ? [json_decode($line)] : [];
+            $data = trim((string) $line) !== '' ? [json_decode($line)] : [];
 
             $parser->parse($data);
 
