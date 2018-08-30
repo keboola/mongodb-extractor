@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4b65d5d7613345f62b0dca218a717bfe",
+    "content-hash": "5a9467ac61d9f2f0a178f15376bf6926",
     "packages": [
         {
             "name": "keboola/csv",
@@ -39,19 +39,20 @@
         },
         {
             "name": "keboola/csvmap",
-            "version": "0.5.0",
+            "version": "0.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-csvmap.git",
-                "reference": "950929ee4fe9f45d9157ffcb1f0b5e3016504c94"
+                "reference": "61871b464030a1dc2ae4f672d1296b1bd95311d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-csvmap/zipball/950929ee4fe9f45d9157ffcb1f0b5e3016504c94",
-                "reference": "950929ee4fe9f45d9157ffcb1f0b5e3016504c94",
+                "url": "https://api.github.com/repos/keboola/php-csvmap/zipball/61871b464030a1dc2ae4f672d1296b1bd95311d0",
+                "reference": "61871b464030a1dc2ae4f672d1296b1bd95311d0",
                 "shasum": ""
             },
             "require": {
+                "ext-json": "*",
                 "keboola/csv": "~1.1.4",
                 "keboola/php-csvtable": "~0.1.6",
                 "keboola/php-utils": "^2.1",
@@ -84,7 +85,7 @@
                 "flatten",
                 "object"
             ],
-            "time": "2017-12-20T16:07:11+00:00"
+            "time": "2018-08-31T09:52:55+00:00"
         },
         {
             "name": "keboola/php-csvtable",
