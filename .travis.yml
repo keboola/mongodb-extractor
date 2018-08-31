@@ -68,7 +68,12 @@ jobs:
 
   - stage: run test job
     script:
-    - echo "TODO"
+      - docker pull quay.io/keboola/syrup-cli:latest
+      - >-
+        docker run
+        --rm
+        -e KBC_STORAGE_TOKEN
+        quay.io/keboola/syrup-cli:latest run-job $DP_APP_ID 321622942 $TRAVIS_BRANCH
     if: branch = master OR tag IS present
 
   - stage: pull image, tag and deploy
