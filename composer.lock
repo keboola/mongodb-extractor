@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "03e9e18f6a0c0dda9a3daff4527a9b28",
+    "content-hash": "5a9467ac61d9f2f0a178f15376bf6926",
     "packages": [
         {
             "name": "keboola/csv",
@@ -39,22 +39,23 @@
         },
         {
             "name": "keboola/csvmap",
-            "version": "0.3.0",
+            "version": "0.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-csvmap.git",
-                "reference": "58f89e5d7795306ed72d5b1ee62f42697dd2cbb2"
+                "reference": "61871b464030a1dc2ae4f672d1296b1bd95311d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-csvmap/zipball/58f89e5d7795306ed72d5b1ee62f42697dd2cbb2",
-                "reference": "58f89e5d7795306ed72d5b1ee62f42697dd2cbb2",
+                "url": "https://api.github.com/repos/keboola/php-csvmap/zipball/61871b464030a1dc2ae4f672d1296b1bd95311d0",
+                "reference": "61871b464030a1dc2ae4f672d1296b1bd95311d0",
                 "shasum": ""
             },
             "require": {
+                "ext-json": "*",
                 "keboola/csv": "~1.1.4",
                 "keboola/php-csvtable": "~0.1.6",
-                "keboola/php-utils": "~0.1.20",
+                "keboola/php-utils": "^2.1",
                 "php": ">=5.6.0"
             },
             "require-dev": {
@@ -84,7 +85,7 @@
                 "flatten",
                 "object"
             ],
-            "time": "2016-09-11T13:39:55+00:00"
+            "time": "2018-08-31T09:52:55+00:00"
         },
         {
             "name": "keboola/php-csvtable",
@@ -134,16 +135,16 @@
         },
         {
             "name": "keboola/php-temp",
-            "version": "0.1.6",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-temp.git",
-                "reference": "ffe345e78ba0d35d970fc26fe2c1a36f7d20ca8c"
+                "reference": "2e3c2fc4cce8536a84cbad2a1586eb2eaebe5d3b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-temp/zipball/ffe345e78ba0d35d970fc26fe2c1a36f7d20ca8c",
-                "reference": "ffe345e78ba0d35d970fc26fe2c1a36f7d20ca8c",
+                "url": "https://api.github.com/repos/keboola/php-temp/zipball/2e3c2fc4cce8536a84cbad2a1586eb2eaebe5d3b",
+                "reference": "2e3c2fc4cce8536a84cbad2a1586eb2eaebe5d3b",
                 "shasum": ""
             },
             "require": {
@@ -179,33 +180,54 @@
                 "filesystem",
                 "temp"
             ],
-            "time": "2016-03-23T17:48:01+00:00"
+            "time": "2017-11-13T13:02:19+00:00"
         },
         {
             "name": "keboola/php-utils",
-            "version": "0.1.20",
+            "version": "2.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-utils.git",
-                "reference": "43ead859da20a5aa74ea1f6c3b25361efcd79238"
+                "reference": "ec4d582994f2961bd16a6f6be40d3e8608ef5ec3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-utils/zipball/43ead859da20a5aa74ea1f6c3b25361efcd79238",
-                "reference": "43ead859da20a5aa74ea1f6c3b25361efcd79238",
+                "url": "https://api.github.com/repos/keboola/php-utils/zipball/ec4d582994f2961bd16a6f6be40d3e8608ef5ec3",
+                "reference": "ec4d582994f2961bd16a6f6be40d3e8608ef5ec3",
                 "shasum": ""
             },
             "require": {
-                "keboola/php-csvtable": "~0.1.1",
-                "keboola/php-temp": "~0.1.0",
-                "php": ">=5.5.0",
+                "keboola/php-temp": "^1.0",
+                "php": ">=5.6.0",
                 "seld/jsonlint": "^1.4"
             },
             "require-dev": {
-                "phpunit/phpunit": "3.7.*"
+                "codeclimate/php-test-reporter": "~0.2",
+                "phpunit/phpunit": "~5.0",
+                "squizlabs/php_codesniffer": "~2.4"
             },
             "type": "library",
             "autoload": {
+                "files": [
+                    "src/Keboola/Utils/jsonDecode.php",
+                    "src/Keboola/Utils/sanitizeUtf8.php",
+                    "src/Keboola/Utils/objectToArray.php",
+                    "src/Keboola/Utils/formatDateTime.php",
+                    "src/Keboola/Utils/replaceDates.php",
+                    "src/Keboola/Utils/replaceDatesInArray.php",
+                    "src/Keboola/Utils/buildUrl.php",
+                    "src/Keboola/Utils/httpBuildUrl.php",
+                    "src/Keboola/Utils/returnBytes.php",
+                    "src/Keboola/Utils/camelize.php",
+                    "src/Keboola/Utils/getDataFromPath.php",
+                    "src/Keboola/Utils/isValidDateTimeString.php",
+                    "src/Keboola/Utils/flattenArray.php",
+                    "src/Keboola/Utils/arrayToObject.php",
+                    "src/Keboola/Utils/isEmptyObject.php",
+                    "src/Keboola/Utils/stripInvalidUtf16.php",
+                    "src/Keboola/Utils/toAscii.php",
+                    "src/Keboola/Utils/sanitizeColumnName.php"
+                ],
                 "psr-0": {
                     "Keboola\\Utils": "src/"
                 }
@@ -216,15 +238,15 @@
             ],
             "authors": [
                 {
-                    "name": "Ondrej Vana",
-                    "email": "kachna@keboola.cz"
+                    "name": "keboola",
+                    "email": "devel@keboola.com"
                 }
             ],
             "description": "Misc utility functions",
             "keywords": [
                 "utility"
             ],
-            "time": "2015-12-10T00:24:43+00:00"
+            "time": "2018-04-11T14:40:53+00:00"
         },
         {
             "name": "keboola/ssh-tunnel",
@@ -474,20 +496,23 @@
         },
         {
             "name": "seld/jsonlint",
-            "version": "1.4.0",
+            "version": "1.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/jsonlint.git",
-                "reference": "66834d3e3566bb5798db7294619388786ae99394"
+                "reference": "d15f59a67ff805a44c50ea0516d2341740f81a38"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/jsonlint/zipball/66834d3e3566bb5798db7294619388786ae99394",
-                "reference": "66834d3e3566bb5798db7294619388786ae99394",
+                "url": "https://api.github.com/repos/Seldaek/jsonlint/zipball/d15f59a67ff805a44c50ea0516d2341740f81a38",
+                "reference": "d15f59a67ff805a44c50ea0516d2341740f81a38",
                 "shasum": ""
             },
             "require": {
                 "php": "^5.3 || ^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.0"
             },
             "bin": [
                 "bin/jsonlint"
@@ -516,7 +541,7 @@
                 "parser",
                 "validator"
             ],
-            "time": "2015-11-21T02:21:41+00:00"
+            "time": "2018-01-24T12:46:19+00:00"
         },
         {
             "name": "symfony/config",
