@@ -1,5 +1,10 @@
 sudo: required
 
+env:
+  global:
+    - DP_VENDOR_ID="keboola"
+    - DP_APP_ID="keboola.ex-mongodb"
+
 language: bash
 
 services:
@@ -8,16 +13,7 @@ services:
 before_script:
   - docker -v
   - docker-compose -v
-  - docker-compose build
-
-script:
-  - >
-    docker-compose run
-    --rm
-    -e CC_TEST_REPORTER_ID=$CC_TEST_REPORTER_ID
-    -e GIT_COMMIT_SHA=$TRAVIS_COMMIT
-    -e GIT_BRANCH=$TRAVIS_BRANCH
-    php-tests-with-report
+  - set -e
 
 after_success:
   - docker images
@@ -28,6 +24,75 @@ deploy:
   script: ./deploy.sh
   on:
     tags: true
+
+jobs:
+  include:
+  - stage: build and test
+    script:
+    - docker-compose build php
+    - docker-compose build php-tests-with-report
+    - >-
+      docker-compose run
+      --rm
+      -e CC_TEST_REPORTER_ID=$CC_TEST_REPORTER_ID
+      -e GIT_COMMIT_SHA=$TRAVIS_COMMIT
+      -e GIT_BRANCH=$TRAVIS_BRANCH
+      php-tests-with-report
+    if: branch != master AND NOT tag IS present
+
+  - stage: build, test and push
+    script:
+    - docker pull quay.io/keboola/developer-portal-cli-v2:latest
+    - docker-compose build php
+    - docker-compose build php-tests-with-report
+    - >-
+      docker-compose run
+      --rm
+      -e CC_TEST_REPORTER_ID=$CC_TEST_REPORTER_ID
+      -e GIT_COMMIT_SHA=$TRAVIS_COMMIT
+      -e GIT_BRANCH=$TRAVIS_BRANCH
+      php-tests-with-report
+    - >-
+      export REPOSITORY=`docker run --rm
+      -e KBC_DEVELOPERPORTAL_USERNAME
+      -e KBC_DEVELOPERPORTAL_PASSWORD
+      quay.io/keboola/developer-portal-cli-v2:latest ecr:get-repository $DP_VENDOR_ID $DP_APP_ID`
+    - docker tag keboola/mongodb-extractor $REPOSITORY:$TRAVIS_BRANCH
+    - >-
+      eval $(docker run --rm
+      -e KBC_DEVELOPERPORTAL_USERNAME
+      -e KBC_DEVELOPERPORTAL_PASSWORD
+      quay.io/keboola/developer-portal-cli-v2:latest ecr:get-login $DP_VENDOR_ID $DP_APP_ID)
+    - docker push $REPOSITORY:$TRAVIS_BRANCH
+    if: branch = master OR tag IS present
+
+  - stage: run test job
+    script:
+    - echo "TODO"
+    if: branch = master OR tag IS present
+
+  - stage: pull image, tag and deploy
+    script:
+    - docker pull quay.io/keboola/developer-portal-cli-v2:latest
+    - >-
+      eval $(docker run --rm
+      -e KBC_DEVELOPERPORTAL_USERNAME
+      -e KBC_DEVELOPERPORTAL_PASSWORD
+      quay.io/keboola/developer-portal-cli-v2:latest ecr:get-login $DP_VENDOR_ID $DP_APP_ID)
+    - >-
+      export REPOSITORY=`docker run --rm
+      -e KBC_DEVELOPERPORTAL_USERNAME
+      -e KBC_DEVELOPERPORTAL_PASSWORD
+      quay.io/keboola/developer-portal-cli-v2:latest ecr:get-repository $DP_VENDOR_ID $DP_APP_ID`
+    - docker pull $REPOSITORY:$TRAVIS_BRANCH
+    - docker tag $REPOSITORY:$TRAVIS_BRANCH $REPOSITORY:$TRAVIS_TAG
+    - docker push $REPOSITORY:$TRAVIS_TAG
+    - >-
+      docker run --rm
+      -e KBC_DEVELOPERPORTAL_USERNAME
+      -e KBC_DEVELOPERPORTAL_PASSWORD
+      quay.io/keboola/developer-portal-cli-v2:latest update-app-repository $DP_VENDOR_ID $DP_APP_ID $TRAVIS_TAG
+    if: tag IS present
 
 notifications:
   slack:
