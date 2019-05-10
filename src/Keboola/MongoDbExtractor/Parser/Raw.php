@@ -46,7 +46,7 @@ class Raw
     {
         $item = reset($data);
 
-        if (!empty($data)) {
+        if (!empty($data) && !empty($item)) {
             $this->writerRowToOutputFile($item);
         }
     }
