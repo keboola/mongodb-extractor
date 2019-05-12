@@ -10,6 +10,8 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 use Nette\Utils\Strings;
+use Symfony\Component\Serializer\Encoder\JsonDecode;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
 class Export
 {
@@ -37,6 +39,9 @@ class Export
     /** @var ConsoleOutput */
     private $consoleOutput;
 
+    /** @var JsonDecode */
+    private $jsonDecoder;
+
     public function __construct(
         array $connectionOptions,
         array $exportOptions,
@@ -56,6 +61,7 @@ class Export
         $this->mapping = $mapping;
         $this->filesystem = new Filesystem;
         $this->consoleOutput = new ConsoleOutput;
+        $this->jsonDecoder = new JsonDecode;
 
         $this->createCommand();
     }
@@ -96,7 +102,9 @@ class Export
         $parsedRecordsCount = 1;
         while (!feof($handle)) {
             $line = fgets($handle);
-            $data = trim((string) $line) !== '' ? [json_decode($line)] : [];
+            $data = trim((string) $line) !== ''
+                ? [$this->jsonDecoder->decode($line, JsonEncoder::FORMAT)]
+                : [];
 
             $parser->parse($data);
 
