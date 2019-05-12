@@ -181,4 +181,44 @@ JSON;
         $this->assertFileExists($actualJsonFileMain);
         $this->assertEquals($expectedJsonMain, file_get_contents($actualJsonFileMain));
     }
+
+    public function testSkippedDocuments()
+    {
+        $json = <<<JSON
+{
+  "parameters": {
+    "db": {
+      "host": "mongodb",
+      "port": 27017,
+      "database": "test"
+    },
+    "exports": [
+      {
+        "name": "export-only-valid-lines",
+        "id": 123,
+        "collection": "invalidJSON",
+        "sort": "{_id: 1}",
+        "mode": "raw"
+      }
+    ]
+  }
+}
+JSON;
+
+        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+
+        $application = new Application($config);
+        $application->actionRun($this->path);
+
+        $expectedCsvFileMain = $this->path . '/export-only-valid-lines.csv';
+        $expectedCsvMain = <<<CSV
+"id","data"
+"5716054bee6e764c94fa8181","{""_id"":{""\$oid"":""5716054bee6e764c94fa8181""},""key"":1}"
+"5716054bee6e764c94fa8183","{""_id"":{""\$oid"":""5716054bee6e764c94fa8183""},""key"":3}"
+"5716054bee6e764c94fa8184","{""_id"":{""\$oid"":""5716054bee6e764c94fa8184""},""key"":4}"
+"5716054bee6e764c94fa8186","{""_id"":{""\$oid"":""5716054bee6e764c94fa8186""},""key"":6}"\n
+CSV;
+        $this->assertFileExists($expectedCsvFileMain);
+        $this->assertEquals($expectedCsvMain, file_get_contents($expectedCsvFileMain));
+    }
 }
