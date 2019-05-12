@@ -100,25 +100,24 @@ class Export
 
         $handle = fopen($this->getOutputFilename(), 'r');
 
-        $parsedRecordsCount = 1;
+        $parsedDocumentsCount = 0;
+        $skippedDocumentsCount = 0;
         while (!feof($handle)) {
             $line = fgets($handle);
             try {
                 $data = trim((string) $line) !== ''
                     ? [$this->jsonDecoder->decode($line, JsonEncoder::FORMAT)]
                     : [];
+                $parser->parse($data);
+                if ($parsedDocumentsCount % 5e3 === 0 && $parsedDocumentsCount !== 0) {
+                    $this->consoleOutput->writeln('Parsed ' . $parsedDocumentsCount . ' records.');
+                }
             } catch (NotEncodableValueException $notEncodableValueException) {
                 $this->consoleOutput->writeln('Could not decode JSON: ' . $line);
-                throw $notEncodableValueException;
+                $skippedDocumentsCount++;
+            } finally {
+                $parsedDocumentsCount++;
             }
-
-            $parser->parse($data);
-
-            if ($parsedRecordsCount % 5e3 === 0) {
-                $this->consoleOutput->writeln('Parsed ' . $parsedRecordsCount . ' records.');
-            }
-
-            $parsedRecordsCount++;
         }
 
         // TODO: refactor this to be able to write manifest here for both export types
@@ -128,6 +127,9 @@ class Export
 
         $this->filesystem->remove($this->getOutputFilename());
 
+        if ($skippedDocumentsCount !== 0) {
+            $this->consoleOutput->writeln('Skipped documents: ' . $skippedDocumentsCount);
+        }
         $this->consoleOutput->writeln('Done "' . $this->getOutputFilename() . '"');
     }
 
