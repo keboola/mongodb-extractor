@@ -12,6 +12,7 @@ use Symfony\Component\Process\Process;
 use Nette\Utils\Strings;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 
 class Export
 {
@@ -102,9 +103,14 @@ class Export
         $parsedRecordsCount = 1;
         while (!feof($handle)) {
             $line = fgets($handle);
-            $data = trim((string) $line) !== ''
-                ? [$this->jsonDecoder->decode($line, JsonEncoder::FORMAT)]
-                : [];
+            try {
+                $data = trim((string) $line) !== ''
+                    ? [$this->jsonDecoder->decode($line, JsonEncoder::FORMAT)]
+                    : [];
+            } catch (NotEncodableValueException $notEncodableValueException) {
+                $this->consoleOutput->writeln('Could not decode JSON: ' . $line);
+                throw $notEncodableValueException;
+            }
 
             $parser->parse($data);
 
