@@ -113,7 +113,7 @@ class Export
                     $this->consoleOutput->writeln('Parsed ' . $parsedDocumentsCount . ' records.');
                 }
             } catch (NotEncodableValueException $notEncodableValueException) {
-                $this->consoleOutput->writeln('Could not decode JSON: ' . $line);
+                $this->consoleOutput->writeln('Could not decode JSON: ' . substr($line, 0, 80) . '...');
                 $skippedDocumentsCount++;
             } finally {
                 $parsedDocumentsCount++;
