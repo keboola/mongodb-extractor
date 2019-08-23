@@ -25,6 +25,50 @@ BASH;
         $this->assertSame($expectedCommand, $command->getCommand());
     }
 
+    public function testWithCustomAuthenticationDatabase()
+    {
+        $options = [
+            'host' => 'localhost',
+            'port' => 27017,
+            'db' => 'myDatabase',
+            'collection' => 'myCollection',
+            'out' => '/tmp/create-test.json',
+            // auth with custom auth database
+            'username' => 'user',
+            'password' => 'pass',
+            'authenticationDatabase' => 'myAuthDatabase',
+        ];
+
+        $command = new MongoExportCommandJson($options);
+        $expectedCommand = <<<BASH
+mongoexport --host 'localhost' --port '27017' --username 'user' --password 'pass' --authenticationDatabase 'myAuthDatabase' --db 'myDatabase' --collection 'myCollection' --type 'json' --out '/tmp/create-test.json'
+BASH;
+
+        $this->assertSame($expectedCommand, $command->getCommand());
+    }
+
+    public function testWithEmptyCustomAuthenticationDatabase()
+    {
+        $options = [
+            'host' => 'localhost',
+            'port' => 27017,
+            'db' => 'myDatabase',
+            'collection' => 'myCollection',
+            'out' => '/tmp/create-test.json',
+            // auth with empty custom auth database
+            'username' => 'user',
+            'password' => 'pass',
+            'authenticationDatabase' => ' ',
+        ];
+
+        $command = new MongoExportCommandJson($options);
+        $expectedCommand = <<<BASH
+mongoexport --host 'localhost' --port '27017' --username 'user' --password 'pass' --db 'myDatabase' --collection 'myCollection' --type 'json' --out '/tmp/create-test.json'
+BASH;
+
+        $this->assertSame($expectedCommand, $command->getCommand());
+    }
+
     public function testCreateFull()
     {
         $options = [
