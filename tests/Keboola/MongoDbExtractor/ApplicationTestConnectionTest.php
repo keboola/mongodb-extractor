@@ -42,6 +42,41 @@ JSON;
         $this->assertSame(['status' => 'ok'], $application->actionTestConnection());
     }
 
+    public function testActionTestConnectionOkViaAuthDb()
+    {
+        $json = <<<JSON
+{
+  "parameters": {
+    "db": {
+      "host": "mongodb-auth",
+      "port": 27017,
+      "database": "test",
+      "authDb": "authDb",
+      "user": "userInAuthDb",
+      "#password": "p#a!s@sw:o&r%^d"
+    },
+    "exports": [
+      {
+        "name": "bakeries",
+        "id": 123,
+        "collection": "restaurants",
+        "incremental": true,
+        "mapping": {
+          "_id.\$oid": "id"
+        }
+      }
+    ]
+  }
+}
+JSON;
+        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+
+        $application = new Application($config);
+        $application->actionTestConnection();
+
+        $this->assertSame(['status' => 'ok'], $application->actionTestConnection());
+    }
+
     public function testActionTestConnectionFailWrongHost()
     {
         $this->expectException(ConnectionTimeoutException::class);
