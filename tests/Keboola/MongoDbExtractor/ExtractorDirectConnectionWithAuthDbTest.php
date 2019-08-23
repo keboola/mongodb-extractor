@@ -36,7 +36,7 @@ class ExtractorDirectConnectionWithAuthDbTest extends ExtractorTestCase
       "host": "mongodb-auth",
       "port": 27017,
       "database": "test",
-      "authDb": "authDb",
+      "authenticationDatabase": "authDb",
       "user": "userInAuthDb",
       "#password": "p#a!s@sw:o&r%^d"
     }

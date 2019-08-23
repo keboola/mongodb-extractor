@@ -36,7 +36,7 @@ BASH;
             // auth with custom auth database
             'username' => 'user',
             'password' => 'pass',
-            'authDb' => 'myAuthDatabase',
+            'authenticationDatabase' => 'myAuthDatabase',
         ];
 
         $command = new MongoExportCommandJson($options);
@@ -58,7 +58,7 @@ BASH;
             // auth with empty custom auth database
             'username' => 'user',
             'password' => 'pass',
-            'authDb' => ' ',
+            'authenticationDatabase' => ' ',
         ];
 
         $command = new MongoExportCommandJson($options);

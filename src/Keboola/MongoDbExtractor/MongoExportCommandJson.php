@@ -81,8 +81,10 @@ class MongoExportCommandJson
             $command[] = '--password ' . escapeshellarg($this->options['password']);
         }
 
-        if (isset($this->options['authDb']) && !empty(trim((string) $this->options['authDb']))) {
-            $command[] = '--authenticationDatabase ' . escapeshellarg($this->options['authDb']);
+        if (isset($this->options['authenticationDatabase'])
+            && !empty(trim((string) $this->options['authenticationDatabase']))
+        ) {
+            $command[] = '--authenticationDatabase ' . escapeshellarg($this->options['authenticationDatabase']);
         }
 
         // export options

@@ -31,7 +31,7 @@ class ConfigDefinition implements ConfigurationInterface
                             ->isRequired()
                             ->cannotBeEmpty()
                         ->end()
-                        ->scalarNode('authDb')->end()
+                        ->scalarNode('authenticationDatabase')->end()
                         ->scalarNode('user')->end()
                         ->scalarNode('password')->end()
                         ->scalarNode('#password')->end()

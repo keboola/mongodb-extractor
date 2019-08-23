@@ -74,10 +74,10 @@ class Extractor
 
         $uri[] = $params['host'] .':' . $params['port'] . '/' . $params['db'];
 
-        if (isset($params['username'], $params['password'], $params['authDb'])
-            && !empty(trim((string) $params['authDb']))
+        if (isset($params['username'], $params['password'], $params['authenticationDatabase'])
+            && !empty(trim((string) $params['authenticationDatabase']))
         ) {
-            $uri[] = '?authSource=' . $params['authDb'];
+            $uri[] = '?authSource=' . $params['authenticationDatabase'];
         }
 
         $manager = new Manager(implode('', $uri));
