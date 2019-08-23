@@ -21,3 +21,15 @@ db.createUser({
         }
     ]
 });
+
+use authDb;
+db.createUser({
+    user: 'userInAuthDb',
+    pwd: 'p#a!s@sw:o&r%^d',
+    roles: [
+        {
+            role: "readWrite",
+            db: "test"
+        }
+    ]
+});
