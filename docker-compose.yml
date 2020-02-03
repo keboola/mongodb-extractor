@@ -9,7 +9,6 @@ services:
     stdin_open: true
     links:
       - mongodb
-      - mongodb-3
       - ssh-tunnel
       - mongodb-auth
       - ssh-tunnel-for-auth
@@ -19,7 +18,7 @@ services:
              && mongoimport --host mongodb --db test --collection restaurants --drop --file tests/dataset.json
              && mongoimport --host mongodb --db test --collection restaurantsIdAsString --drop --file tests/dataset-id-as-string.json
              && mongoimport --host mongodb --db test --collection invalidJSON --drop --file tests/dataset-invalid-json-values.json
-             && mongoimport --host mongodb-3 --db test --collection mixedIds --drop --file tests/dataset-mixed-ids.json
+             && mongoimport --host mongodb --db test --collection mixedIds --drop --file tests/dataset-mixed-ids.json
              && mongoimport --host mongodb-auth --username user --password "p#a!s@sw:o&r%^d" --db test --collection restaurants --drop --file tests/dataset.json
              && bash
              '
@@ -33,7 +32,6 @@ services:
       dockerfile: Dockerfile-tests
     links:
       - mongodb
-      - mongodb-3
       - ssh-tunnel
       - mongodb-auth
       - ssh-tunnel-for-auth
@@ -43,7 +41,7 @@ services:
              && mongoimport --host mongodb --db test --collection restaurants --drop --file tests/dataset.json
              && mongoimport --host mongodb --db test --collection restaurantsIdAsString --drop --file tests/dataset-id-as-string.json
              && mongoimport --host mongodb --db test --collection invalidJSON --drop --file tests/dataset-invalid-json-values.json
-             && mongoimport --host mongodb-3 --db test --collection mixedIds --drop --file tests/dataset-mixed-ids.json
+             && mongoimport --host mongodb --db test --collection mixedIds --drop --file tests/dataset-mixed-ids.json
              && mongoimport --host mongodb-auth --username user --password "p#a!s@sw:o&r%^d" --db test --collection restaurants --drop --file tests/dataset.json
              && ./tests.sh
              '
@@ -56,7 +54,6 @@ services:
       dockerfile: Dockerfile-tests
     links:
       - mongodb
-      - mongodb-3
       - ssh-tunnel
       - mongodb-auth
       - ssh-tunnel-for-auth
@@ -66,7 +63,7 @@ services:
              && mongoimport --host mongodb --db test --collection restaurants --drop --file tests/dataset.json
              && mongoimport --host mongodb --db test --collection restaurantsIdAsString --drop --file tests/dataset-id-as-string.json
              && mongoimport --host mongodb --db test --collection invalidJSON --drop --file tests/dataset-invalid-json-values.json
-             && mongoimport --host mongodb-3 --db test --collection mixedIds --drop --file tests/dataset-mixed-ids.json
+             && mongoimport --host mongodb --db test --collection mixedIds --drop --file tests/dataset-mixed-ids.json
              && mongoimport --host mongodb-auth --username user --password "p#a!s@sw:o&r%^d" --db test --collection restaurants --drop --file tests/dataset.json
              && curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
              && chmod +x ./cc-test-reporter
@@ -104,6 +101,3 @@ services:
     image: quay.io/keboola/mongodb-extractor-ssh
     links:
       - mongodb-auth:mongodb-auth-behind-ssh
-
-  mongodb-3:
-    image: mongo:3.0
