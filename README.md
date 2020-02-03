@@ -92,8 +92,9 @@ Application is prepared for run in container, you can start development same way
 
 1. Clone this repository: `git clone git@github.com:keboola/mongodb-extractor.git`
 2. Change directory: `cd mongodb-extractor`
-3. Build services: `docker-compose build`
-4. Run tests `docker-compose run --rm php-tests` (runs `./tests.sh` script)
+3. Build services: `docker-compose build php`
+4. Build services: `docker-compose build php-tests`
+5. Run tests `docker-compose run --rm php-tests` (runs `./tests.sh` script)
 
 After seeing all tests green, continue:
 
