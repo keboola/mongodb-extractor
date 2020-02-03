@@ -52,16 +52,7 @@ try {
     }
 
     exit(0);
-} catch (UserException $e) {
-    echo $e->getMessage();
-    exit(1);
-} catch (ConnectionTimeoutException $e) {
-    echo $e->getMessage();
-    exit(1);
-} catch (AuthenticationException $e) {
-    echo $e->getMessage();
-    exit(1);
-} catch (SSHException $e) {
+} catch (UserException|ConnectionTimeoutException|AuthenticationException|SSHException $e) {
     echo $e->getMessage();
     exit(1);
 } catch (ProcessFailedException $e) {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Keboola\MongoDbExtractor;
 
+use Keboola\MongoDbExtractor\ExportCommandFactory;
 use Keboola\MongoDbExtractor\Parser\Mapping;
 use Keboola\MongoDbExtractor\Parser\Raw;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -16,9 +17,6 @@ use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 
 class Export
 {
-    /** @var MongoExportCommandJson */
-    private $exportCommand;
-
     /** @var array */
     private $connectionOptions;
 
@@ -63,8 +61,6 @@ class Export
         $this->filesystem = new Filesystem;
         $this->consoleOutput = new ConsoleOutput;
         $this->jsonDecoder = new JsonDecode;
-
-        $this->createCommand();
     }
 
     /**
@@ -72,7 +68,16 @@ class Export
      */
     public function export(): void
     {
-        $process = new Process($this->exportCommand->getCommand(), null, null, null, null);
+        $options = array_merge(
+            $this->connectionOptions,
+            $this->exportOptions,
+            ['out' => $this->getOutputFilename()]
+        );
+
+        $factory = new ExportCommandFactory();
+        $cliCommand = $factory->create($options);
+
+        $process = new Process($cliCommand, null, null, null, null);
         $process->mustRun(function ($type, $buffer): void {
             // $type is always Process::ERR here, so we don't check it
             $this->consoleOutput->write($buffer);
@@ -131,17 +136,6 @@ class Export
             $this->consoleOutput->writeln('Skipped documents: ' . $skippedDocumentsCount);
         }
         $this->consoleOutput->writeln('Done "' . $this->getOutputFilename() . '"');
-    }
-
-    /**
-     * Creates command
-     */
-    private function createCommand(): void
-    {
-        $options = $this->connectionOptions;
-        $options['out'] = $this->getOutputFilename();
-
-        $this->exportCommand = new MongoExportCommandJson(array_merge($options, $this->exportOptions));
     }
 
     /**

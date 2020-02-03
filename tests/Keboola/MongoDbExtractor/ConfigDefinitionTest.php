@@ -2,6 +2,7 @@
 
 namespace Keboola\MongoDbExtractor;
 
+use Keboola\MongoDbExtractor\Config\ConfigDefinition;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
