@@ -35,6 +35,46 @@ BASH;
         $this->assertSame($expectedCommand, $command);
     }
 
+    public function testMongoDbProtocol()
+    {
+        $options = [
+            'protocol' => 'mongodb',
+            'host' => 'localhost',
+            'port' => 27017,
+            'db' => 'myDatabase',
+            'collection' => 'myCollection',
+            'out' => '/tmp/create-test.json',
+        ];
+
+        $command = $this->commandFactory->create($options);
+        $expectedCommand = <<<BASH
+mongoexport --uri 'mongodb://localhost:27017/myDatabase' --collection 'myCollection' --type 'json' --out '/tmp/create-test.json'
+BASH;
+
+        $this->assertSame($expectedCommand, $command);
+    }
+
+    public function testMongoDbSrvProtocol()
+    {
+        $options = [
+            'protocol' => 'mongodb+srv',
+            'host' => 'localhost',
+            'port' => 27017,
+            'db' => 'myDatabase',
+            'collection' => 'myCollection',
+            'out' => '/tmp/create-test.json',
+        ];
+
+        $command = $this->commandFactory->create($options);
+
+        // URI starting with mongodb+srv:// must not include a port number
+        $expectedCommand = <<<BASH
+mongoexport --uri 'mongodb+srv://localhost/myDatabase' --collection 'myCollection' --type 'json' --out '/tmp/create-test.json'
+BASH;
+
+        $this->assertSame($expectedCommand, $command);
+    }
+
     public function testWithCustomAuthenticationDatabase()
     {
         $options = [

@@ -10,6 +10,11 @@ use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 
 class ConfigDefinition implements ConfigurationInterface
 {
+    public const
+        PROTOCOL_MONGO_DB = 'mongodb',
+        PROTOCOL_MONGO_DB_SRV = 'mongodb+srv'; // https://docs.mongodb.com/manual/reference/connection-string/#dns-seedlist-connection-format
+
+
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder();
@@ -19,6 +24,10 @@ class ConfigDefinition implements ConfigurationInterface
             ->children()
                 ->arrayNode('db')
                     ->children()
+                        ->enumNode('protocol')
+                            ->values([self::PROTOCOL_MONGO_DB, self::PROTOCOL_MONGO_DB_SRV])
+                            ->defaultValue(self::PROTOCOL_MONGO_DB)
+                        ->end()
                         ->scalarNode('host')
                             ->isRequired()
                             ->cannotBeEmpty()
