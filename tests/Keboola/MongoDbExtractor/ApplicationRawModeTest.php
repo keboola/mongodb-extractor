@@ -133,7 +133,7 @@ JSON;
 {
   "parameters": {
     "db": {
-      "host": "mongodb-3",
+      "host": "mongodb",
       "port": 27017,
       "database": "test"
     },
