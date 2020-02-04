@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Keboola\MongoDbExtractor;
 
+use Keboola\MongoDbExtractor\TestConnectionCommandFactory;
 use Keboola\SSHTunnel\SSH;
-use MongoDB\Driver\Manager;
 use MongoDB\Driver\Command;
+use MongoDB\Driver\Manager;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 
 class Extractor
 {
-    /** @var Manager */
-    protected $db;
-
     /** @var array */
     private $parameters;
 
@@ -55,34 +55,6 @@ class Extractor
             $this->parameters['db']['host'] = '127.0.0.1';
             $this->parameters['db']['port'] = $sshOptions['localPort'];
         }
-
-        $this->db = $this->createConnection($this->parameters['db']);
-    }
-
-    /**
-     * Creates connection
-     * @param $params
-     * @return Manager
-     */
-    public function createConnection(array $params): Manager
-    {
-        $uri = ['mongodb://'];
-
-        if (isset($params['username'], $params['password'])) {
-            $uri[] = rawurlencode($params['username']) . ':' . rawurlencode($params['password']) . '@';
-        }
-
-        $uri[] = $params['host'] .':' . $params['port'] . '/' . $params['db'];
-
-        if (isset($params['username'], $params['password'], $params['authenticationDatabase'])
-            && !empty(trim((string) $params['authenticationDatabase']))
-        ) {
-            $uri[] = '?authSource=' . $params['authenticationDatabase'];
-        }
-
-        $manager = new Manager(implode('', $uri));
-
-        return $manager;
     }
 
     /**
@@ -90,7 +62,10 @@ class Extractor
      */
     public function testConnection(): void
     {
-        $this->db->executeCommand($this->parameters['db']['database'], new Command(['listCollections' => 1]));
+        $uriFactory = new UriFactory();
+        $uri = $uriFactory->create($this->parameters['db']);
+        $manager = new Manager($uri);
+        $manager->executeCommand($this->parameters['db']['database'], new Command(['listCollections' => 1]));
     }
 
     /**
