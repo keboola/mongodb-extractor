@@ -76,6 +76,8 @@ class Extractor
      */
     public function extract(string $outputPath): bool
     {
+        $this->testConnection();
+
         $count = 0;
 
         foreach ($this->parameters['exports'] as $exportOptions) {
@@ -104,13 +106,5 @@ class Extractor
     private function createSshTunnel(array $sshOptions): void
     {
         (new SSH())->openTunnel($sshOptions);
-
-        // Wait for port
-        $timeoutSeconds = 10;
-        $fp = fsockopen('127.0.0.1', (int) $sshOptions['localPort'], $errCode, $errStr, $timeoutSeconds);
-        if (!$fp) {
-            throw new UserException('SSH tunnel timeout.');
-        }
-        fclose($fp);
     }
 }
