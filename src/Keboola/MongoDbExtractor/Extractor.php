@@ -50,7 +50,7 @@ class Extractor
             $sshOptions['remoteHost'] = $this->parameters['db']['host'];
             $sshOptions['remotePort'] = $this->parameters['db']['port'];
 
-            (new SSH())->openTunnel($sshOptions);
+            $this->createSshTunnel($sshOptions);
 
             $this->parameters['db']['host'] = '127.0.0.1';
             $this->parameters['db']['port'] = $sshOptions['localPort'];
@@ -99,5 +99,18 @@ class Extractor
         }
 
         return true;
+    }
+
+    private function createSshTunnel(array $sshOptions): void
+    {
+        (new SSH())->openTunnel($sshOptions);
+
+        // Wait for port
+        $timeoutSeconds = 10;
+        $fp = fsockopen('127.0.0.1', (int) $sshOptions['localPort'], $errCode, $errStr, $timeoutSeconds);
+        if (!$fp) {
+            throw new UserException('SSH tunnel timeout.');
+        }
+        fclose($fp);
     }
 }
