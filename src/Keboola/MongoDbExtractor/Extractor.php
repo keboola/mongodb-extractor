@@ -50,7 +50,7 @@ class Extractor
             $sshOptions['remoteHost'] = $this->parameters['db']['host'];
             $sshOptions['remotePort'] = $this->parameters['db']['port'];
 
-            (new SSH())->openTunnel($sshOptions);
+            $this->createSshTunnel($sshOptions);
 
             $this->parameters['db']['host'] = '127.0.0.1';
             $this->parameters['db']['port'] = $sshOptions['localPort'];
@@ -76,6 +76,8 @@ class Extractor
      */
     public function extract(string $outputPath): bool
     {
+        $this->testConnection();
+
         $count = 0;
 
         foreach ($this->parameters['exports'] as $exportOptions) {
@@ -99,5 +101,10 @@ class Extractor
         }
 
         return true;
+    }
+
+    private function createSshTunnel(array $sshOptions): void
+    {
+        (new SSH())->openTunnel($sshOptions);
     }
 }
