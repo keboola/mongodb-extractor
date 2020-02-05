@@ -10,12 +10,25 @@ use Keboola\SSHTunnel\SSHException;
 
 class ExtractorSshConnectionTimeoutTest extends \PHPUnit\Framework\TestCase
 {
-    private $fs;
+    use CreateExtractorTrait;
 
+    /** @var UriFactory */
+    protected $uriFactory;
+
+    /** @var ExportCommandFactory */
+    protected $exportCommandFactory;
+
+    /** @var string */
     protected $path = '/tmp/extractor-ssh-connection-timeout';
+
+    /** @var Filesystem */
+    private $fs;
 
     protected function setUp()
     {
+        $this->uriFactory = new UriFactory();
+        $this->exportCommandFactory = new ExportCommandFactory($this->uriFactory);
+
         $this->fs = new Filesystem;
         $this->fs->remove($this->path);
         $this->fs->mkdir($this->path);
@@ -75,7 +88,7 @@ JSON;
         $this->expectException(SSHException::class);
         $this->expectExceptionMessage('Unable to create ssh tunnel');
 
-        new Extractor($this->getConfig()['parameters']);
+        $this->createExtractor($this->getConfig()['parameters']);
         // we don't call extract, so it'll end with SshException for sure
     }
 }

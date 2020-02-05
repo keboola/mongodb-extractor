@@ -9,10 +9,21 @@ use Symfony\Component\Process\Process;
 
 abstract class ExtractorTestCase extends \PHPUnit\Framework\TestCase
 {
+    use CreateExtractorTrait;
+
+    /** @var string */
     protected $path;
+
+    /** @var UriFactory */
+    protected $uriFactory;
+
+    /** @var ExportCommandFactory */
+    protected $exportCommandFactory;
 
     protected function setUp()
     {
+        $this->uriFactory = new UriFactory();
+        $this->exportCommandFactory = new ExportCommandFactory($this->uriFactory);
     }
 
     abstract protected function getConfig();
@@ -48,7 +59,7 @@ abstract class ExtractorTestCase extends \PHPUnit\Framework\TestCase
         $parameters = $this->getConfig()['parameters'];
         $parameters['exports'][] = $exportParams;
 
-        $extractor = new Extractor($parameters);
+        $extractor = $this->createExtractor($parameters);
         $export = $extractor->extract($this->path);
 
         $this->assertTrue($export, 'Command successful');
@@ -76,7 +87,7 @@ abstract class ExtractorTestCase extends \PHPUnit\Framework\TestCase
         $parameters = $this->getConfig()['parameters'];
         $parameters['exports'][] = $exportParams;
 
-        $extractor = new Extractor($parameters);
+        $extractor = $this->createExtractor($parameters);
         $export = $extractor->extract($this->path);
 
         $this->assertTrue($export, 'Command successful');
@@ -105,7 +116,7 @@ CSV;
         $parameters = $this->getConfig()['parameters'];
         $parameters['exports'][] = $exportParams;
 
-        $extractor = new Extractor($parameters);
+        $extractor = $this->createExtractor($parameters);
         $export = $extractor->extract($this->path);
 
         $this->assertTrue($export, 'Command successful');
@@ -134,7 +145,7 @@ CSV;
         $parameters = $this->getConfig()['parameters'];
         $parameters['exports'][] = $exportParams;
 
-        $extractor = new Extractor($parameters);
+        $extractor = $this->createExtractor($parameters);
         $export = $extractor->extract($this->path);
 
         $this->assertTrue($export, 'Command successful');
@@ -166,7 +177,7 @@ CSV;
         $parameters = $this->getConfig()['parameters'];
         $parameters['exports'][] = $exportParams;
 
-        $extractor = new Extractor($parameters);
+        $extractor = $this->createExtractor($parameters);
         $export = $extractor->extract($this->path);
 
         $this->assertTrue($export, 'Command successful');
@@ -200,7 +211,7 @@ CSV;
         $parameters = $this->getConfig()['parameters'];
         $parameters['exports'][] = $exportParams;
 
-        $extractor = new Extractor($parameters);
+        $extractor = $this->createExtractor($parameters);
         $export = $extractor->extract($this->path);
 
         $this->assertTrue($export, 'Command successful');
@@ -234,7 +245,7 @@ CSV;
         $parameters = $this->getConfig()['parameters'];
         $parameters['exports'][] = $exportParams;
 
-        $extractor = new Extractor($parameters);
+        $extractor = $this->createExtractor($parameters);
         $extractor->extract($this->path);
     }
 
@@ -256,7 +267,7 @@ CSV;
         $parameters = $this->getConfig()['parameters'];
         $parameters['exports'][] = $exportParams;
 
-        $extractor = new Extractor($parameters);
+        $extractor = $this->createExtractor($parameters);
         $extractor->extract($this->path);
     }
 
@@ -278,7 +289,7 @@ CSV;
         $parameters = $this->getConfig()['parameters'];
         $parameters['exports'][] = $exportParams;
 
-        $extractor = new Extractor($parameters);
+        $extractor = $this->createExtractor($parameters);
         $extractor->extract($this->path);
     }
 
@@ -296,7 +307,7 @@ CSV;
         $parameters = $this->getConfig()['parameters'];
         $parameters['exports'][] = $exportParams;
 
-        $extractor = new Extractor($parameters);
+        $extractor = $this->createExtractor($parameters);
         $export = $extractor->extract($this->path);
 
         $this->assertTrue($export, 'Command successful');
@@ -354,7 +365,7 @@ JSON
         $parameters = $this->getConfig()['parameters'];
         $parameters['exports'][] = $exportParams;
 
-        $extractor = new Extractor($parameters);
+        $extractor = $this->createExtractor($parameters);
         $export = $extractor->extract($this->path);
 
         $this->assertTrue($export, 'Command successful');

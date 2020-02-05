@@ -7,10 +7,21 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
 class ExtractorNotEnabledExportsTest extends \PHPUnit\Framework\TestCase
 {
+    use CreateExtractorTrait;
+
+    /** @var string */
     protected $path = '/tmp/extractor-not-enabled-exports';
+
+    /** @var UriFactory */
+    protected $uriFactory;
+
+    /** @var ExportCommandFactory */
+    protected $exportCommandFactory;
 
     protected function setUp()
     {
+        $this->uriFactory = new UriFactory();
+        $this->exportCommandFactory = new ExportCommandFactory($this->uriFactory);
     }
 
     protected function getConfig()
@@ -46,8 +57,6 @@ JSON;
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Please enable at least one export');
-
-        $extractor = new Extractor($this->getConfig()['parameters']);
-        $extractor->extract($this->path);
+        $this->createExtractor($this->getConfig()['parameters'])->extract($this->path);
     }
 }

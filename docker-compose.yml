@@ -12,16 +12,22 @@ services:
       - ssh-tunnel
       - mongodb-auth
       - ssh-tunnel-for-auth
+      - node1.mongodb.cluster.local
+      - dns.local
     command: >
-             sh -c '
-             sleep 6
-             && mongoimport --host mongodb --db test --collection restaurants --drop --file tests/dataset.json
-             && mongoimport --host mongodb --db test --collection restaurantsIdAsString --drop --file tests/dataset-id-as-string.json
-             && mongoimport --host mongodb --db test --collection invalidJSON --drop --file tests/dataset-invalid-json-values.json
-             && mongoimport --host mongodb --db test --collection mixedIds --drop --file tests/dataset-mixed-ids.json
-             && mongoimport --host mongodb-auth --username user --password "p#a!s@sw:o&r%^d" --db test --collection restaurants --drop --file tests/dataset.json
-             && bash
-             '
+      sh -c '
+      php -r "echo \"nameserver \" . gethostbyname(\"dns.local\") . \"\n\";" > /etc/resolv.conf.new
+      && cp /etc/resolv.conf /etc/resolv.conf.bak
+      && cp /etc/resolv.conf.new /etc/resolv.conf
+      && sleep 10
+      && mongoimport --host mongodb --db test --collection restaurants --drop --file tests/dataset.json
+      && mongoimport --host mongodb --db test --collection restaurantsIdAsString --drop --file tests/dataset-id-as-string.json
+      && mongoimport --host mongodb --db test --collection invalidJSON --drop --file tests/dataset-invalid-json-values.json
+      && mongoimport --host mongodb --db test --collection mixedIds --drop --file tests/dataset-mixed-ids.json
+      && mongoimport --host mongodb-auth --username user --password "p#a!s@sw:o&r%^d" --db test --collection restaurants --drop --file tests/dataset.json
+      && mongoimport --host node1.mongodb.cluster.local --db test --collection restaurants --drop --file tests/dataset.json
+      && bash
+      '
     volumes:
       - ./:/code
       - ./docker/php/php.ini:/usr/local/etc/php/php.ini
@@ -35,16 +41,22 @@ services:
       - ssh-tunnel
       - mongodb-auth
       - ssh-tunnel-for-auth
+      - node1.mongodb.cluster.local
+      - dns.local
     command: >
-             sh -c '
-             sleep 6
-             && mongoimport --host mongodb --db test --collection restaurants --drop --file tests/dataset.json
-             && mongoimport --host mongodb --db test --collection restaurantsIdAsString --drop --file tests/dataset-id-as-string.json
-             && mongoimport --host mongodb --db test --collection invalidJSON --drop --file tests/dataset-invalid-json-values.json
-             && mongoimport --host mongodb --db test --collection mixedIds --drop --file tests/dataset-mixed-ids.json
-             && mongoimport --host mongodb-auth --username user --password "p#a!s@sw:o&r%^d" --db test --collection restaurants --drop --file tests/dataset.json
-             && ./tests.sh
-             '
+      sh -c '
+      php -r "echo \"nameserver \" . gethostbyname(\"dns.local\") . \"\n\";" > /etc/resolv.conf.new
+      && cp /etc/resolv.conf /etc/resolv.conf.bak
+      && cp /etc/resolv.conf.new /etc/resolv.conf
+      && sleep 10
+      && mongoimport --host mongodb --db test --collection restaurants --drop --file tests/dataset.json
+      && mongoimport --host mongodb --db test --collection restaurantsIdAsString --drop --file tests/dataset-id-as-string.json
+      && mongoimport --host mongodb --db test --collection invalidJSON --drop --file tests/dataset-invalid-json-values.json
+      && mongoimport --host mongodb --db test --collection mixedIds --drop --file tests/dataset-mixed-ids.json
+      && mongoimport --host mongodb-auth --username user --password "p#a!s@sw:o&r%^d" --db test --collection restaurants --drop --file tests/dataset.json
+      && mongoimport --host node1.mongodb.cluster.local --db test --collection restaurants --drop --file tests/dataset.json
+      && ./tests.sh
+      '
     volumes:
       - ./docker/php/php.ini:/usr/local/etc/php/php.ini
 
@@ -57,26 +69,50 @@ services:
       - ssh-tunnel
       - mongodb-auth
       - ssh-tunnel-for-auth
+      - node1.mongodb.cluster.local
+      - dns.local
     command: >-
-             sh -c '
-             sleep 6
-             && mongoimport --host mongodb --db test --collection restaurants --drop --file tests/dataset.json
-             && mongoimport --host mongodb --db test --collection restaurantsIdAsString --drop --file tests/dataset-id-as-string.json
-             && mongoimport --host mongodb --db test --collection invalidJSON --drop --file tests/dataset-invalid-json-values.json
-             && mongoimport --host mongodb --db test --collection mixedIds --drop --file tests/dataset-mixed-ids.json
-             && mongoimport --host mongodb-auth --username user --password "p#a!s@sw:o&r%^d" --db test --collection restaurants --drop --file tests/dataset.json
-             && curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-             && chmod +x ./cc-test-reporter
-             && ./cc-test-reporter before-build
-             && ./tests.sh
-             && ./cc-test-reporter after-build
-             '
+      sh -c '
+      php -r "echo \"nameserver \" . gethostbyname(\"dns.local\") . \"\n\";" > /etc/resolv.conf.new
+      && cp /etc/resolv.conf /etc/resolv.conf.bak
+      && cp /etc/resolv.conf.new /etc/resolv.conf
+      && sleep 10
+      && mongoimport --host mongodb --db test --collection restaurants --drop --file tests/dataset.json
+      && mongoimport --host mongodb --db test --collection restaurantsIdAsString --drop --file tests/dataset-id-as-string.json
+      && mongoimport --host mongodb --db test --collection invalidJSON --drop --file tests/dataset-invalid-json-values.json
+      && mongoimport --host mongodb --db test --collection mixedIds --drop --file tests/dataset-mixed-ids.json
+      && mongoimport --host mongodb-auth --username user --password "p#a!s@sw:o&r%^d" --db test --collection restaurants --drop --file tests/dataset.json
+      && mongoimport --host node1.mongodb.cluster.local --db test --collection restaurants --drop --file tests/dataset.json
+      && curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+      && chmod +x ./cc-test-reporter
+      && ./cc-test-reporter before-build
+      && ./tests.sh
+      && ./cc-test-reporter after-build
+      '
     volumes:
       - ./.git:/code/.git
       - ./docker/php/php.ini:/usr/local/etc/php/php.ini
 
+  # DNS server for testing mongodb+srv:// connection
+  # https://docs.mongodb.com/manual/reference/connection-string/#dns-seedlist-connection-format
+  dns.local:
+    image: jpillora/dnsmasq
+    entrypoint: >
+      dnsmasq
+        --conf-file=''
+        --resolv-file=/etc/resolv.conf
+        --no-daemon
+        --log-queries
+        --log-facility=-
+        --srv-host '_mongodb._tcp.mongodb.cluster.local,node1.mongodb.cluster.local,27017'
+        --txt-record 'mongodb.cluster.local'
+
   mongodb:
     image: mongo:3.2
+
+  node1.mongodb.cluster.local:
+    image: mongo:4.2
+    command: mongod
 
   mongodb-auth:
     extends:
@@ -84,13 +120,13 @@ services:
     volumes:
       - ./docker/mongodb/init-auth.js:/init.js
     command: >
-             sh -c '
-             sh -c "mongod &"
-             && sleep 2
-             && mongo < /init.js
-             && mongod --shutdown
-             && mongod --auth
-             '
+      sh -c '
+      sh -c "mongod &"
+      && sleep 2
+      && mongo < /init.js
+      && mongod --shutdown
+      && mongod --auth
+      '
 
   ssh-tunnel:
     image: quay.io/keboola/mongodb-extractor-ssh

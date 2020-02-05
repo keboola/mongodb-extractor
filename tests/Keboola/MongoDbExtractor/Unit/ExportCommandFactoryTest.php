@@ -2,6 +2,7 @@
 
 namespace Keboola\MongoDbExtractor\Unit;
 
+use Keboola\MongoDbExtractor\UriFactory;
 use PHPUnit\Framework\TestCase;
 use Keboola\MongoDbExtractor\ExportCommandFactory;
 use Keboola\MongoDbExtractor\UserException;
@@ -14,7 +15,8 @@ class ExportCommandFactoryTest extends TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->commandFactory = new ExportCommandFactory();
+        $uriFactory = new UriFactory();
+        $this->commandFactory = new ExportCommandFactory($uriFactory);
     }
 
     public function testCreateMinimal()
@@ -41,14 +43,14 @@ BASH;
             'protocol' => 'mongodb',
             'host' => 'localhost',
             'port' => 27017,
-            'db' => 'myDatabase',
+            'database' => 'myDatabase',
             'collection' => 'myCollection',
             'out' => '/tmp/create-test.json',
         ];
 
         $command = $this->commandFactory->create($options);
         $expectedCommand = <<<BASH
-mongoexport --uri 'mongodb://localhost:27017/myDatabase' --collection 'myCollection' --type 'json' --out '/tmp/create-test.json'
+mongoexport --host 'localhost' --port '27017' --db 'myDatabase' --collection 'myCollection' --type 'json' --out '/tmp/create-test.json'
 BASH;
 
         $this->assertSame($expectedCommand, $command);
@@ -59,12 +61,32 @@ BASH;
         $options = [
             'protocol' => 'mongodb+srv',
             'host' => 'localhost',
-            'port' => 27017,
-            'db' => 'myDatabase',
+            'port' => 123456,
+            'database' => 'myDatabase',
             'collection' => 'myCollection',
             'out' => '/tmp/create-test.json',
         ];
 
+        $command = $this->commandFactory->create($options);
+
+        // URI starting with mongodb+srv:// must not include a port number
+        $expectedCommand = <<<BASH
+mongoexport --uri 'mongodb+srv://localhost/myDatabase' --collection 'myCollection' --type 'json' --out '/tmp/create-test.json'
+BASH;
+
+        $this->assertSame($expectedCommand, $command);
+    }
+
+    public function testMongoDbSrvProtocolEmptyPort()
+    {
+        $options = [
+            'protocol' => 'mongodb+srv',
+            'host' => 'localhost',
+            'port' => '',
+            'database' => 'myDatabase',
+            'collection' => 'myCollection',
+            'out' => '/tmp/create-test.json',
+        ];
         $command = $this->commandFactory->create($options);
 
         // URI starting with mongodb+srv:// must not include a port number

@@ -33,7 +33,6 @@ class ConfigDefinition implements ConfigurationInterface
                             ->cannotBeEmpty()
                         ->end()
                         ->scalarNode('port')
-                            ->isRequired()
                             ->cannotBeEmpty()
                         ->end()
                         ->scalarNode('database')

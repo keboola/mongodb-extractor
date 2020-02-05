@@ -19,10 +19,17 @@ class UriFactory
 
         $uri[] = $params['host'];
 
+        // Validate port, required for mongodb://, optional/ignored for mongodb+srv://
         // URI starting with mongodb+srv:// must not include a port number
-        $uri[] = $protocol === ConfigDefinition::PROTOCOL_MONGO_DB_SRV ? '' : (':' . $params['port']);
+        if ($protocol === ConfigDefinition::PROTOCOL_MONGO_DB) {
+            if (empty($params['port'])) {
+                throw new UserException('Missing connection parameter "port".');
+            }
 
-        $uri[] = '/' . $params['db'];
+            $uri[] = ':' . $params['port'];
+        }
+
+        $uri[] = '/' . $params['database'];
 
         if (isset($params['username'], $params['password'], $params['authenticationDatabase'])
             && !empty(trim((string) $params['authenticationDatabase']))
