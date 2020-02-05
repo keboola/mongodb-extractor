@@ -235,7 +235,7 @@ CSV;
         $parameters['exports'][] = $exportParams;
 
         $extractor = new Extractor($parameters);
-        $extractor->extract($this->path);
+        $export = $extractor->extract($this->path);
     }
 
     public function testExportInvalidMappingBadData()
