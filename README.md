@@ -105,7 +105,7 @@ After seeing all tests green, continue:
 
 ### Tests
 
-In running container execute `tests.sh` script which contains `phpunit` and related commands:
+In running container (`docker-compose run --rm php`) execute `tests.sh` script which contains `phpunit` and related commands:
 
 ```console
 ./tests.sh
