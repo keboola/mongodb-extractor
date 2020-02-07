@@ -2,6 +2,7 @@
 
 namespace Keboola\MongoDbExtractor;
 
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Filesystem\Filesystem;
@@ -202,6 +203,101 @@ JSON;
 }
 JSON;
 
+        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+
+        $application = new Application($config);
+        $application->actionRun($this->path);
+    }
+
+    public function testValidateWithoutUser()
+    {
+        $this->expectException(UserException::class);
+
+        $json = <<<JSON
+{
+  "parameters": {
+    "db": {
+      "host": "locahost",
+      "password": "password",
+      "port": 27017,
+      "database": "test"
+    },
+    "exports": [
+      {
+        "name": "bakeries",
+        "id": 123,
+        "collection": "restaurants",
+        "incremental": true,
+        "mapping": {
+          "_id.\$oid": "id"
+        }
+      }
+    ]
+  }
+}
+JSON;
+        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+
+        $application = new Application($config);
+        $application->actionRun($this->path);
+    }
+
+    public function testValidateWithoutPassword()
+    {
+        $this->expectException(UserException::class);
+
+        $json = <<<JSON
+{
+  "parameters": {
+    "db": {
+      "host": "locahost",
+      "user": "user",
+      "port": 27017,
+      "database": "test"
+    },
+    "exports": [
+      {
+        "name": "bakeries",
+        "id": 123,
+        "collection": "restaurants",
+        "incremental": true,
+        "mapping": {
+          "_id.\$oid": "id"
+        }
+      }
+    ]
+  }
+}
+JSON;
+        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+
+        $application = new Application($config);
+        $application->actionRun($this->path);
+    }
+
+    public function testCreateWithMissingRequiredParam()
+    {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessageRegExp('~The child node "host" at path "parameters.db" must be configured~');
+
+        $json = <<<JSON
+{
+  "parameters": {
+    "db": {},
+    "exports": [
+      {
+        "name": "bakeries",
+        "id": 123,
+        "collection": "restaurants",
+        "incremental": true,
+        "mapping": {
+          "_id.\$oid": "id"
+        }
+      }
+    ]
+  }
+}
+JSON;
         $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
 
         $application = new Application($config);

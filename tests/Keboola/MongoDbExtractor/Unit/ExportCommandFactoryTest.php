@@ -22,14 +22,14 @@ class ExportCommandFactoryTest extends TestCase
         $options = [
             'host' => 'localhost',
             'port' => 27017,
-            'db' => 'myDatabase',
+            'database' => 'myDatabase',
             'collection' => 'myCollection',
             'out' => '/tmp/create-test.json',
         ];
 
         $command = $this->commandFactory->create($options);
         $expectedCommand = <<<BASH
-mongoexport --uri 'mongodb://localhost:27017/myDatabase' --collection 'myCollection' --type 'json' --out '/tmp/create-test.json'
+mongoexport --host 'localhost' --port '27017' --db 'myDatabase' --collection 'myCollection' --type 'json' --out '/tmp/create-test.json'
 BASH;
 
         $this->assertSame($expectedCommand, $command);
@@ -40,7 +40,7 @@ BASH;
         $options = [
             'host' => 'localhost',
             'port' => 27017,
-            'db' => 'myDatabase',
+            'database' => 'myDatabase',
             'collection' => 'myCollection',
             'out' => '/tmp/create-test.json',
             // auth with custom auth database
@@ -51,7 +51,7 @@ BASH;
 
         $command = $this->commandFactory->create($options);
         $expectedCommand = <<<BASH
-mongoexport --uri 'mongodb://user:pass@localhost:27017/myDatabase?authSource=myAuthDatabase' --collection 'myCollection' --type 'json' --out '/tmp/create-test.json'
+mongoexport --host 'localhost' --port '27017' --db 'myDatabase' --username 'user' --password 'pass' --authenticationDatabase 'myAuthDatabase' --collection 'myCollection' --type 'json' --out '/tmp/create-test.json'
 BASH;
 
         $this->assertSame($expectedCommand, $command);
@@ -62,7 +62,7 @@ BASH;
         $options = [
             'host' => 'localhost',
             'port' => 27017,
-            'db' => 'myDatabase',
+            'database' => 'myDatabase',
             'collection' => 'myCollection',
             'out' => '/tmp/create-test.json',
             // auth with empty custom auth database
@@ -73,7 +73,7 @@ BASH;
 
         $command = $this->commandFactory->create($options);
         $expectedCommand = <<<BASH
-mongoexport --uri 'mongodb://user:pass@localhost:27017/myDatabase' --collection 'myCollection' --type 'json' --out '/tmp/create-test.json'
+mongoexport --host 'localhost' --port '27017' --db 'myDatabase' --username 'user' --password 'pass' --collection 'myCollection' --type 'json' --out '/tmp/create-test.json'
 BASH;
 
         $this->assertSame($expectedCommand, $command);
@@ -86,7 +86,7 @@ BASH;
             'port' => 27017,
             'username' => 'user',
             'password' => 'pass',
-            'db' => 'myDatabase',
+            'database' => 'myDatabase',
             'collection' => 'myCollection',
             'query' => '{a: "b"}',
             'sort' => '{a: 1, b: -1}',
@@ -96,7 +96,7 @@ BASH;
 
         $command = $this->commandFactory->create($options);
         $expectedCommand = <<<BASH
-mongoexport --uri 'mongodb://user:pass@localhost:27017/myDatabase' --collection 'myCollection' --query '{a: "b"}' --sort '{a: 1, b: -1}' --limit '10' --type 'json' --out '/tmp/create-test.json'
+mongoexport --host 'localhost' --port '27017' --db 'myDatabase' --username 'user' --password 'pass' --collection 'myCollection' --query '{a: "b"}' --sort '{a: 1, b: -1}' --limit '10' --type 'json' --out '/tmp/create-test.json'
 BASH;
 
         $this->assertSame($expectedCommand, $command);
@@ -109,7 +109,7 @@ BASH;
             'port' => 27017,
             'username' => 'user',
             'password' => 'pass',
-            'db' => 'myDatabase',
+            'database' => 'myDatabase',
             'collection' => 'myCollection',
             'query' => '',
             'sort' => ' ',
@@ -119,48 +119,9 @@ BASH;
 
         $command = $this->commandFactory->create($options);
         $expectedCommand = <<<BASH
-mongoexport --uri 'mongodb://user:pass@localhost:27017/myDatabase' --collection 'myCollection' --type 'json' --out '/tmp/create-test.json'
+mongoexport --host 'localhost' --port '27017' --db 'myDatabase' --username 'user' --password 'pass' --collection 'myCollection' --type 'json' --out '/tmp/create-test.json'
 BASH;
 
         $this->assertSame($expectedCommand, $command);
-    }
-
-    public function testValidateWithoutUser()
-    {
-        $this->expectException(UserException::class);
-
-        $options = [
-            'host' => 'localhost',
-            'port' => 27017,
-            'password' => 'password',
-            'db' => 'myDatabase',
-            'collection' => 'myCollection',
-            'out' => '/tmp/validate-test.json',
-        ];
-
-        $this->commandFactory->create($options);
-    }
-
-    public function testValidateWithoutPassword()
-    {
-        $this->expectException(UserException::class);
-
-        $options = [
-            'host' => 'localhost',
-            'port' => 27017,
-            'username' => 'user',
-            'db' => 'myDatabase',
-            'collection' => 'myCollection',
-            'out' => '/tmp/validate-test.json',
-        ];
-
-        $this->commandFactory->create($options);
-    }
-
-    public function testCreateWithMissingRequiredParam()
-    {
-        $this->expectException(UserException::class);
-        $options = [];
-        $this->commandFactory->create($options);
     }
 }
