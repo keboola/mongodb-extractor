@@ -212,6 +212,7 @@ JSON;
     public function testValidateWithoutUser()
     {
         $this->expectException(UserException::class);
+        $this->expectExceptionMessageRegExp('~When passing authentication details, both "user" and "password" params are required~');
 
         $json = <<<JSON
 {
@@ -245,6 +246,7 @@ JSON;
     public function testValidateWithoutPassword()
     {
         $this->expectException(UserException::class);
+        $this->expectExceptionMessageRegExp('~When passing authentication details, both "user" and "password" params are required~');
 
         $json = <<<JSON
 {
