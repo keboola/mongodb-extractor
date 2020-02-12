@@ -21,7 +21,7 @@ class UriFactoryTest extends TestCase
         $this->assertSame('mongodb://localhost:27017/myDatabase', $this->uriFactory->create([
             'host' => 'localhost',
             'port' => 27017,
-            'db' => 'myDatabase',
+            'database' => 'myDatabase',
         ]));
     }
 
@@ -30,7 +30,7 @@ class UriFactoryTest extends TestCase
         $this->assertSame('mongodb://user:pass@localhost:27017/myDatabase', $this->uriFactory->create([
             'host' => 'localhost',
             'port' => 27017,
-            'db' => 'myDatabase',
+            'database' => 'myDatabase',
             'username' => 'user',
             'password' => 'pass',
         ]));
@@ -41,7 +41,7 @@ class UriFactoryTest extends TestCase
         $this->assertSame('mongodb://user:pass@localhost:27017/myDatabase?authSource=authDb', $this->uriFactory->create([
             'host' => 'localhost',
             'port' => 27017,
-            'db' => 'myDatabase',
+            'database' => 'myDatabase',
             'username' => 'user',
             'password' => 'pass',
             'authenticationDatabase' => 'authDb',
