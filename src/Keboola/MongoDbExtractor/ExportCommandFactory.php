@@ -4,17 +4,29 @@ declare(strict_types=1);
 
 namespace Keboola\MongoDbExtractor;
 
-use Keboola\MongoDbExtractor\UriFactory;
-
 class ExportCommandFactory
 {
     public function create(array $params): string
     {
-        $uriFactory = new UriFactory();
-        $uri = $uriFactory->create($params);
-
         $command = ['mongoexport'];
-        $command[] = '--uri ' . escapeshellarg($uri);
+
+        // Connection options
+        $command[] = '--host ' . escapeshellarg($params['host']);
+        $command[] = '--port ' . escapeshellarg((string) $params['port']);
+        $command[] = '--db ' . escapeshellarg($params['database']);
+
+        if (isset($params['username'])) {
+            $command[] = '--username ' . escapeshellarg($params['username']);
+            $command[] = '--password ' . escapeshellarg($params['password']);
+        }
+
+        if (isset($params['authenticationDatabase'])
+            && !empty(trim((string) $params['authenticationDatabase']))
+        ) {
+            $command[] = '--authenticationDatabase ' . escapeshellarg($params['authenticationDatabase']);
+        }
+
+        // Export options
         $command[] = '--collection ' . escapeshellarg($params['collection']);
 
         foreach (['query', 'sort', 'limit'] as $option) {

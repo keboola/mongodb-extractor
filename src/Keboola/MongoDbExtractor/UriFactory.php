@@ -6,29 +6,8 @@ namespace Keboola\MongoDbExtractor;
 
 class UriFactory
 {
-    /** @var array */
-    private $requiredDbOptions = [
-        'host',
-        'port',
-        'db',
-    ];
-
     public function create(array $params): string
     {
-        array_walk($this->requiredDbOptions, function ($option) use ($params): void {
-            if (!isset($params[$option])) {
-                $msg = sprintf('Missing connection parameter "%s".', $option);
-                throw new UserException($msg);
-            }
-        });
-
-        // validate auth options: both or none
-        if (isset($params['username']) && !isset($params['password'])
-            || !isset($params['username']) && isset($params['password'])) {
-            throw new UserException('When passing authentication details,'
-                . ' both "user" and "password" params are required');
-        }
-
         $uri = ['mongodb://'];
 
         if (isset($params['username'], $params['password'])) {

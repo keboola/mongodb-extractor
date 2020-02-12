@@ -28,6 +28,13 @@ class Extractor
         '#password' => 'password',
     ];
 
+    /** @var array */
+    private $requiredDbOptions = [
+        'host',
+        'port',
+        'db',
+    ];
+
     public function __construct(array $parameters)
     {
         $this->parameters = $parameters;
@@ -36,6 +43,21 @@ class Extractor
             if (isset($this->parameters['db'][$from])) {
                 $this->parameters['db'][$to] = $this->parameters['db'][$from];
             }
+        }
+
+        $dbParams = $this->parameters['db'];
+        array_walk($this->requiredDbOptions, function ($option) use ($dbParams): void {
+            if (!isset($dbParams[$option])) {
+                $msg = sprintf('Missing connection parameter "%s".', $option);
+                throw new UserException($msg);
+            }
+        });
+
+        // validate auth options: both or none
+        if (isset($dbParams['username']) && !isset($dbParams['password'])
+            || !isset($dbParams['username']) && isset($dbParams['password'])) {
+            throw new UserException('When passing authentication details,'
+                . ' both "user" and "password" params are required');
         }
 
         if (isset($this->parameters['db']['ssh']['enabled']) && $this->parameters['db']['ssh']['enabled'] === true) {
