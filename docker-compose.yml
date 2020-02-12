@@ -23,6 +23,7 @@ services:
         && wait-for-it -t 100 mongodb:27017
         && wait-for-it -t 100 mongodb-auth:27017
         && wait-for-it -t 100 node1.mongodb.cluster.local:27017
+        && sleep 1
         && mongoimport --host mongodb --db test --collection restaurants --drop --file tests/dataset.json
         && mongoimport --host mongodb --db test --collection restaurantsIdAsString --drop --file tests/dataset-id-as-string.json
         && mongoimport --host mongodb --db test --collection invalidJSON --drop --file tests/dataset-invalid-json-values.json
