@@ -31,7 +31,7 @@ class UriFactoryTest extends TestCase
             'host' => 'localhost',
             'port' => 27017,
             'database' => 'myDatabase',
-            'username' => 'user',
+            'user' => 'user',
             'password' => 'pass',
         ]));
     }
@@ -42,7 +42,7 @@ class UriFactoryTest extends TestCase
             'host' => 'localhost',
             'port' => 27017,
             'database' => 'myDatabase',
-            'username' => 'user',
+            'user' => 'user',
             'password' => 'pass',
             'authenticationDatabase' => 'authDb',
         ]));

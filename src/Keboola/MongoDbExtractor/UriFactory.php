@@ -13,8 +13,8 @@ class UriFactory
         $protocol = $params['protocol']  ?? ConfigDefinition::PROTOCOL_MONGO_DB;
         $uri = [$protocol . '://'];
 
-        if (isset($params['username'], $params['password'])) {
-            $uri[] = rawurlencode($params['username']) . ':' . rawurlencode($params['password']) . '@';
+        if (isset($params['user'], $params['password'])) {
+            $uri[] = rawurlencode($params['user']) . ':' . rawurlencode($params['password']) . '@';
         }
 
         $uri[] = $params['host'];
@@ -31,7 +31,7 @@ class UriFactory
 
         $uri[] = '/' . $params['database'];
 
-        if (isset($params['username'], $params['password'], $params['authenticationDatabase'])
+        if (isset($params['user'], $params['password'], $params['authenticationDatabase'])
             && !empty(trim((string) $params['authenticationDatabase']))
         ) {
             $uri[] = '?authSource=' . $params['authenticationDatabase'];

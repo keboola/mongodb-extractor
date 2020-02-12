@@ -21,13 +21,10 @@ class Extractor
 
     /**
      * Mapping:
-     * - compatibility with db-extractor-common
      * - encrypted password
      * @var array
      */
     private $dbParamsMapping = [
-        'user' => 'username',
-        'database' => 'db',
         '#password' => 'password',
     ];
 
@@ -51,13 +48,13 @@ class Extractor
         }
 
         // Db is required
-        if (empty($dbParams['db'])) {
+        if (empty($dbParams['database'])) {
             throw new UserException('Missing connection parameter "db".');
         }
 
         // validate auth options: both or none
-        if (isset($dbParams['username']) && !isset($dbParams['password'])
-            || !isset($dbParams['username']) && isset($dbParams['password'])) {
+        if (isset($dbParams['user']) && !isset($dbParams['password'])
+            || !isset($dbParams['user']) && isset($dbParams['password'])) {
             throw new UserException('When passing authentication details,'
                 . ' both "user" and "password" params are required');
         }

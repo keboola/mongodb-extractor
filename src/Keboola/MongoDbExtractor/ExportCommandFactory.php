@@ -33,8 +33,8 @@ class ExportCommandFactory
             $command[] = '--port ' . escapeshellarg((string) $params['port']);
             $command[] = '--db ' . escapeshellarg($params['database']);
 
-            if (isset($params['username'])) {
-                $command[] = '--username ' . escapeshellarg($params['username']);
+            if (isset($params['user'])) {
+                $command[] = '--username ' . escapeshellarg($params['user']);
                 $command[] = '--password ' . escapeshellarg($params['password']);
             }
 

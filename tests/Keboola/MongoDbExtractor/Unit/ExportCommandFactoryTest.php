@@ -106,7 +106,7 @@ BASH;
             'collection' => 'myCollection',
             'out' => '/tmp/create-test.json',
             // auth with custom auth database
-            'username' => 'user',
+            'user' => 'user',
             'password' => 'pass',
             'authenticationDatabase' => 'myAuthDatabase',
         ];
@@ -128,7 +128,7 @@ BASH;
             'collection' => 'myCollection',
             'out' => '/tmp/create-test.json',
             // auth with empty custom auth database
-            'username' => 'user',
+            'user' => 'user',
             'password' => 'pass',
             'authenticationDatabase' => ' ',
         ];
@@ -146,7 +146,7 @@ BASH;
         $options = [
             'host' => 'localhost',
             'port' => 27017,
-            'username' => 'user',
+            'user' => 'user',
             'password' => 'pass',
             'database' => 'myDatabase',
             'collection' => 'myCollection',
@@ -169,7 +169,7 @@ BASH;
         $options = [
             'host' => 'localhost',
             'port' => 27017,
-            'username' => 'user',
+            'user' => 'user',
             'password' => 'pass',
             'database' => 'myDatabase',
             'collection' => 'myCollection',
