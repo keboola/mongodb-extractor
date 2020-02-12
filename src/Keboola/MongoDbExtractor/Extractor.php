@@ -42,12 +42,12 @@ class Extractor
 
         $dbParams = $this->parameters['db'];
 
-        // Port is required
+        // Host is required
         if (empty($dbParams['host'])) {
             throw new UserException('Missing connection parameter "host".');
         }
 
-        // Db is required
+        // Database is required
         if (empty($dbParams['database'])) {
             throw new UserException('Missing connection parameter "db".');
         }
