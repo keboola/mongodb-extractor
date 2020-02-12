@@ -1,7 +1,6 @@
 version: "2"
 
 services:
-
   php:
     build: .
     image: keboola/mongodb-extractor
@@ -14,20 +13,25 @@ services:
       - ssh-tunnel-for-auth
       - node1.mongodb.cluster.local
       - dns.local
-    command: >
-      sh -c '
-      php -r "echo \"nameserver \" . gethostbyname(\"dns.local\") . \"\n\";" > /etc/resolv.conf.new
-      && cp /etc/resolv.conf /etc/resolv.conf.bak
-      && cp /etc/resolv.conf.new /etc/resolv.conf
-      && sleep 10
-      && mongoimport --host mongodb --db test --collection restaurants --drop --file tests/dataset.json
-      && mongoimport --host mongodb --db test --collection restaurantsIdAsString --drop --file tests/dataset-id-as-string.json
-      && mongoimport --host mongodb --db test --collection invalidJSON --drop --file tests/dataset-invalid-json-values.json
-      && mongoimport --host mongodb --db test --collection mixedIds --drop --file tests/dataset-mixed-ids.json
-      && mongoimport --host mongodb-auth --username user --password "p#a!s@sw:o&r%^d" --db test --collection restaurants --drop --file tests/dataset.json
-      && mongoimport --host node1.mongodb.cluster.local --db test --collection restaurants --drop --file tests/dataset.json
-      && bash
-      '
+    entrypoint: &phpInit
+      - sh
+      - -c
+      - >
+        php -r "echo \"nameserver \" . gethostbyname(\"dns.local\") . \"\n\";" > /etc/resolv.conf.new
+        && cp /etc/resolv.conf /etc/resolv.conf.bak
+        && cp /etc/resolv.conf.new /etc/resolv.conf
+        && wait-for-it -t 100 mongodb:27017
+        && wait-for-it -t 100 mongodb-auth:27017
+        && wait-for-it -t 100 node1.mongodb.cluster.local:27017
+        && mongoimport --host mongodb --db test --collection restaurants --drop --file tests/dataset.json
+        && mongoimport --host mongodb --db test --collection restaurantsIdAsString --drop --file tests/dataset-id-as-string.json
+        && mongoimport --host mongodb --db test --collection invalidJSON --drop --file tests/dataset-invalid-json-values.json
+        && mongoimport --host mongodb --db test --collection mixedIds --drop --file tests/dataset-mixed-ids.json
+        && mongoimport --host mongodb-auth --username user --password "p#a!s@sw:o&r%^d" --db test --collection restaurants --drop --file tests/dataset.json
+        && mongoimport --host node1.mongodb.cluster.local --db test --collection restaurants --drop --file tests/dataset.json
+        && exec "$$@"
+      - sh
+    command: bash
     volumes:
       - ./:/code
       - ./docker/php/php.ini:/usr/local/etc/php/php.ini
@@ -43,20 +47,8 @@ services:
       - ssh-tunnel-for-auth
       - node1.mongodb.cluster.local
       - dns.local
-    command: >
-      sh -c '
-      php -r "echo \"nameserver \" . gethostbyname(\"dns.local\") . \"\n\";" > /etc/resolv.conf.new
-      && cp /etc/resolv.conf /etc/resolv.conf.bak
-      && cp /etc/resolv.conf.new /etc/resolv.conf
-      && sleep 10
-      && mongoimport --host mongodb --db test --collection restaurants --drop --file tests/dataset.json
-      && mongoimport --host mongodb --db test --collection restaurantsIdAsString --drop --file tests/dataset-id-as-string.json
-      && mongoimport --host mongodb --db test --collection invalidJSON --drop --file tests/dataset-invalid-json-values.json
-      && mongoimport --host mongodb --db test --collection mixedIds --drop --file tests/dataset-mixed-ids.json
-      && mongoimport --host mongodb-auth --username user --password "p#a!s@sw:o&r%^d" --db test --collection restaurants --drop --file tests/dataset.json
-      && mongoimport --host node1.mongodb.cluster.local --db test --collection restaurants --drop --file tests/dataset.json
-      && ./tests.sh
-      '
+    entrypoint: *phpInit
+    command: ./tests.sh
     volumes:
       - ./docker/php/php.ini:/usr/local/etc/php/php.ini
 
@@ -71,19 +63,10 @@ services:
       - ssh-tunnel-for-auth
       - node1.mongodb.cluster.local
       - dns.local
+    entrypoint: *phpInit
     command: >-
       sh -c '
-      php -r "echo \"nameserver \" . gethostbyname(\"dns.local\") . \"\n\";" > /etc/resolv.conf.new
-      && cp /etc/resolv.conf /etc/resolv.conf.bak
-      && cp /etc/resolv.conf.new /etc/resolv.conf
-      && sleep 10
-      && mongoimport --host mongodb --db test --collection restaurants --drop --file tests/dataset.json
-      && mongoimport --host mongodb --db test --collection restaurantsIdAsString --drop --file tests/dataset-id-as-string.json
-      && mongoimport --host mongodb --db test --collection invalidJSON --drop --file tests/dataset-invalid-json-values.json
-      && mongoimport --host mongodb --db test --collection mixedIds --drop --file tests/dataset-mixed-ids.json
-      && mongoimport --host mongodb-auth --username user --password "p#a!s@sw:o&r%^d" --db test --collection restaurants --drop --file tests/dataset.json
-      && mongoimport --host node1.mongodb.cluster.local --db test --collection restaurants --drop --file tests/dataset.json
-      && curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+      curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
       && chmod +x ./cc-test-reporter
       && ./cc-test-reporter before-build
       && ./tests.sh
