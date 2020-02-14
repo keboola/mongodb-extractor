@@ -4,39 +4,34 @@ declare(strict_types=1);
 
 namespace Keboola\MongoDbExtractor;
 
-use Keboola\MongoDbExtractor\TestConnectionCommandFactory;
 use Keboola\SSHTunnel\SSH;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Manager;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Process\Process;
 
 class Extractor
 {
     /** @var array */
     private $parameters;
 
+    /** @var UriFactory */
+    private $uriFactory;
+
+    /** @var ExportCommandFactory */
+    private $exportCommandFactory;
+
     /**
      * Mapping:
-     * - compatibility with db-extractor-common
      * - encrypted password
      * @var array
      */
     private $dbParamsMapping = [
-        'user' => 'username',
-        'database' => 'db',
         '#password' => 'password',
     ];
 
-    /** @var array */
-    private $requiredDbOptions = [
-        'host',
-        'port',
-        'db',
-    ];
-
-    public function __construct(array $parameters)
+    public function __construct(UriFactory $uriFactory, ExportCommandFactory $exportCommandFactory, array $parameters)
     {
+        $this->uriFactory = $uriFactory;
+        $this->exportCommandFactory = $exportCommandFactory;
         $this->parameters = $parameters;
 
         foreach ($this->dbParamsMapping as $from => $to) {
@@ -46,16 +41,20 @@ class Extractor
         }
 
         $dbParams = $this->parameters['db'];
-        array_walk($this->requiredDbOptions, function ($option) use ($dbParams): void {
-            if (!isset($dbParams[$option])) {
-                $msg = sprintf('Missing connection parameter "%s".', $option);
-                throw new UserException($msg);
-            }
-        });
+
+        // Host is required
+        if (empty($dbParams['host'])) {
+            throw new UserException('Missing connection parameter "host".');
+        }
+
+        // Database is required
+        if (empty($dbParams['database'])) {
+            throw new UserException('Missing connection parameter "db".');
+        }
 
         // validate auth options: both or none
-        if (isset($dbParams['username']) && !isset($dbParams['password'])
-            || !isset($dbParams['username']) && isset($dbParams['password'])) {
+        if (isset($dbParams['user']) && !isset($dbParams['password'])
+            || !isset($dbParams['user']) && isset($dbParams['password'])) {
             throw new UserException('When passing authentication details,'
                 . ' both "user" and "password" params are required');
         }
@@ -84,8 +83,7 @@ class Extractor
      */
     public function testConnection(): void
     {
-        $uriFactory = new UriFactory();
-        $uri = $uriFactory->create($this->parameters['db']);
+        $uri = $this->uriFactory->create($this->parameters['db']);
         $manager = new Manager($uri);
         $manager->executeCommand($this->parameters['db']['database'], new Command(['listCollections' => 1]));
     }
@@ -104,6 +102,7 @@ class Extractor
 
         foreach ($this->parameters['exports'] as $exportOptions) {
             $export = new Export(
+                $this->exportCommandFactory,
                 $this->parameters['db'],
                 $exportOptions,
                 $outputPath,

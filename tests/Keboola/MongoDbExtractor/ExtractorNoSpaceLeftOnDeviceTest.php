@@ -9,11 +9,21 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
 class ExtractorNoSpaceLeftOnDeviceTest extends \PHPUnit\Framework\TestCase
 {
+    use CreateExtractorTrait;
+
+    /** @var UriFactory */
+    protected $uriFactory;
+
+    /** @var ExportCommandFactory */
+    protected $exportCommandFactory;
+
     /** @var Filesystem */
     private $fs;
 
+    /** @var string */
     private $path = '/tmp/no-space-left-on-device';
 
+    /** @var string */
     private $file = 'export-one.csv';
 
     protected function setUp()
@@ -25,6 +35,9 @@ class ExtractorNoSpaceLeftOnDeviceTest extends \PHPUnit\Framework\TestCase
         // simulate full disk
         $process = new Process('ln -s /dev/full ' . $this->path . '/' . $this->file);
         $process->mustRun();
+
+        $this->uriFactory = new UriFactory();
+        $this->exportCommandFactory = new ExportCommandFactory($this->uriFactory);
     }
 
     public function testExportNoSpaceLeftOnDevice()
@@ -42,9 +55,7 @@ class ExtractorNoSpaceLeftOnDeviceTest extends \PHPUnit\Framework\TestCase
 
         $parameters = $this->getConfig()['parameters'];
         $parameters['exports'][] = $exportParams;
-
-        $extractor = new Extractor($parameters);
-        $extractor->extract($this->path);
+        $this->createExtractor($parameters)->extract($this->path);
     }
 
     protected function getConfig()

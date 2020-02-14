@@ -15,6 +15,9 @@ class Application
     /** @var array */
     private $parameters;
 
+    /** @var Extractor */
+    private $extractor;
+
     public function __construct(array $config)
     {
         $this->config = $config;
@@ -26,6 +29,10 @@ class Application
             !== count(array_unique(array_column($this->parameters['exports'], 'name')))) {
             throw new UserException('Please remove duplicate export names');
         }
+
+        $uriFactory = new UriFactory();
+        $exportCommandFactory = new ExportCommandFactory($uriFactory);
+        $this->extractor = new Extractor($uriFactory, $exportCommandFactory, $this->parameters);
     }
 
     /**
@@ -36,8 +43,7 @@ class Application
      */
     public function actionRun(string $outputPath): bool
     {
-        $extractor = new Extractor($this->parameters);
-        return $extractor->extract($outputPath);
+        return $this->extractor->extract($outputPath);
     }
 
     /**
@@ -46,8 +52,7 @@ class Application
      */
     public function actionTestConnection(): array
     {
-        $extractor = new Extractor($this->parameters);
-        $extractor->testConnection();
+        $this->extractor->testConnection();
         return [
             'status' => 'ok',
         ];

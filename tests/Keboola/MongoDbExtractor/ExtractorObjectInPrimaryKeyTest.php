@@ -9,6 +9,14 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
 class ExtractorObjectInPrimaryKeyTest extends \PHPUnit\Framework\TestCase
 {
+    use CreateExtractorTrait;
+
+    /** @var UriFactory */
+    protected $uriFactory;
+
+    /** @var ExportCommandFactory */
+    protected $exportCommandFactory;
+
     /** @var Filesystem */
     private $fs;
 
@@ -16,6 +24,9 @@ class ExtractorObjectInPrimaryKeyTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp()
     {
+        $this->uriFactory = new UriFactory();
+        $this->exportCommandFactory = new ExportCommandFactory($this->uriFactory);
+
         $this->fs = new Filesystem;
         $this->fs->remove($this->path);
         $this->fs->mkdir($this->path);
@@ -25,11 +36,7 @@ class ExtractorObjectInPrimaryKeyTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException(BadConfigException::class);
         $this->expectExceptionMessageRegExp('~Only scalar values are allowed in primary key.~');
-
-        $parameters = $this->getConfig()['parameters'];
-
-        $extractor = new Extractor($parameters);
-        $extractor->extract($this->path);
+        $this->createExtractor($this->getConfig()['parameters'])->extract($this->path);
     }
 
     protected function getConfig()

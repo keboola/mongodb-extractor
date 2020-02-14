@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Keboola\MongoDbExtractor;
 
-use Keboola\MongoDbExtractor\ExportCommandFactory;
 use Keboola\MongoDbExtractor\Parser\Mapping;
 use Keboola\MongoDbExtractor\Parser\Raw;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -17,6 +16,9 @@ use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 
 class Export
 {
+    /** @var ExportCommandFactory */
+    private $exportCommandFactory;
+
     /** @var array */
     private $connectionOptions;
 
@@ -42,6 +44,7 @@ class Export
     private $jsonDecoder;
 
     public function __construct(
+        ExportCommandFactory $exportCommandFactory,
         array $connectionOptions,
         array $exportOptions,
         string $path,
@@ -53,6 +56,7 @@ class Export
             throw new UserException('Mapping cannot be empty in "mapping" export mode.');
         }
 
+        $this->exportCommandFactory = $exportCommandFactory;
         $this->connectionOptions = $connectionOptions;
         $this->exportOptions = $exportOptions;
         $this->path = $path;
@@ -74,8 +78,7 @@ class Export
             ['out' => $this->getOutputFilename()]
         );
 
-        $factory = new ExportCommandFactory();
-        $cliCommand = $factory->create($options);
+        $cliCommand = $this->exportCommandFactory->create($options);
 
         $process = new Process($cliCommand, null, null, null, null);
         $process->mustRun(function ($type, $buffer): void {
