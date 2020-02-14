@@ -28,7 +28,12 @@ class ExportCommandFactory
             $command[] = '--uri ' . escapeshellarg($uri);
         } else {
             // If not mongodb+srv://, then use standard parameters: --host, --db, ...
-            // because --uri parameter does not work well with the SSH tunnel (probably a bug)
+            // because --uri parameter does not work well with some MongoDB servers (probably a bug).
+            // In that case:
+            // .... test Connection through PHP driver works OK
+            // .... mongoexport with --host parameter works OK
+            // .... mongoexport with --uri parameter freezes without writing an error
+            // Therefore is --uri parameter used only with mongodb+srv://, where there is no other way.
             $command[] = '--host ' . escapeshellarg($params['host']);
             $command[] = '--port ' . escapeshellarg((string) $params['port']);
             $command[] = '--db ' . escapeshellarg($params['database']);
