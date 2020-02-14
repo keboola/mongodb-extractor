@@ -119,6 +119,28 @@ BASH;
         $this->assertSame($expectedCommand, $command);
     }
 
+    public function testMongoDbSrvProtocolWithCustomAuthenticationDatabase()
+    {
+        $options = [
+            'protocol' => 'mongodb+srv',
+            'host' => 'localhost',
+            'port' => 123456,
+            'database' => 'myDatabase',
+            'collection' => 'myCollection',
+            'out' => '/tmp/create-test.json',
+            'user' => 'user',
+            'password' => 'pass',
+            'authenticationDatabase' => 'myAuthDatabase',
+        ];
+
+        $command = $this->commandFactory->create($options);
+
+        $expectedCommand = <<<BASH
+mongoexport --uri 'mongodb+srv://user:pass@localhost/myDatabase?authSource=myAuthDatabase' --collection 'myCollection' --type 'json' --out '/tmp/create-test.json'
+BASH;
+        $this->assertSame($expectedCommand, $command);
+    }
+
     public function testWithEmptyCustomAuthenticationDatabase()
     {
         $options = [
