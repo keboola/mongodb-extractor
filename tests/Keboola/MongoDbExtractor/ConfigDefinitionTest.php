@@ -144,5 +144,81 @@ JSON;
         (new Processor())->processConfiguration(new ConfigDefinition, [$config['parameters']]);
     }
 
+    /**
+     * @dataProvider invalidIncrementalFetchingConfig
+     */
+    public function testInvalidIncrementalFetchingConfig($json, $expectedMessage)
+    {
+        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+        $processor = new Processor;
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage($expectedMessage);
+        $processor->processConfiguration(new ConfigDefinition, [$config['parameters']]);
+    }
 
+    public function invalidIncrementalFetchingConfig()
+    {
+        return [
+            [
+                <<<JSON
+{
+  "parameters": {
+    "db": {
+      "host": "127.0.0.1",
+      "port": 27017,
+      "database": "test",
+      "user": "user",
+      "password": "password"
+    },
+    "exports": [
+      {
+        "name": "bronx-bakeries",
+        "id": 123,
+        "collection": "restaurants",
+        "query": "{borough: \"Bronx\"}",
+        "incrementalFetchingColumn": "borough",
+        "incremental": false,
+        "mapping": {
+          "_id": null
+        }
+      }
+    ]
+  }
+}
+JSON
+                ,
+                'Both incremental fetching and query cannot be set together.',
+            ],
+            [
+                <<<JSON
+{
+  "parameters": {
+    "db": {
+      "host": "127.0.0.1",
+      "port": 27017,
+      "database": "test",
+      "user": "user",
+      "password": "password"
+    },
+    "exports": [
+      {
+        "name": "bronx-bakeries",
+        "id": 123,
+        "collection": "restaurants",
+        "sort": "_id",
+        "incrementalFetchingColumn": "borough",
+        "incremental": false,
+        "mapping": {
+          "_id": null
+        }
+      }
+    ]
+  }
+}
+JSON
+                ,
+                'Both incremental fetching and sort cannot be set together.',
+            ],
+        ];
+    }
 }
