@@ -43,6 +43,27 @@ class Export
     /** @var JsonDecode */
     private $jsonDecoder;
 
+    // read about column types - https://docs.mongodb.com/manual/reference/operator/query/type/
+    /** @var array */
+    private const DISALLOW_INCREMENTAL_FETCHING_COLUMN_TYPES = [
+        'string',
+        'object',
+        'array',
+        'binData',
+        'undefined',
+        'objectId',
+        'bool',
+        'date',
+        'null',
+        'regex',
+        'dbPointer',
+        'javascript',
+        'symbol',
+        'javascriptWithScope',
+        'minKey',
+        'maxKey',
+    ];
+
     public function __construct(
         ExportCommandFactory $exportCommandFactory,
         array $connectionOptions,
@@ -157,5 +178,116 @@ class Export
     public function isEnabled(): bool
     {
         return isset($this->exportOptions['enabled']) && $this->exportOptions['enabled'] === true;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLastFetchedValue()
+    {
+        if (isset($this->exportOptions['limit'])) {
+            $lastvalueOptions = [
+                'limit' => 1,
+                'skip' => $this->exportOptions['limit']-1,
+                'sort' => json_encode([$this->exportOptions['incrementalFetchingColumn'] => 1]),
+            ];
+        } else {
+            $lastvalueOptions = [
+                'limit' => 1,
+                'sort' => json_encode([$this->exportOptions['incrementalFetchingColumn'] => -1]),
+            ];
+        }
+        $options = array_merge(
+            $this->connectionOptions,
+            $this->exportOptions,
+            $lastvalueOptions
+        );
+
+        $cliCommand = $this->exportCommandFactory->create($options);
+        $process = new Process($cliCommand, null, null, null, null);
+        $process->mustRun();
+
+        $output = $process->getOutput();
+        if (!empty($output)) {
+            $data = $this->jsonDecoder->decode($output, JsonEncoder::FORMAT, ['json_decode_associative' => true]);
+            foreach (explode('.', $this->exportOptions['incrementalFetchingColumn']) as $item) {
+                $data = $data[$item];
+            }
+            return $data;
+        }
+        return null;
+    }
+
+    public static function saveStateFile(string $outputPath, array $data): void
+    {
+        $filename = $outputPath . '/../state.json';
+        $saveData = [
+            'lastFetchedRow' => $data,
+        ];
+        file_put_contents($filename, json_encode($saveData));
+    }
+
+    public static function validateIncrementalFetching(
+        array $exportOptions,
+        array $dbParams,
+        ExportCommandFactory $exportCommandFactory
+    ): void {
+        $dataTypes = array_map(function (string $item) use ($exportOptions): array {
+            return [$exportOptions['incrementalFetchingColumn'] => ['$type' => $item]];
+        }, self::DISALLOW_INCREMENTAL_FETCHING_COLUMN_TYPES);
+        $query = [
+            '$or' => $dataTypes,
+        ];
+        $options = array_merge(
+            $exportOptions,
+            $dbParams,
+            [
+                'query' => json_encode($query),
+                'limit' => 1,
+            ]
+        );
+        $optionsForCount = array_filter($options, function ($item) {
+            return !in_array($item, [
+                'sort',
+                'incremental',
+                'incrementalFetchingColumn',
+                'incrementalFetchingValue',
+                'mapping',
+                'mode',
+                'enabled',
+                'out',
+            ]);
+        }, ARRAY_FILTER_USE_KEY);
+
+        $cliCommand = $exportCommandFactory->create($optionsForCount);
+        $process = new Process($cliCommand, null, null, null, null);
+        $process->mustRun();
+        if (!empty($process->getOutput())) {
+            throw new UserException(
+                sprintf(
+                    'Column [%s] specified for incremental fetching is not a numeric or timestamp type column',
+                    $options['incrementalFetchingColumn']
+                )
+            );
+        }
+    }
+
+    /**
+     * @param string|int|null $inputState
+     */
+    public static function buildIncrementalFetchingParams(array $params, $inputState): array
+    {
+        $query = (object) [];
+        if (!is_null($inputState)) {
+            $query = [
+                $params['incrementalFetchingColumn'] => [
+                    '$gte' => $inputState,
+                ],
+            ];
+        }
+
+        $params['query'] = json_encode($query);
+        $params['sort'] = json_encode([$params['incrementalFetchingColumn'] => 1]);
+        return $params;
     }
 }

@@ -59,6 +59,7 @@ class ConfigDefinition implements ConfigurationInterface
                                 ->cannotBeEmpty()
                             ->end()
                             ->scalarNode('query')->end()
+                            ->scalarNode('incrementalFetchingColumn')->end()
                             ->scalarNode('sort')->end()
                             ->scalarNode('limit')->end()
                             ->enumNode('mode')

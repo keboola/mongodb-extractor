@@ -38,7 +38,17 @@ try {
     );
     $outputPath = $arguments['data'] . '/out/tables';
 
-    $application = new Application($config);
+    //get the state
+    $inputState = [];
+    $inputStateFile = $arguments['data'] . '/in/state.json';
+    if (file_exists($inputStateFile)) {
+        $inputState = $jsonDecode->decode(
+            file_get_contents($inputStateFile),
+            JsonEncoder::FORMAT
+        );
+    }
+
+    $application = new Application($config, $inputState);
     $action = isset($config['action']) ? $config['action'] : 'run';
 
     switch ($action) {

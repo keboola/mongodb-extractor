@@ -19,6 +19,9 @@ class Extractor
     /** @var ExportCommandFactory */
     private $exportCommandFactory;
 
+    /** @var array */
+    private $inputState;
+
     /**
      * Mapping:
      * - encrypted password
@@ -28,11 +31,16 @@ class Extractor
         '#password' => 'password',
     ];
 
-    public function __construct(UriFactory $uriFactory, ExportCommandFactory $exportCommandFactory, array $parameters)
-    {
+    public function __construct(
+        UriFactory $uriFactory,
+        ExportCommandFactory $exportCommandFactory,
+        array $parameters,
+        array $inputState = []
+    ) {
         $this->uriFactory = $uriFactory;
         $this->exportCommandFactory = $exportCommandFactory;
         $this->parameters = $parameters;
+        $this->inputState = $inputState;
 
         foreach ($this->dbParamsMapping as $from => $to) {
             if (isset($this->parameters['db'][$from])) {
@@ -100,7 +108,25 @@ class Extractor
 
         $count = 0;
 
+        $lastFetchedValues = [];
         foreach ($this->parameters['exports'] as $exportOptions) {
+            $incrementalFetching = (isset($exportOptions['incrementalFetchingColumn']) &&
+                $exportOptions['incrementalFetchingColumn'] !== '');
+            if ($incrementalFetching) {
+                Export::validateIncrementalFetching(
+                    $exportOptions,
+                    $this->parameters['db'],
+                    $this->exportCommandFactory
+                );
+                $lastFetchedValue = null;
+                if (isset($this->inputState['lastFetchedRow'][$exportOptions['id']])) {
+                    $lastFetchedValue = $this->inputState['lastFetchedRow'][$exportOptions['id']];
+                }
+                $exportOptions = Export::buildIncrementalFetchingParams(
+                    $exportOptions,
+                    $lastFetchedValue
+                );
+            }
             $export = new Export(
                 $this->exportCommandFactory,
                 $this->parameters['db'],
@@ -112,9 +138,16 @@ class Extractor
 
             if ($export->isEnabled()) {
                 $count++;
+                if ($incrementalFetching) {
+                    $lastFetchedValues[$exportOptions['id']] = $export->getLastFetchedValue();
+                }
                 $export->export();
                 $export->parseAndCreateManifest();
             }
+        }
+
+        if (!empty($lastFetchedValues)) {
+            Export::saveStateFile($outputPath, $lastFetchedValues);
         }
 
         if ($count === 0) {
