@@ -43,27 +43,6 @@ class Export
     /** @var JsonDecode */
     private $jsonDecoder;
 
-    // read about column types - https://docs.mongodb.com/manual/reference/operator/query/type/
-    /** @var array */
-    private const DISALLOW_INCREMENTAL_FETCHING_COLUMN_TYPES = [
-        'string',
-        'object',
-        'array',
-        'binData',
-        'undefined',
-        'objectId',
-        'bool',
-        'date',
-        'null',
-        'regex',
-        'dbPointer',
-        'javascript',
-        'symbol',
-        'javascriptWithScope',
-        'minKey',
-        'maxKey',
-    ];
-
     public function __construct(
         ExportCommandFactory $exportCommandFactory,
         array $connectionOptions,
