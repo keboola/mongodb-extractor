@@ -227,51 +227,6 @@ class Export
         file_put_contents($filename, json_encode($saveData));
     }
 
-    public static function validateIncrementalFetching(
-        array $exportOptions,
-        array $dbParams,
-        ExportCommandFactory $exportCommandFactory
-    ): void {
-        $dataTypes = array_map(function (string $item) use ($exportOptions): array {
-            return [$exportOptions['incrementalFetchingColumn'] => ['$type' => $item]];
-        }, self::DISALLOW_INCREMENTAL_FETCHING_COLUMN_TYPES);
-        $query = [
-            '$or' => $dataTypes,
-        ];
-        $options = array_merge(
-            $exportOptions,
-            $dbParams,
-            [
-                'query' => json_encode($query),
-                'limit' => 1,
-            ]
-        );
-        $optionsForCount = array_filter($options, function ($item) {
-            return !in_array($item, [
-                'sort',
-                'incremental',
-                'incrementalFetchingColumn',
-                'incrementalFetchingValue',
-                'mapping',
-                'mode',
-                'enabled',
-                'out',
-            ]);
-        }, ARRAY_FILTER_USE_KEY);
-
-        $cliCommand = $exportCommandFactory->create($optionsForCount);
-        $process = new Process($cliCommand, null, null, null, null);
-        $process->mustRun();
-        if (!empty($process->getOutput())) {
-            throw new UserException(
-                sprintf(
-                    'Column [%s] specified for incremental fetching is not a numeric or timestamp type column',
-                    $options['incrementalFetchingColumn']
-                )
-            );
-        }
-    }
-
     /**
      * @param string|int|null $inputState
      */

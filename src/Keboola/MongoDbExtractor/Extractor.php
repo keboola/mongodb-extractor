@@ -113,11 +113,6 @@ class Extractor
             $incrementalFetching = (isset($exportOptions['incrementalFetchingColumn']) &&
                 $exportOptions['incrementalFetchingColumn'] !== '');
             if ($incrementalFetching) {
-                Export::validateIncrementalFetching(
-                    $exportOptions,
-                    $this->parameters['db'],
-                    $this->exportCommandFactory
-                );
                 $lastFetchedValue = null;
                 if (isset($this->inputState['lastFetchedRow'][$exportOptions['id']])) {
                     $lastFetchedValue = $this->inputState['lastFetchedRow'][$exportOptions['id']];
