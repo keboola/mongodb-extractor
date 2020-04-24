@@ -279,43 +279,4 @@ CSV;
         Assert::assertEquals($expectedStateFileContent, file_get_contents($stateFile));
         Assert::assertEquals($expectedIncrementalFileContent, file_get_contents($incrementalFile));
     }
-
-    public function testIncrementalFetchingInvalidColumnType()
-    {
-        $json = <<<JSON
-{
-  "parameters": {
-    "db": {
-      "host": "mongodb",
-      "port": 27017,
-      "database": "test"
-    },
-    "exports": [
-      {
-        "name": "incremental",
-        "id": 123,
-        "collection": "incremental",
-        "incremental": true,
-        "incrementalFetchingColumn": "string",
-        "limit": "2",
-        "mapping": {
-          "id": "id",
-          "decimal": "decimal",
-          "date": "date",
-          "timestamp": "timestamp"
-        }
-      }
-    ]
-  }
-}
-JSON;
-        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
-
-        $application = new Application($config);
-        $this->expectException(UserException::class);
-        $this->expectExceptionMessage(
-            'Column [string] specified for incremental fetching is not a numeric or timestamp type column'
-        );
-        $application->actionRun($this->path . '/out/tables');
-    }
 }
