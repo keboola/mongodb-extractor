@@ -7,6 +7,7 @@ namespace Keboola\MongoDbExtractor\Config;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
 class ConfigDefinition implements ConfigurationInterface
 {
@@ -48,6 +49,20 @@ class ConfigDefinition implements ConfigurationInterface
                 ->end()
                 ->arrayNode('exports')
                     ->prototype('array')
+                        ->validate()
+                        ->always(function ($v) {
+                            if (isset($v['query']) && $v['query'] !== '' && isset($v['incrementalFetchingColumn'])) {
+                                throw new InvalidConfigurationException(
+                                    'Both incremental fetching and query cannot be set together.'
+                                );
+                            }
+                            if (isset($v['sort']) && $v['sort'] !== '' && isset($v['incrementalFetchingColumn'])) {
+                                $message = 'Both incremental fetching and sort cannot be set together.';
+                                throw new InvalidConfigurationException($message);
+                            }
+                            return $v;
+                        })
+                        ->end()
                         ->children()
                             ->scalarNode('id')->end()
                             ->scalarNode('name')
@@ -59,6 +74,7 @@ class ConfigDefinition implements ConfigurationInterface
                                 ->cannotBeEmpty()
                             ->end()
                             ->scalarNode('query')->end()
+                            ->scalarNode('incrementalFetchingColumn')->end()
                             ->scalarNode('sort')->end()
                             ->scalarNode('limit')->end()
                             ->enumNode('mode')

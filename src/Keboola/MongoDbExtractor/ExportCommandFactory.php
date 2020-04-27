@@ -53,14 +53,16 @@ class ExportCommandFactory
         // Export options
         $command[] = '--collection ' . escapeshellarg($params['collection']);
 
-        foreach (['query', 'sort', 'limit'] as $option) {
+        foreach (['query', 'sort', 'limit', 'skip'] as $option) {
             if (isset($params[$option]) && !empty(trim((string) $params[$option]))) {
                 $command[] = '--' . $option . ' ' . escapeshellarg((string) $params[$option]);
             }
         }
 
         $command[] = '--type ' . escapeshellarg('json');
-        $command[] = '--out ' . escapeshellarg($params['out']);
+        if (isset($params['out'])) {
+            $command[] = '--out ' . escapeshellarg($params['out']);
+        }
 
         return implode(' ', $command);
     }

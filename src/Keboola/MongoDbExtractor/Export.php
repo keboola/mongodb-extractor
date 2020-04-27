@@ -158,4 +158,70 @@ class Export
     {
         return isset($this->exportOptions['enabled']) && $this->exportOptions['enabled'] === true;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getLastFetchedValue()
+    {
+        if (isset($this->exportOptions['limit'])) {
+            $lastvalueOptions = [
+                'limit' => 1,
+                'skip' => $this->exportOptions['limit']-1,
+                'sort' => json_encode([$this->exportOptions['incrementalFetchingColumn'] => 1]),
+            ];
+        } else {
+            $lastvalueOptions = [
+                'limit' => 1,
+                'sort' => json_encode([$this->exportOptions['incrementalFetchingColumn'] => -1]),
+            ];
+        }
+        $options = array_merge(
+            $this->connectionOptions,
+            $this->exportOptions,
+            $lastvalueOptions
+        );
+
+        $cliCommand = $this->exportCommandFactory->create($options);
+        $process = new Process($cliCommand, null, null, null, null);
+        $process->mustRun();
+
+        $output = $process->getOutput();
+        if (!empty($output)) {
+            $data = $this->jsonDecoder->decode($output, JsonEncoder::FORMAT, ['json_decode_associative' => true]);
+            foreach (explode('.', $this->exportOptions['incrementalFetchingColumn']) as $item) {
+                $data = $data[$item];
+            }
+            return $data;
+        }
+        return null;
+    }
+
+    public static function saveStateFile(string $outputPath, array $data): void
+    {
+        $filename = $outputPath . '/../state.json';
+        $saveData = [
+            'lastFetchedRow' => $data,
+        ];
+        file_put_contents($filename, json_encode($saveData));
+    }
+
+    /**
+     * @param string|int|null $inputState
+     */
+    public static function buildIncrementalFetchingParams(array $params, $inputState): array
+    {
+        $query = (object) [];
+        if (!is_null($inputState)) {
+            $query = [
+                $params['incrementalFetchingColumn'] => [
+                    '$gte' => $inputState,
+                ],
+            ];
+        }
+
+        $params['query'] = json_encode($query);
+        $params['sort'] = json_encode([$params['incrementalFetchingColumn'] => 1]);
+        return $params;
+    }
 }

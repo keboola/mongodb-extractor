@@ -18,7 +18,7 @@ class Application
     /** @var Extractor */
     private $extractor;
 
-    public function __construct(array $config)
+    public function __construct(array $config, array $inputState = [])
     {
         $this->config = $config;
         $this->parameters = (new Processor)->processConfiguration(
@@ -32,7 +32,7 @@ class Application
 
         $uriFactory = new UriFactory();
         $exportCommandFactory = new ExportCommandFactory($uriFactory);
-        $this->extractor = new Extractor($uriFactory, $exportCommandFactory, $this->parameters);
+        $this->extractor = new Extractor($uriFactory, $exportCommandFactory, $this->parameters, $inputState);
     }
 
     /**
