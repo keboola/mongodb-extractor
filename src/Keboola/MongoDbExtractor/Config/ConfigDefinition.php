@@ -11,9 +11,10 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
 class ConfigDefinition implements ConfigurationInterface
 {
-    public const
-        PROTOCOL_MONGO_DB = 'mongodb',
-        PROTOCOL_MONGO_DB_SRV = 'mongodb+srv'; // https://docs.mongodb.com/manual/reference/connection-string/#dns-seedlist-connection-format
+    public const PROTOCOL_MONGO_DB = 'mongodb';
+
+    // https://docs.mongodb.com/manual/reference/connection-string/#dns-seedlist-connection-format
+    public const PROTOCOL_MONGO_DB_SRV = 'mongodb+srv';
 
 
     public function getConfigTreeBuilder(): TreeBuilder
