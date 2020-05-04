@@ -19,7 +19,10 @@
         "keboola/ssh-tunnel": "^2.0",
         "monolog/monolog": "^1.23",
         "symfony/config": "^4.1",
-        "keboola/csvmap": "^0.6.0"
+        "keboola/csvmap": "^0.6.0",
+        "php": "^7.2",
+        "ext-json": "*",
+        "keboola/csv": "^1.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.2",
