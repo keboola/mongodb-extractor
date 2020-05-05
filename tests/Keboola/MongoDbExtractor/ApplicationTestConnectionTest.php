@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Keboola\MongoDbExtractor;
+namespace Keboola\MongoDbExtractor\Tests;
 
+use Keboola\MongoDbExtractor\Application;
 use MongoDB\Driver\Exception\AuthenticationException;
 use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Driver\Exception\ConnectionTimeoutException;

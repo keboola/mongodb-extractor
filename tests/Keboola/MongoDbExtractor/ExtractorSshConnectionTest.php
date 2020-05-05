@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Keboola\MongoDbExtractor;
+namespace Keboola\MongoDbExtractor\Tests;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;

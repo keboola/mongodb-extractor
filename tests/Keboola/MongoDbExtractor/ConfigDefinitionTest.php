@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Keboola\MongoDbExtractor;
+namespace Keboola\MongoDbExtractor\Tests;
 
 use Keboola\MongoDbExtractor\Config\ConfigDefinition;
 use PHPUnit\Framework\TestCase;

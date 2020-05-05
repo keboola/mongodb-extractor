@@ -2,8 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Keboola\MongoDbExtractor;
+namespace Keboola\MongoDbExtractor\Tests;
 
+use Keboola\MongoDbExtractor\ExportCommandFactory;
+use Keboola\MongoDbExtractor\Tests\Traits\CreateExtractorTrait;
+use Keboola\MongoDbExtractor\UriFactory;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;

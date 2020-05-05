@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Keboola\MongoDbExtractor;
+namespace Keboola\MongoDbExtractor\Tests;
 
+use Keboola\MongoDbExtractor\Application;
+use Keboola\MongoDbExtractor\UserException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Serializer\Encoder\JsonDecode;

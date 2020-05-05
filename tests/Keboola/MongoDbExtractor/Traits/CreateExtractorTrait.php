@@ -2,7 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Keboola\MongoDbExtractor;
+namespace Keboola\MongoDbExtractor\Tests\Traits;
+
+use Keboola\MongoDbExtractor\ExportCommandFactory;
+use Keboola\MongoDbExtractor\Extractor;
+use Keboola\MongoDbExtractor\UriFactory;
 
 trait CreateExtractorTrait
 {

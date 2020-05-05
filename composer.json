@@ -35,6 +35,11 @@
             "Keboola\\": "src/Keboola/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Keboola\\MongoDbExtractor\\Tests\\": "tests/Keboola/MongoDbExtractor/"
+        }
+    },
     "scripts": {
         "phpcs": "phpcs -n --ignore=vendor --extensions=php .",
         "phpcbf": "phpcbf -n --ignore=vendor --extensions=php .",

@@ -2,9 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Keboola\MongoDbExtractor;
+namespace Keboola\MongoDbExtractor\Tests;
 
 use Keboola\CsvMap\Exception\BadConfigException;
+use Keboola\MongoDbExtractor\ExportCommandFactory;
+use Keboola\MongoDbExtractor\Tests\Traits\CreateExtractorTrait;
+use Keboola\MongoDbExtractor\UriFactory;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
@@ -18,8 +21,7 @@ class ExtractorObjectInPrimaryKeyTest extends TestCase
 
     protected ExportCommandFactory $exportCommandFactory;
 
-    /** @var string  */
-    private $path = '/tmp/object-in-primary-key';
+    private string $path = '/tmp/object-in-primary-key';
 
     protected function setUp(): void
     {

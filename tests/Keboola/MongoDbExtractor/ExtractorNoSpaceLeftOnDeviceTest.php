@@ -2,8 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Keboola\MongoDbExtractor;
+namespace Keboola\MongoDbExtractor\Tests;
 
+use Keboola\MongoDbExtractor\ExportCommandFactory;
+use Keboola\MongoDbExtractor\Tests\Traits\CreateExtractorTrait;
+use Keboola\MongoDbExtractor\UriFactory;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Keboola\MongoDbExtractor\Unit;
+namespace Keboola\MongoDbExtractor\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Keboola\MongoDbExtractor\UriFactory;
