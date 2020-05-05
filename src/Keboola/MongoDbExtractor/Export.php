@@ -80,7 +80,7 @@ class Export
 
         $cliCommand = $this->exportCommandFactory->create($options);
 
-        $process = new Process($cliCommand, null, null, null, null);
+        $process = Process::fromShellCommandline($cliCommand, null, null, null, null);
         $process->mustRun(function ($type, $buffer): void {
             // $type is always Process::ERR here, so we don't check it
             $this->consoleOutput->write($buffer);
@@ -183,7 +183,7 @@ class Export
         );
 
         $cliCommand = $this->exportCommandFactory->create($options);
-        $process = new Process($cliCommand, null, null, null, null);
+        $process = Process::fromShellCommandline($cliCommand, null, null, null, null);
         $process->mustRun();
 
         $output = $process->getOutput();

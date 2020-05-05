@@ -34,7 +34,7 @@ class ExtractorNoSpaceLeftOnDeviceTest extends TestCase
         $fs->mkdir($this->path);
 
         // simulate full disk
-        $process = new Process('ln -s /dev/full ' . $this->path . '/' . $this->file);
+        $process = Process::fromShellCommandline('ln -s /dev/full ' . $this->path . '/' . $this->file);
         $process->mustRun();
 
         $this->uriFactory = new UriFactory();
