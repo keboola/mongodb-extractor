@@ -11,11 +11,9 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
 class ExtractorSshConnectionWithAuthTest extends ExtractorTestCase
 {
-    /** @var Filesystem */
-    private $fs;
+    private Filesystem $fs;
 
-    /** @var string  */
-    protected $path = '/tmp/extractor-ssh-auth';
+    protected string $path = '/tmp/extractor-ssh-auth';
 
     protected function setUp(): void
     {

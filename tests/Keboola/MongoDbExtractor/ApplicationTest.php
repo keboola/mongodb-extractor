@@ -12,11 +12,9 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class ApplicationTest extends TestCase
 {
-    /** @var Filesystem */
-    private $fs;
+    private Filesystem $fs;
 
-    /** @var string  */
-    protected $path = '/tmp/application-test';
+    protected string $path = '/tmp/application-test';
 
     protected function setUp(): void
     {

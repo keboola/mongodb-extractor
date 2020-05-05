@@ -15,11 +15,9 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
  */
 class ExtractorClusterConnectionTest extends ExtractorTestCase
 {
-    /** @var Filesystem */
-    private $fs;
+    private Filesystem $fs;
 
-    /** @var string */
-    protected $path = '/tmp/extractor-cluster';
+    protected string $path = '/tmp/extractor-cluster';
 
     protected function setUp(): void
     {

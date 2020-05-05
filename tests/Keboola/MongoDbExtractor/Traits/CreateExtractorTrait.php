@@ -6,11 +6,9 @@ namespace Keboola\MongoDbExtractor;
 
 trait CreateExtractorTrait
 {
-    /** @var UriFactory */
-    protected $uriFactory;
+    protected UriFactory $uriFactory;
 
-    /** @var ExportCommandFactory */
-    protected $exportCommandFactory;
+    protected ExportCommandFactory $exportCommandFactory;
 
     public function createExtractor(array $parameters): Extractor
     {

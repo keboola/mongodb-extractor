@@ -11,11 +11,9 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class ApplicationRawModeTest extends TestCase
 {
-    /** @var Filesystem */
-    private $fs;
+    private Filesystem $fs;
 
-    /** @var string  */
-    protected $path = '/tmp/application-raw-mode-test';
+    protected string $path = '/tmp/application-raw-mode-test';
 
     protected function setUp(): void
     {

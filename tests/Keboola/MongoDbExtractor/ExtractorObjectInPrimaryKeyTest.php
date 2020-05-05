@@ -14,11 +14,9 @@ class ExtractorObjectInPrimaryKeyTest extends TestCase
 {
     use CreateExtractorTrait;
 
-    /** @var UriFactory */
-    protected $uriFactory;
+    protected UriFactory $uriFactory;
 
-    /** @var ExportCommandFactory */
-    protected $exportCommandFactory;
+    protected ExportCommandFactory $exportCommandFactory;
 
     /** @var string  */
     private $path = '/tmp/object-in-primary-key';

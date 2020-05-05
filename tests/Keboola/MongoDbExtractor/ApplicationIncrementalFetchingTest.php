@@ -12,11 +12,9 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
 class ApplicationIncrementalFetchingTest extends TestCase
 {
-    /** @var Filesystem */
-    private $fs;
+    private Filesystem $fs;
 
-    /** @var string  */
-    private $path = '/tmp/incremental-fetching-test';
+    private string $path = '/tmp/incremental-fetching-test';
 
     protected function setUp(): void
     {

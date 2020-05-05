@@ -9,8 +9,7 @@ use Keboola\MongoDbExtractor\UriFactory;
 
 class UriFactoryTest extends TestCase
 {
-    /** @var UriFactory */
-    private $uriFactory;
+    private UriFactory $uriFactory;
 
     protected function setUp(): void
     {

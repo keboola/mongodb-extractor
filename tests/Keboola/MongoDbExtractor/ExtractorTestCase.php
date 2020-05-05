@@ -14,14 +14,11 @@ abstract class ExtractorTestCase extends TestCase
 {
     use CreateExtractorTrait;
 
-    /** @var string */
-    protected $path;
+    protected string $path;
 
-    /** @var UriFactory */
-    protected $uriFactory;
+    protected UriFactory $uriFactory;
 
-    /** @var ExportCommandFactory */
-    protected $exportCommandFactory;
+    protected ExportCommandFactory $exportCommandFactory;
 
     protected function setUp(): void
     {

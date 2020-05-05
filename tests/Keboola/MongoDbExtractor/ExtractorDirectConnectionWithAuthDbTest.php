@@ -10,11 +10,9 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
 class ExtractorDirectConnectionWithAuthDbTest extends ExtractorTestCase
 {
-    /** @var Filesystem */
-    private $fs;
+    private Filesystem $fs;
 
-    /** @var string  */
-    protected $path = '/tmp/extractor-direct-auth-db';
+    protected string $path = '/tmp/extractor-direct-auth-db';
 
     protected function setUp(): void
     {

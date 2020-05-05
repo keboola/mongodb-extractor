@@ -15,17 +15,13 @@ class ExtractorNoSpaceLeftOnDeviceTest extends TestCase
 {
     use CreateExtractorTrait;
 
-    /** @var UriFactory */
-    protected $uriFactory;
+    protected UriFactory $uriFactory;
 
-    /** @var ExportCommandFactory */
-    protected $exportCommandFactory;
+    protected ExportCommandFactory $exportCommandFactory;
 
-    /** @var string */
-    private $path = '/tmp/no-space-left-on-device';
+    private string $path = '/tmp/no-space-left-on-device';
 
-    /** @var string */
-    private $file = 'export-one.csv';
+    private string $file = 'export-one.csv';
 
     protected function setUp(): void
     {

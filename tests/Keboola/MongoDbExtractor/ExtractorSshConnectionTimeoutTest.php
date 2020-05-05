@@ -15,17 +15,13 @@ class ExtractorSshConnectionTimeoutTest extends TestCase
 {
     use CreateExtractorTrait;
 
-    /** @var UriFactory */
-    protected $uriFactory;
+    protected UriFactory $uriFactory;
 
-    /** @var ExportCommandFactory */
-    protected $exportCommandFactory;
+    protected ExportCommandFactory $exportCommandFactory;
 
-    /** @var string */
-    protected $path = '/tmp/extractor-ssh-connection-timeout';
+    protected string $path = '/tmp/extractor-ssh-connection-timeout';
 
-    /** @var Filesystem */
-    private $fs;
+    private Filesystem $fs;
 
     protected function setUp(): void
     {

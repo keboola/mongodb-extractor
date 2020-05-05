@@ -10,11 +10,9 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
 class ExtractorDirectConnectionTest extends ExtractorTestCase
 {
-    /** @var Filesystem */
-    private $fs;
+    private Filesystem $fs;
 
-    /** @var string  */
-    protected $path = '/tmp/extractor-direct';
+    protected string $path = '/tmp/extractor-direct';
 
     protected function setUp(): void
     {

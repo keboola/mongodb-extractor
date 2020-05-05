@@ -13,14 +13,11 @@ class ExtractorNotEnabledExportsTest extends TestCase
 {
     use CreateExtractorTrait;
 
-    /** @var string */
-    protected $path = '/tmp/extractor-not-enabled-exports';
+    protected string $path = '/tmp/extractor-not-enabled-exports';
 
-    /** @var UriFactory */
-    protected $uriFactory;
+    protected UriFactory $uriFactory;
 
-    /** @var ExportCommandFactory */
-    protected $exportCommandFactory;
+    protected ExportCommandFactory $exportCommandFactory;
 
     protected function setUp(): void
     {

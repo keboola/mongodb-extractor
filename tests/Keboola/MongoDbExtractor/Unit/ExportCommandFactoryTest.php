@@ -10,8 +10,7 @@ use Keboola\MongoDbExtractor\ExportCommandFactory;
 
 class ExportCommandFactoryTest extends TestCase
 {
-    /** @var ExportCommandFactory */
-    private $commandFactory;
+    private ExportCommandFactory $commandFactory;
 
     protected function setUp(): void
     {

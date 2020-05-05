@@ -8,8 +8,7 @@ use Keboola\MongoDbExtractor\Config\ConfigDefinition;
 
 class ExportCommandFactory
 {
-    /** @var UriFactory */
-    private $uriFactory;
+    private UriFactory $uriFactory;
 
     public function __construct(UriFactory $uriFactory)
     {

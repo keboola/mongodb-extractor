@@ -9,14 +9,11 @@ use Symfony\Component\Config\Definition\Processor;
 
 class Application
 {
-    /** @var array */
-    private $config;
+    private array $config;
 
-    /** @var array */
-    private $parameters;
+    private array $parameters;
 
-    /** @var Extractor */
-    private $extractor;
+    private Extractor $extractor;
 
     public function __construct(array $config, array $inputState = [])
     {
