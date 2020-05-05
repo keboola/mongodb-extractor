@@ -30,7 +30,7 @@ class ExtractorSshConnectionTest extends ExtractorTestCase
     {
         $this->fs->remove($this->path);
 
-        $process = Process::fromShellCommandline'pgrep ssh | xargs kill');
+        $process = Process::fromShellCommandline('pgrep ssh | xargs kill');
         $process->mustRun();
     }
 

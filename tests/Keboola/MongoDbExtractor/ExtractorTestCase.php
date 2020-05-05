@@ -70,7 +70,7 @@ abstract class ExtractorTestCase extends TestCase
         $expectedFile = $this->path . '/' . 'export-all.csv';
         $this->assertFileExists($expectedFile);
 
-        $process = Process::fromShellCommandline'wc -l ' . $expectedFile);
+        $process = Process::fromShellCommandline('wc -l ' . $expectedFile);
         $process->mustRun();
 
         $this->assertSame(74, (int) $process->getOutput());

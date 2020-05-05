@@ -43,7 +43,7 @@ class ExtractorSshConnectionTimeoutTest extends TestCase
     {
         $this->fs->remove($this->path);
 
-        $process = Process::fromShellCommandline'pgrep ssh | xargs -r kill');
+        $process = Process::fromShellCommandline('pgrep ssh | xargs -r kill');
         $process->mustRun();
     }
 
