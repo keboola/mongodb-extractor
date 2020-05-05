@@ -60,7 +60,7 @@ class ApplicationIncrementalFetchingTest extends TestCase
   }
 }
 JSON;
-        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
 
         $application = new Application($config);
         $application->actionRun($this->path . '/out/tables');
@@ -122,7 +122,7 @@ CSV;
   }
 }
 JSON;
-        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
 
         $application = new Application($config);
         $application->actionRun($this->path . '/out/tables');
@@ -184,7 +184,7 @@ CSV;
   }
 }
 JSON;
-        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
 
         $application = new Application($config);
         $application->actionRun($this->path . '/out/tables');
@@ -247,7 +247,7 @@ CSV;
   }
 }
 JSON;
-        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
 
         $application = new Application($config);
         $application->actionRun($this->path . '/out/tables');

@@ -54,7 +54,7 @@ class ExtractorNotEnabledExportsTest extends TestCase
   }
 }
 JSON;
-        return (new JsonDecode(true))->decode($config, JsonEncoder::FORMAT);
+        return (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($config, JsonEncoder::FORMAT);
     }
 
     public function testWrongConnection(): void

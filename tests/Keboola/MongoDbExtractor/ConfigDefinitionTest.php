@@ -41,7 +41,7 @@ class ConfigDefinitionTest extends TestCase
 }
 JSON;
 
-        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
         $processor = new Processor;
         $processedConfig = $processor->processConfiguration(new ConfigDefinition, [$config['parameters']]);
 
@@ -80,7 +80,7 @@ JSON;
 }
 JSON;
 
-        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
         $processor = new Processor;
         $processedConfig = $processor->processConfiguration(new ConfigDefinition, [$config['parameters']]);
 
@@ -108,7 +108,7 @@ JSON;
 }
 JSON;
 
-        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
         (new Processor())->processConfiguration(new ConfigDefinition, [$config['parameters']]);
     }
 
@@ -143,7 +143,7 @@ JSON;
 }
 JSON;
 
-        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
         (new Processor())->processConfiguration(new ConfigDefinition, [$config['parameters']]);
     }
 
@@ -152,7 +152,7 @@ JSON;
      */
     public function testInvalidIncrementalFetchingConfig(string $json, string $expectedMessage): void
     {
-        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
         $processor = new Processor;
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage($expectedMessage);

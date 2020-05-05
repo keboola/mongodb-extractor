@@ -85,7 +85,7 @@ class ExtractorSshConnectionTimeoutTest extends TestCase
 }
 JSON;
         // phpcs:enable
-        return (new JsonDecode(true))->decode($config, JsonEncoder::FORMAT);
+        return (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($config, JsonEncoder::FORMAT);
     }
 
     public function testWrongConnection(): void

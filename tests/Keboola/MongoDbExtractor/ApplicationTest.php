@@ -91,7 +91,7 @@ class ApplicationTest extends TestCase
 }
 JSON;
 
-        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
 
         $application = new Application($config);
         $application->actionRun($this->path);
@@ -175,7 +175,7 @@ JSON;
   }
 }
 JSON;
-        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
 
         $this->expectException(UserException::class);
         $this->expectExceptionMessage('Please remove duplicate export names');
@@ -204,7 +204,7 @@ JSON;
 }
 JSON;
 
-        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
 
         $this->expectException(UserException::class);
         $this->expectExceptionMessageMatches('~Mapping cannot be empty~');
@@ -242,7 +242,7 @@ JSON;
   }
 }
 JSON;
-        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
 
         $application = new Application($config);
         $application->actionRun($this->path);
@@ -278,7 +278,7 @@ JSON;
   }
 }
 JSON;
-        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
 
         $application = new Application($config);
         $application->actionRun($this->path);
@@ -307,7 +307,7 @@ JSON;
   }
 }
 JSON;
-        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
 
         $application = new Application($config);
         $application->actionRun($this->path);

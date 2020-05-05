@@ -37,7 +37,7 @@ class ApplicationTestConnectionTest extends TestCase
   }
 }
 JSON;
-        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
 
         $application = new Application($config);
         $application->actionTestConnection();
@@ -72,7 +72,7 @@ JSON;
   }
 }
 JSON;
-        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
 
         $application = new Application($config);
         $application->actionTestConnection();
@@ -106,7 +106,7 @@ JSON;
   }
 }
 JSON;
-        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
 
         $application = new Application($config);
         $application->actionTestConnection();
@@ -139,7 +139,7 @@ JSON;
   }
 }
 JSON;
-        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
 
         $application = new Application($config);
         $application->actionTestConnection();
@@ -174,7 +174,7 @@ JSON;
   }
 }
 JSON;
-        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
 
         $application = new Application($config);
         $application->actionTestConnection();
