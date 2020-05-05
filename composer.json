@@ -17,7 +17,7 @@
         "nette/utils": "^2.5",
         "symfony/serializer": "^5.0",
         "keboola/ssh-tunnel": "^2.0",
-        "monolog/monolog": "^1.23",
+        "monolog/monolog": "^2.0",
         "symfony/config": "^5.0",
         "keboola/csvmap": "^0.6.0",
         "php": "^7.2",
