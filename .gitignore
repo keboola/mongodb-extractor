@@ -5,3 +5,4 @@
 /build
 /ssh.*
 /cc-test-reporter
+.phpunit.result.cache
