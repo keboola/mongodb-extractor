@@ -1,16 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\MongoDbExtractor;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Filesystem\Filesystem;
 
-class ApplicationRawModeTest extends \PHPUnit\Framework\TestCase
+class ApplicationRawModeTest extends TestCase
 {
     /** @var Filesystem */
     private $fs;
 
+    /** @var string  */
     protected $path = '/tmp/application-raw-mode-test';
 
     protected function setUp(): void
@@ -27,7 +31,7 @@ class ApplicationRawModeTest extends \PHPUnit\Framework\TestCase
         $this->fs->remove($this->path);
     }
 
-    public function testActionRunRawMode()
+    public function testActionRunRawMode(): void
     {
         $json = <<<JSON
 {
@@ -60,12 +64,15 @@ JSON;
 
         // csv
         $expectedCsvFileMain = $this->path . '/restaurants.csv';
+
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
         $expectedCsvMain = <<<CSV
 "id","data"
 "5716054bee6e764c94fa841e","{""_id"":{""\$oid"":""5716054bee6e764c94fa841e""},""address"":{""building"":""1484"",""coord"":[-73.8806669,40.8283447],""street"":""Westchester Avenue"",""zipcode"":""10472""},""borough"":""Bronx"",""cuisine"":""Bakery"",""name"":""Nacional Bakery #1""}"
 "5716054bee6e764c94fa8c13","{""_id"":{""\$oid"":""5716054bee6e764c94fa8c13""},""address"":{""building"":""104512"",""coord"":[-73.88541699999999,40.82766],""street"":""Westchester Avenue"",""zipcode"":""10459""},""borough"":""Bronx"",""cuisine"":""Bakery"",""name"":""La Nueva Giralda Bakery""}"
 "5716054bee6e764c94fa8ff6","{""_id"":{""\$oid"":""5716054bee6e764c94fa8ff6""},""address"":{""building"":""1522-4"",""coord"":[-73.8789604,40.8286012],""street"":""Westchester Avenue"",""zipcode"":""10472""},""borough"":""Bronx"",""cuisine"":""Bakery"",""name"":""National Bakery""}"\n
 CSV;
+        // phpcs:enable
         $this->assertFileExists($expectedCsvFileMain);
         $this->assertEquals($expectedCsvMain, file_get_contents($expectedCsvFileMain));
 
@@ -78,7 +85,7 @@ JSON;
         $this->assertEquals($expectedJsonMain, file_get_contents($actualJsonFileMain));
     }
 
-    public function testActionRunRawModeIdAsString()
+    public function testActionRunRawModeIdAsString(): void
     {
         $json = <<<JSON
 {
@@ -109,12 +116,15 @@ JSON;
 
         // csv
         $expectedCsvFileMain = $this->path . '/restaurants-id-as-string.csv';
+
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
         $expectedCsvMain = <<<CSV
 "id","data"
 "5716054bee6e764c94fa7ddd","{""_id"":""5716054bee6e764c94fa7ddd"",""address"":{""building"":""1007"",""coord"":[-73.856077,40.848447],""street"":""Morris Park Ave"",""zipcode"":""10462""},""borough"":""Bronx"",""cuisine"":""Bakery"",""name"":""Morris Park Bake Shop""}"
 "5716054bee6e764c94fa8181","{""_id"":""5716054bee6e764c94fa8181"",""address"":{""building"":""4202"",""coord"":[-73.85694079999999,40.8936238],""street"":""White Plains Road"",""zipcode"":""10466""},""borough"":""Bronx"",""cuisine"":""Bakery"",""name"":""E & L Bakery & Coffee Shop""}"
 "5716054bee6e764c94fa8213","{""_id"":""5716054bee6e764c94fa8213"",""address"":{""building"":""29"",""coord"":[-73.86119219999999,40.8338023],""street"":""Hugh Grant Circle"",""zipcode"":""10462""},""borough"":""Bronx"",""cuisine"":""Bakery"",""name"":""Zaro'S Bread Basket""}"\n
 CSV;
+        // phpcs:enable
         $this->assertFileExists($expectedCsvFileMain);
         $this->assertEquals($expectedCsvMain, file_get_contents($expectedCsvFileMain));
 
@@ -127,7 +137,7 @@ JSON;
         $this->assertEquals($expectedJsonMain, file_get_contents($actualJsonFileMain));
     }
 
-    public function testActionRunRawModeMixedIds()
+    public function testActionRunRawModeMixedIds(): void
     {
         $json = <<<JSON
 {
@@ -182,7 +192,7 @@ JSON;
         $this->assertEquals($expectedJsonMain, file_get_contents($actualJsonFileMain));
     }
 
-    public function testSkippedDocuments()
+    public function testSkippedDocuments(): void
     {
         $json = <<<JSON
 {

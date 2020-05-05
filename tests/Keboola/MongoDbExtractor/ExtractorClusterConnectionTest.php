@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\MongoDbExtractor;
 
 use Mockery;
@@ -36,7 +38,7 @@ class ExtractorClusterConnectionTest extends ExtractorTestCase
         $this
             ->uriFactory
             ->shouldReceive('create')
-            ->andReturnUsing(function (array $params) use($originUriFactory) {
+            ->andReturnUsing(function (array $params) use ($originUriFactory) {
                 $uri = $originUriFactory->create($params);
                 return str_replace(
                     'mongodb.cluster.local/test',
@@ -45,7 +47,6 @@ class ExtractorClusterConnectionTest extends ExtractorTestCase
                 );
             });
         $this->exportCommandFactory = new ExportCommandFactory($this->uriFactory);
-
     }
 
     protected function tearDown(): void

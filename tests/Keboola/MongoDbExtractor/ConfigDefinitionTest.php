@@ -1,16 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\MongoDbExtractor;
 
 use Keboola\MongoDbExtractor\Config\ConfigDefinition;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
-class ConfigDefinitionTest extends \PHPUnit\Framework\TestCase
+class ConfigDefinitionTest extends TestCase
 {
-    public function testValidConfig()
+    public function testValidConfig(): void
     {
         $json = <<<JSON
 {
@@ -42,13 +45,13 @@ JSON;
         $processor = new Processor;
         $processedConfig = $processor->processConfiguration(new ConfigDefinition, [$config['parameters']]);
 
-        $this->assertInternalType('array', $processedConfig);
+        $this->assertIsArray($processedConfig);
 
         // Protocol key is optional, test default value
         $this->assertSame(ConfigDefinition::PROTOCOL_MONGO_DB, $processedConfig['db']['protocol']);
     }
 
-    public function testValidConfigWithProtocol()
+    public function testValidConfigWithProtocol(): void
     {
         $json = <<<JSON
 {
@@ -81,11 +84,11 @@ JSON;
         $processor = new Processor;
         $processedConfig = $processor->processConfiguration(new ConfigDefinition, [$config['parameters']]);
 
-        $this->assertInternalType('array', $processedConfig);
+        $this->assertIsArray($processedConfig);
         $this->assertSame(ConfigDefinition::PROTOCOL_MONGO_DB_SRV, $processedConfig['db']['protocol']);
     }
 
-    public function testMissingKeys()
+    public function testMissingKeys(): void
     {
         $this->expectException(InvalidConfigurationException::class);
 
@@ -109,7 +112,7 @@ JSON;
         (new Processor())->processConfiguration(new ConfigDefinition, [$config['parameters']]);
     }
 
-    public function testInvalidProtocol()
+    public function testInvalidProtocol(): void
     {
         $this->expectException(InvalidConfigurationException::class);
 
@@ -147,7 +150,7 @@ JSON;
     /**
      * @dataProvider invalidIncrementalFetchingConfig
      */
-    public function testInvalidIncrementalFetchingConfig($json, $expectedMessage)
+    public function testInvalidIncrementalFetchingConfig(string $json, string $expectedMessage): void
     {
         $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
         $processor = new Processor;
@@ -156,7 +159,7 @@ JSON;
         $processor->processConfiguration(new ConfigDefinition, [$config['parameters']]);
     }
 
-    public function invalidIncrementalFetchingConfig()
+    public function invalidIncrementalFetchingConfig(): array
     {
         return [
             [

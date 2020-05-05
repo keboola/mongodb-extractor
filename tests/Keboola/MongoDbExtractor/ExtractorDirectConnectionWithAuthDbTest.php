@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\MongoDbExtractor;
 
 use Symfony\Component\Filesystem\Filesystem;
@@ -11,6 +13,7 @@ class ExtractorDirectConnectionWithAuthDbTest extends ExtractorTestCase
     /** @var Filesystem */
     private $fs;
 
+    /** @var string  */
     protected $path = '/tmp/extractor-direct-auth-db';
 
     protected function setUp(): void

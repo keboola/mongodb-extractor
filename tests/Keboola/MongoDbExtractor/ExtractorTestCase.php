@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\MongoDbExtractor;
 
 use Keboola\CsvMap\Exception\BadConfigException;
@@ -36,18 +38,18 @@ abstract class ExtractorTestCase extends TestCase
                 'type' => 'column',
                 'mapping' => [
                     'destination' => 'id',
-                ]
+                ],
             ],
             'name' => [
                 'type' => 'column',
                 'mapping' => [
-                    'destination' => 'name'
-                ]
+                    'destination' => 'name',
+                ],
             ],
         ];
     }
 
-    public function testExportAll()
+    public function testExportAll(): void
     {
         $exportParams = [
             'collection' => 'restaurants',
@@ -74,7 +76,7 @@ abstract class ExtractorTestCase extends TestCase
         $this->assertSame(74, (int) $process->getOutput());
     }
 
-    public function testExportOne()
+    public function testExportOne(): void
     {
         $exportParams = [
             'collection' => 'restaurants',
@@ -103,7 +105,7 @@ CSV;
         $this->assertEquals($expectedJson, file_get_contents($expectedFile));
     }
 
-    public function testExportOneWebalizedName()
+    public function testExportOneWebalizedName(): void
     {
         $exportParams = [
             'collection' => 'restaurants',
@@ -132,7 +134,7 @@ CSV;
         $this->assertEquals($expectedJson, file_get_contents($expectedFile));
     }
 
-    public function testExportMulti()
+    public function testExportMulti(): void
     {
         $exportParams = [
             'collection' => 'restaurants',
@@ -164,7 +166,7 @@ CSV;
         $this->assertEquals($expectedJson, file_get_contents($expectedFile));
     }
 
-    public function testExportMultiFieldsPaths()
+    public function testExportMultiFieldsPaths(): void
     {
         $exportParams = [
             'collection' => 'restaurants',
@@ -196,7 +198,7 @@ CSV;
         $this->assertEquals($expectedJson, file_get_contents($expectedFile));
     }
 
-    public function testExportMultiWithSortAndLimit()
+    public function testExportMultiWithSortAndLimit(): void
     {
         $exportParams = [
             'collection' => 'restaurants',
@@ -230,7 +232,7 @@ CSV;
         $this->assertEquals($expectedJson, file_get_contents($expectedFile));
     }
 
-    public function testExportBadQueryJson()
+    public function testExportBadQueryJson(): void
     {
         $this->expectException(ProcessFailedException::class);
 
@@ -250,7 +252,7 @@ CSV;
         $extractor->extract($this->path);
     }
 
-    public function testExportInvalidMappingBadData()
+    public function testExportInvalidMappingBadData(): void
     {
         $this->expectException(BadDataException::class);
         $this->expectExceptionMessage('Error writing \'id\' column: Cannot write object into a column');
@@ -259,7 +261,7 @@ CSV;
             'collection' => 'restaurants',
             'name' => 'export-bad-mapping',
             'mapping' => [
-                '_id' => 'id' // _id is object
+                '_id' => 'id', // _id is object
             ],
             'enabled' => true,
             'mode' => 'mapping',
@@ -272,7 +274,7 @@ CSV;
         $extractor->extract($this->path);
     }
 
-    public function testExportInvalidMappingBadConfig()
+    public function testExportInvalidMappingBadConfig(): void
     {
         $this->expectException(BadConfigException::class);
         $this->expectExceptionMessage('Key \'mapping.destination\' is not set for column \'2\'');
@@ -281,7 +283,7 @@ CSV;
             'collection' => 'restaurants',
             'name' => 'export-bad-mapping',
             'mapping' => [
-                '2' => []
+                '2' => [],
             ],
             'enabled' => true,
             'mode' => 'mapping',
@@ -294,7 +296,7 @@ CSV;
         $extractor->extract($this->path);
     }
 
-    public function testExportRandomCollection()
+    public function testExportRandomCollection(): void
     {
         $exportParams = [
             'collection' => 'randomCollection',
@@ -323,7 +325,7 @@ CSV;
         $this->assertEquals($expectedJson, file_get_contents($expectedFile));
     }
 
-    public function testExportRelatedTableFirstItemEmpty()
+    public function testExportRelatedTableFirstItemEmpty(): void
     {
         $exportParams = [
             'collection' => 'restaurants',
@@ -347,16 +349,16 @@ JSON
                     'type' => 'column',
                     'mapping' => [
                         'destination' => 'id',
-                        'primaryKey' => true
-                    ]
+                        'primaryKey' => true,
+                    ],
                 ],
                 'coords' => [
                     'type' => 'table',
                     'destination' => 'export-related-table-first-item-empty-coord',
                     'tableMapping' => [
                         'w' => 'w',
-                        'n' => 'n'
-                    ]
+                        'n' => 'n',
+                    ],
                 ],
             ],
             'mode' => 'mapping',
@@ -382,7 +384,6 @@ CSV;
 
         $this->assertFileExists($expectedFile);
         $this->assertEquals($expectedJson, file_get_contents($expectedFile));
-
 
         $expectedJsonCoord = <<<CSV
 "w","n","export-related-table-first-item-empty_pk"

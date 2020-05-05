@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\MongoDbExtractor;
 
 use Symfony\Component\Filesystem\Filesystem;
@@ -12,6 +14,7 @@ class ExtractorSshConnectionWithAuthTest extends ExtractorTestCase
     /** @var Filesystem */
     private $fs;
 
+    /** @var string  */
     protected $path = '/tmp/extractor-ssh-auth';
 
     protected function setUp(): void
@@ -33,6 +36,7 @@ class ExtractorSshConnectionWithAuthTest extends ExtractorTestCase
 
     protected function getConfig(): array
     {
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
         $config = <<<JSON
 {
   "parameters": {
@@ -56,6 +60,7 @@ class ExtractorSshConnectionWithAuthTest extends ExtractorTestCase
   }
 }
 JSON;
+        //phpcs:enable
         return (new JsonDecode(true))->decode($config, JsonEncoder::FORMAT);
     }
 }

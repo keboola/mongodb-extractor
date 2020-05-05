@@ -1,14 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\MongoDbExtractor;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 use Keboola\SSHTunnel\SSHException;
 
-class ExtractorSshConnectionTimeoutTest extends \PHPUnit\Framework\TestCase
+class ExtractorSshConnectionTimeoutTest extends TestCase
 {
     use CreateExtractorTrait;
 
@@ -46,6 +49,7 @@ class ExtractorSshConnectionTimeoutTest extends \PHPUnit\Framework\TestCase
 
     protected function getConfig(): array
     {
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
         $config = <<<JSON
 {
   "parameters": {
@@ -80,10 +84,11 @@ class ExtractorSshConnectionTimeoutTest extends \PHPUnit\Framework\TestCase
   }
 }
 JSON;
+        // phpcs:enable
         return (new JsonDecode(true))->decode($config, JsonEncoder::FORMAT);
     }
 
-    public function testWrongConnection()
+    public function testWrongConnection(): void
     {
         $this->expectException(SSHException::class);
         $this->expectExceptionMessage('Unable to create ssh tunnel');

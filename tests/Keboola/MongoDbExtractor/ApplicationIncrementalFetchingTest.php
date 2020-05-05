@@ -15,6 +15,7 @@ class ApplicationIncrementalFetchingTest extends TestCase
     /** @var Filesystem */
     private $fs;
 
+    /** @var string  */
     private $path = '/tmp/incremental-fetching-test';
 
     protected function setUp(): void
@@ -31,7 +32,7 @@ class ApplicationIncrementalFetchingTest extends TestCase
         $this->fs->remove($this->path);
     }
 
-    public function testIncrementalFetchingInt()
+    public function testIncrementalFetchingInt(): void
     {
         $json = <<<JSON
 {
@@ -93,7 +94,7 @@ CSV;
         Assert::assertEquals($expectedIncrementalFileContent, file_get_contents($incrementalFile));
     }
 
-    public function testIncrementalFetchingDecimal()
+    public function testIncrementalFetchingDecimal(): void
     {
         $json = <<<JSON
 {
@@ -155,7 +156,7 @@ CSV;
         Assert::assertEquals($expectedIncrementalFileContent, file_get_contents($incrementalFile));
     }
 
-    public function testIncrementalFetchingTimestamp()
+    public function testIncrementalFetchingTimestamp(): void
     {
         $json = <<<JSON
 {
@@ -217,7 +218,7 @@ CSV;
         Assert::assertEquals($expectedIncrementalFileContent, file_get_contents($incrementalFile));
     }
 
-    public function testIncrementalFetchingLimit()
+    public function testIncrementalFetchingLimit(): void
     {
         $json = <<<JSON
 {

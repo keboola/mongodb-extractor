@@ -1,11 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keboola\MongoDbExtractor;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Throwable;
 
-class ExtractorNotEnabledExportsTest extends \PHPUnit\Framework\TestCase
+class ExtractorNotEnabledExportsTest extends TestCase
 {
     use CreateExtractorTrait;
 
@@ -53,9 +57,9 @@ JSON;
         return (new JsonDecode(true))->decode($config, JsonEncoder::FORMAT);
     }
 
-    public function testWrongConnection()
+    public function testWrongConnection(): void
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Throwable::class);
         $this->expectExceptionMessage('Please enable at least one export');
         $this->createExtractor($this->getConfig()['parameters'])->extract($this->path);
     }

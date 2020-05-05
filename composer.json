@@ -36,8 +36,8 @@
         }
     },
     "scripts": {
-        "phpcs": "phpcs -n --ignore=vendor,tests --extensions=php .",
-        "phpcbf": "phpcbf -n --ignore=vendor,tests --extensions=php .",
+        "phpcs": "phpcs -n --ignore=vendor --extensions=php .",
+        "phpcbf": "phpcbf -n --ignore=vendor --extensions=php .",
         "phpunit": "phpunit"
     }
 }
