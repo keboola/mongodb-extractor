@@ -18,13 +18,13 @@ class ExtractorNotEnabledExportsTest extends \PHPUnit\Framework\TestCase
     /** @var ExportCommandFactory */
     protected $exportCommandFactory;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->uriFactory = new UriFactory();
         $this->exportCommandFactory = new ExportCommandFactory($this->uriFactory);
     }
 
-    protected function getConfig()
+    protected function getConfig(): array
     {
         $config = <<<JSON
 {

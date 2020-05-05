@@ -26,7 +26,7 @@ class ExtractorNoSpaceLeftOnDeviceTest extends \PHPUnit\Framework\TestCase
     /** @var string */
     private $file = 'export-one.csv';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->fs = new Filesystem;
         $this->fs->remove($this->path);
@@ -58,7 +58,7 @@ class ExtractorNoSpaceLeftOnDeviceTest extends \PHPUnit\Framework\TestCase
         $this->createExtractor($parameters)->extract($this->path);
     }
 
-    protected function getConfig()
+    protected function getConfig(): array
     {
         $config = <<<JSON
 {

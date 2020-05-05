@@ -13,7 +13,7 @@ class ApplicationRawModeTest extends \PHPUnit\Framework\TestCase
 
     protected $path = '/tmp/application-raw-mode-test';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->fs = new Filesystem;
         $this->fs->remove($this->path);
@@ -22,7 +22,7 @@ class ApplicationRawModeTest extends \PHPUnit\Framework\TestCase
         parent::setUp();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->fs->remove($this->path);
     }

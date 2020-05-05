@@ -10,7 +10,7 @@ class UriFactoryTest extends TestCase
     /** @var UriFactory */
     private $uriFactory;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->uriFactory = new UriFactory();

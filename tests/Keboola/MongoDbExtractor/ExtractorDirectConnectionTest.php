@@ -13,7 +13,7 @@ class ExtractorDirectConnectionTest extends ExtractorTestCase
 
     protected $path = '/tmp/extractor-direct';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->fs = new Filesystem;
         $this->fs->remove($this->path);
@@ -22,12 +22,12 @@ class ExtractorDirectConnectionTest extends ExtractorTestCase
         parent::setUp();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->fs->remove($this->path);
     }
 
-    protected function getConfig()
+    protected function getConfig(): array
     {
         $config = <<<JSON
 {

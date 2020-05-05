@@ -4,10 +4,11 @@ namespace Keboola\MongoDbExtractor;
 
 use Keboola\CsvMap\Exception\BadConfigException;
 use Keboola\CsvMap\Exception\BadDataException;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
-abstract class ExtractorTestCase extends \PHPUnit\Framework\TestCase
+abstract class ExtractorTestCase extends TestCase
 {
     use CreateExtractorTrait;
 
@@ -20,15 +21,15 @@ abstract class ExtractorTestCase extends \PHPUnit\Framework\TestCase
     /** @var ExportCommandFactory */
     protected $exportCommandFactory;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->uriFactory = new UriFactory();
         $this->exportCommandFactory = new ExportCommandFactory($this->uriFactory);
     }
 
-    abstract protected function getConfig();
+    abstract protected function getConfig(): array;
 
-    private function getMapping()
+    private function getMapping(): array
     {
         return [
             '_id.$oid' => [

@@ -24,7 +24,7 @@ class ExtractorSshConnectionTimeoutTest extends \PHPUnit\Framework\TestCase
     /** @var Filesystem */
     private $fs;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->uriFactory = new UriFactory();
         $this->exportCommandFactory = new ExportCommandFactory($this->uriFactory);
@@ -36,7 +36,7 @@ class ExtractorSshConnectionTimeoutTest extends \PHPUnit\Framework\TestCase
         parent::setUp();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->fs->remove($this->path);
 
@@ -44,7 +44,7 @@ class ExtractorSshConnectionTimeoutTest extends \PHPUnit\Framework\TestCase
         $process->mustRun();
     }
 
-    protected function getConfig()
+    protected function getConfig(): array
     {
         $config = <<<JSON
 {

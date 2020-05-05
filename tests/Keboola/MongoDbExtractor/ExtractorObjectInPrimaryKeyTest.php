@@ -22,7 +22,7 @@ class ExtractorObjectInPrimaryKeyTest extends \PHPUnit\Framework\TestCase
 
     private $path = '/tmp/object-in-primary-key';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->uriFactory = new UriFactory();
         $this->exportCommandFactory = new ExportCommandFactory($this->uriFactory);
@@ -39,7 +39,7 @@ class ExtractorObjectInPrimaryKeyTest extends \PHPUnit\Framework\TestCase
         $this->createExtractor($this->getConfig()['parameters'])->extract($this->path);
     }
 
-    protected function getConfig()
+    protected function getConfig(): array
     {
         $config = <<<JSON
 {

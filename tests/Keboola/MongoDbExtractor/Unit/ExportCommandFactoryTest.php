@@ -12,7 +12,7 @@ class ExportCommandFactoryTest extends TestCase
     /** @var ExportCommandFactory */
     private $commandFactory;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $uriFactory = new UriFactory();

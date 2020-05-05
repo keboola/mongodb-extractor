@@ -17,7 +17,7 @@ class ApplicationIncrementalFetchingTest extends TestCase
 
     private $path = '/tmp/incremental-fetching-test';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->fs = new Filesystem;
         $this->fs->remove($this->path);
@@ -26,7 +26,7 @@ class ApplicationIncrementalFetchingTest extends TestCase
         parent::setUp();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->fs->remove($this->path);
     }

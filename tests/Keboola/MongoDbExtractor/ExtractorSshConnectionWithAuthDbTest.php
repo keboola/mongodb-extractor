@@ -14,7 +14,7 @@ class ExtractorSshConnectionWithAuthDbTest extends ExtractorTestCase
 
     protected $path = '/tmp/extractor-ssh-auth';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->fs = new Filesystem;
         $this->fs->remove($this->path);
@@ -23,7 +23,7 @@ class ExtractorSshConnectionWithAuthDbTest extends ExtractorTestCase
         parent::setUp();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->fs->remove($this->path);
 
@@ -31,7 +31,7 @@ class ExtractorSshConnectionWithAuthDbTest extends ExtractorTestCase
         $process->mustRun();
     }
 
-    protected function getConfig()
+    protected function getConfig(): array
     {
         $config = <<<JSON
 {

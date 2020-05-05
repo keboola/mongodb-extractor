@@ -19,7 +19,7 @@ class ExtractorClusterConnectionTest extends ExtractorTestCase
     /** @var string */
     protected $path = '/tmp/extractor-cluster';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -48,12 +48,12 @@ class ExtractorClusterConnectionTest extends ExtractorTestCase
 
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->fs->remove($this->path);
     }
 
-    protected function getConfig()
+    protected function getConfig(): array
     {
         $config = <<<JSON
 {
