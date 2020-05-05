@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Keboola\MongoDbExtractor\Tests;
 
+use Keboola\MongoDbExtractor\ExportCommandFactory;
 use Keboola\MongoDbExtractor\UriFactory;
 use Mockery;
 use Symfony\Component\Filesystem\Filesystem;
