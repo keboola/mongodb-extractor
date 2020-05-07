@@ -1,52 +1,55 @@
 <?php
 
-namespace Keboola\MongoDbExtractor;
+declare(strict_types=1);
+
+namespace Keboola\MongoDbExtractor\Tests;
 
 use Keboola\CsvMap\Exception\BadConfigException;
 use Keboola\CsvMap\Exception\BadDataException;
+use Keboola\MongoDbExtractor\ExportCommandFactory;
+use Keboola\MongoDbExtractor\Tests\Traits\CreateExtractorTrait;
+use Keboola\MongoDbExtractor\UriFactory;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
-abstract class ExtractorTestCase extends \PHPUnit\Framework\TestCase
+abstract class ExtractorTestCase extends TestCase
 {
     use CreateExtractorTrait;
 
-    /** @var string */
-    protected $path;
+    protected string $path;
 
-    /** @var UriFactory */
-    protected $uriFactory;
+    protected UriFactory $uriFactory;
 
-    /** @var ExportCommandFactory */
-    protected $exportCommandFactory;
+    protected ExportCommandFactory $exportCommandFactory;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->uriFactory = new UriFactory();
         $this->exportCommandFactory = new ExportCommandFactory($this->uriFactory);
     }
 
-    abstract protected function getConfig();
+    abstract protected function getConfig(): array;
 
-    private function getMapping()
+    private function getMapping(): array
     {
         return [
             '_id.$oid' => [
                 'type' => 'column',
                 'mapping' => [
                     'destination' => 'id',
-                ]
+                ],
             ],
             'name' => [
                 'type' => 'column',
                 'mapping' => [
-                    'destination' => 'name'
-                ]
+                    'destination' => 'name',
+                ],
             ],
         ];
     }
 
-    public function testExportAll()
+    public function testExportAll(): void
     {
         $exportParams = [
             'collection' => 'restaurants',
@@ -67,13 +70,13 @@ abstract class ExtractorTestCase extends \PHPUnit\Framework\TestCase
         $expectedFile = $this->path . '/' . 'export-all.csv';
         $this->assertFileExists($expectedFile);
 
-        $process = new Process('wc -l ' . $expectedFile);
+        $process = Process::fromShellCommandline('wc -l ' . $expectedFile);
         $process->mustRun();
 
         $this->assertSame(74, (int) $process->getOutput());
     }
 
-    public function testExportOne()
+    public function testExportOne(): void
     {
         $exportParams = [
             'collection' => 'restaurants',
@@ -102,7 +105,7 @@ CSV;
         $this->assertEquals($expectedJson, file_get_contents($expectedFile));
     }
 
-    public function testExportOneWebalizedName()
+    public function testExportOneWebalizedName(): void
     {
         $exportParams = [
             'collection' => 'restaurants',
@@ -131,7 +134,7 @@ CSV;
         $this->assertEquals($expectedJson, file_get_contents($expectedFile));
     }
 
-    public function testExportMulti()
+    public function testExportMulti(): void
     {
         $exportParams = [
             'collection' => 'restaurants',
@@ -163,7 +166,7 @@ CSV;
         $this->assertEquals($expectedJson, file_get_contents($expectedFile));
     }
 
-    public function testExportMultiFieldsPaths()
+    public function testExportMultiFieldsPaths(): void
     {
         $exportParams = [
             'collection' => 'restaurants',
@@ -195,7 +198,7 @@ CSV;
         $this->assertEquals($expectedJson, file_get_contents($expectedFile));
     }
 
-    public function testExportMultiWithSortAndLimit()
+    public function testExportMultiWithSortAndLimit(): void
     {
         $exportParams = [
             'collection' => 'restaurants',
@@ -229,7 +232,7 @@ CSV;
         $this->assertEquals($expectedJson, file_get_contents($expectedFile));
     }
 
-    public function testExportBadQueryJson()
+    public function testExportBadQueryJson(): void
     {
         $this->expectException(ProcessFailedException::class);
 
@@ -249,7 +252,7 @@ CSV;
         $extractor->extract($this->path);
     }
 
-    public function testExportInvalidMappingBadData()
+    public function testExportInvalidMappingBadData(): void
     {
         $this->expectException(BadDataException::class);
         $this->expectExceptionMessage('Error writing \'id\' column: Cannot write object into a column');
@@ -258,7 +261,7 @@ CSV;
             'collection' => 'restaurants',
             'name' => 'export-bad-mapping',
             'mapping' => [
-                '_id' => 'id' // _id is object
+                '_id' => 'id', // _id is object
             ],
             'enabled' => true,
             'mode' => 'mapping',
@@ -271,7 +274,7 @@ CSV;
         $extractor->extract($this->path);
     }
 
-    public function testExportInvalidMappingBadConfig()
+    public function testExportInvalidMappingBadConfig(): void
     {
         $this->expectException(BadConfigException::class);
         $this->expectExceptionMessage('Key \'mapping.destination\' is not set for column \'2\'');
@@ -280,7 +283,7 @@ CSV;
             'collection' => 'restaurants',
             'name' => 'export-bad-mapping',
             'mapping' => [
-                '2' => []
+                '2' => [],
             ],
             'enabled' => true,
             'mode' => 'mapping',
@@ -293,7 +296,7 @@ CSV;
         $extractor->extract($this->path);
     }
 
-    public function testExportRandomCollection()
+    public function testExportRandomCollection(): void
     {
         $exportParams = [
             'collection' => 'randomCollection',
@@ -322,7 +325,7 @@ CSV;
         $this->assertEquals($expectedJson, file_get_contents($expectedFile));
     }
 
-    public function testExportRelatedTableFirstItemEmpty()
+    public function testExportRelatedTableFirstItemEmpty(): void
     {
         $exportParams = [
             'collection' => 'restaurants',
@@ -346,16 +349,16 @@ JSON
                     'type' => 'column',
                     'mapping' => [
                         'destination' => 'id',
-                        'primaryKey' => true
-                    ]
+                        'primaryKey' => true,
+                    ],
                 ],
                 'coords' => [
                     'type' => 'table',
                     'destination' => 'export-related-table-first-item-empty-coord',
                     'tableMapping' => [
                         'w' => 'w',
-                        'n' => 'n'
-                    ]
+                        'n' => 'n',
+                    ],
                 ],
             ],
             'mode' => 'mapping',
@@ -381,7 +384,6 @@ CSV;
 
         $this->assertFileExists($expectedFile);
         $this->assertEquals($expectedJson, file_get_contents($expectedFile));
-
 
         $expectedJsonCoord = <<<CSV
 "w","n","export-related-table-first-item-empty_pk"

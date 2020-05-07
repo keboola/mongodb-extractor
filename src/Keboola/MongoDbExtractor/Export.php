@@ -16,32 +16,23 @@ use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 
 class Export
 {
-    /** @var ExportCommandFactory */
-    private $exportCommandFactory;
+    private ExportCommandFactory $exportCommandFactory;
 
-    /** @var array */
-    private $connectionOptions;
+    private array $connectionOptions;
 
-    /** @var array */
-    private $exportOptions;
+    private array $exportOptions;
 
-    /** @var string */
-    private $path;
+    private string $path;
 
-    /** @var string */
-    private $name;
+    private string $name;
 
-    /** @var array */
-    private $mapping;
+    private array $mapping;
 
-    /** @var Filesystem */
-    private $filesystem;
+    private Filesystem $filesystem;
 
-    /** @var ConsoleOutput */
-    private $consoleOutput;
+    private ConsoleOutput $consoleOutput;
 
-    /** @var JsonDecode */
-    private $jsonDecoder;
+    private JsonDecode $jsonDecoder;
 
     public function __construct(
         ExportCommandFactory $exportCommandFactory,
@@ -80,7 +71,7 @@ class Export
 
         $cliCommand = $this->exportCommandFactory->create($options);
 
-        $process = new Process($cliCommand, null, null, null, null);
+        $process = Process::fromShellCommandline($cliCommand, null, null, null, null);
         $process->mustRun(function ($type, $buffer): void {
             // $type is always Process::ERR here, so we don't check it
             $this->consoleOutput->write($buffer);
@@ -183,7 +174,7 @@ class Export
         );
 
         $cliCommand = $this->exportCommandFactory->create($options);
-        $process = new Process($cliCommand, null, null, null, null);
+        $process = Process::fromShellCommandline($cliCommand, null, null, null, null);
         $process->mustRun();
 
         $output = $process->getOutput();

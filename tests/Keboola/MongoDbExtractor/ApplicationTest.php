@@ -1,21 +1,24 @@
 <?php
 
-namespace Keboola\MongoDbExtractor;
+declare(strict_types=1);
 
+namespace Keboola\MongoDbExtractor\Tests;
+
+use Keboola\MongoDbExtractor\Application;
+use Keboola\MongoDbExtractor\UserException;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
-use Symfony\Component\Process\Process;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Filesystem\Filesystem;
 
-class ApplicationTest extends \PHPUnit\Framework\TestCase
+class ApplicationTest extends TestCase
 {
-    /** @var Filesystem */
-    private $fs;
+    private Filesystem $fs;
 
-    protected $path = '/tmp/application-test';
+    protected string $path = '/tmp/application-test';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->fs = new Filesystem;
         $this->fs->remove($this->path);
@@ -24,12 +27,12 @@ class ApplicationTest extends \PHPUnit\Framework\TestCase
         parent::setUp();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->fs->remove($this->path);
     }
 
-    public function testActionRunFull()
+    public function testActionRunFull(): void
     {
         $json = <<<JSON
 {
@@ -88,7 +91,7 @@ class ApplicationTest extends \PHPUnit\Framework\TestCase
 }
 JSON;
 
-        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
 
         $application = new Application($config);
         $application->actionRun($this->path);
@@ -138,10 +141,8 @@ JSON;
         $this->assertEquals($expectedJsonRelated, file_get_contents($actualJsonFileRelated));
     }
 
-    public function testActionRunDuplicateExportNames()
+    public function testActionRunDuplicateExportNames(): void
     {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Please remove duplicate export names');
 
         $json = <<<JSON
 {
@@ -174,17 +175,16 @@ JSON;
   }
 }
 JSON;
-        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
 
+        $this->expectException(UserException::class);
+        $this->expectExceptionMessage('Please remove duplicate export names');
         $application = new Application($config);
         $application->actionRun($this->path);
     }
 
-    public function testMissingMappingSection()
+    public function testMissingMappingSection(): void
     {
-        $this->expectException(UserException::class);
-        $this->expectExceptionMessageRegExp('~Mapping cannot be empty~');
-
         $json = <<<JSON
 {
   "parameters": {
@@ -204,16 +204,20 @@ JSON;
 }
 JSON;
 
-        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
 
+        $this->expectException(UserException::class);
+        $this->expectExceptionMessageMatches('~Mapping cannot be empty~');
         $application = new Application($config);
         $application->actionRun($this->path);
     }
 
-    public function testValidateWithoutUser()
+    public function testValidateWithoutUser(): void
     {
         $this->expectException(UserException::class);
-        $this->expectExceptionMessageRegExp('~When passing authentication details, both "user" and "password" params are required~');
+        $this->expectExceptionMessageMatches(
+            '~When passing authentication details, both "user" and "password" params are required~'
+        );
 
         $json = <<<JSON
 {
@@ -238,16 +242,18 @@ JSON;
   }
 }
 JSON;
-        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
 
         $application = new Application($config);
         $application->actionRun($this->path);
     }
 
-    public function testValidateWithoutPassword()
+    public function testValidateWithoutPassword(): void
     {
         $this->expectException(UserException::class);
-        $this->expectExceptionMessageRegExp('~When passing authentication details, both "user" and "password" params are required~');
+        $this->expectExceptionMessageMatches(
+            '~When passing authentication details, both "user" and "password" params are required~'
+        );
 
         $json = <<<JSON
 {
@@ -272,16 +278,16 @@ JSON;
   }
 }
 JSON;
-        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
 
         $application = new Application($config);
         $application->actionRun($this->path);
     }
 
-    public function testCreateWithMissingRequiredParam()
+    public function testCreateWithMissingRequiredParam(): void
     {
         $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessageRegExp('~The child node "host" at path "parameters.db" must be configured~');
+        $this->expectExceptionMessageMatches('~The child node "host" at path "parameters.db" must be configured~');
 
         $json = <<<JSON
 {
@@ -301,7 +307,7 @@ JSON;
   }
 }
 JSON;
-        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
 
         $application = new Application($config);
         $application->actionRun($this->path);

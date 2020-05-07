@@ -11,20 +11,15 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
 class Raw
 {
-    /** @var CsvFile */
-    private $outputFile;
+    private CsvFile $outputFile;
 
-    /** @var Filesystem */
-    private $filesystem;
+    private Filesystem $filesystem;
 
-    /** @var JsonEncode */
-    private $jsonEncode;
+    private JsonEncode $jsonEncode;
 
-    /** @var array */
-    private $manifestOptions;
+    private array $manifestOptions;
 
-    /** @var bool */
-    private $setIdAsPrimaryKey = true;
+    private bool $setIdAsPrimaryKey = true;
 
     public function __construct(string $name, string $outputPath, array $manifestOptions)
     {

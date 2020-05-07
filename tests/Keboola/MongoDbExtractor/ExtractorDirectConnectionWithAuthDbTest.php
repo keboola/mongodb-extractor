@@ -1,6 +1,8 @@
 <?php
 
-namespace Keboola\MongoDbExtractor;
+declare(strict_types=1);
+
+namespace Keboola\MongoDbExtractor\Tests;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
@@ -8,12 +10,11 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
 class ExtractorDirectConnectionWithAuthDbTest extends ExtractorTestCase
 {
-    /** @var Filesystem */
-    private $fs;
+    private Filesystem $fs;
 
-    protected $path = '/tmp/extractor-direct-auth-db';
+    protected string $path = '/tmp/extractor-direct-auth-db';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->fs = new Filesystem;
         $this->fs->remove($this->path);
@@ -22,12 +23,12 @@ class ExtractorDirectConnectionWithAuthDbTest extends ExtractorTestCase
         parent::setUp();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->fs->remove($this->path);
     }
 
-    protected function getConfig()
+    protected function getConfig(): array
     {
         $config = <<<JSON
 {
@@ -43,6 +44,6 @@ class ExtractorDirectConnectionWithAuthDbTest extends ExtractorTestCase
   }
 }
 JSON;
-        return (new JsonDecode(true))->decode($config, JsonEncoder::FORMAT);
+        return (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($config, JsonEncoder::FORMAT);
     }
 }

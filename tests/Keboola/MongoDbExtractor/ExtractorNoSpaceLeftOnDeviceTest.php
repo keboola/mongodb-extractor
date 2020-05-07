@@ -1,48 +1,47 @@
 <?php
 
-namespace Keboola\MongoDbExtractor;
+declare(strict_types=1);
 
+namespace Keboola\MongoDbExtractor\Tests;
+
+use Keboola\MongoDbExtractor\ExportCommandFactory;
+use Keboola\MongoDbExtractor\Tests\Traits\CreateExtractorTrait;
+use Keboola\MongoDbExtractor\UriFactory;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Throwable;
 
-class ExtractorNoSpaceLeftOnDeviceTest extends \PHPUnit\Framework\TestCase
+class ExtractorNoSpaceLeftOnDeviceTest extends TestCase
 {
     use CreateExtractorTrait;
 
-    /** @var UriFactory */
-    protected $uriFactory;
+    protected UriFactory $uriFactory;
 
-    /** @var ExportCommandFactory */
-    protected $exportCommandFactory;
+    protected ExportCommandFactory $exportCommandFactory;
 
-    /** @var Filesystem */
-    private $fs;
+    private string $path = '/tmp/no-space-left-on-device';
 
-    /** @var string */
-    private $path = '/tmp/no-space-left-on-device';
+    private string $file = 'export-one.csv';
 
-    /** @var string */
-    private $file = 'export-one.csv';
-
-    protected function setUp()
+    protected function setUp(): void
     {
-        $this->fs = new Filesystem;
-        $this->fs->remove($this->path);
-        $this->fs->mkdir($this->path);
+        $fs = new Filesystem;
+        $fs->remove($this->path);
+        $fs->mkdir($this->path);
 
         // simulate full disk
-        $process = new Process('ln -s /dev/full ' . $this->path . '/' . $this->file);
+        $process = Process::fromShellCommandline('ln -s /dev/full ' . $this->path . '/' . $this->file);
         $process->mustRun();
 
         $this->uriFactory = new UriFactory();
         $this->exportCommandFactory = new ExportCommandFactory($this->uriFactory);
     }
 
-    public function testExportNoSpaceLeftOnDevice()
+    public function testExportNoSpaceLeftOnDevice(): void
     {
-        $this->expectException(\Exception::class);
 
         $exportParams = [
             'collection' => 'restaurants',
@@ -55,10 +54,11 @@ class ExtractorNoSpaceLeftOnDeviceTest extends \PHPUnit\Framework\TestCase
 
         $parameters = $this->getConfig()['parameters'];
         $parameters['exports'][] = $exportParams;
+        $this->expectException(Throwable::class);
         $this->createExtractor($parameters)->extract($this->path);
     }
 
-    protected function getConfig()
+    protected function getConfig(): array
     {
         $config = <<<JSON
 {
@@ -71,23 +71,23 @@ class ExtractorNoSpaceLeftOnDeviceTest extends \PHPUnit\Framework\TestCase
   }
 }
 JSON;
-        return (new JsonDecode(true))->decode($config, JsonEncoder::FORMAT);
+        return (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($config, JsonEncoder::FORMAT);
     }
 
-    private function getMapping()
+    private function getMapping(): array
     {
         return [
             '_id.$oid' => [
                 'type' => 'column',
                 'mapping' => [
                     'destination' => 'id',
-                ]
+                ],
             ],
             'name' => [
                 'type' => 'column',
                 'mapping' => [
-                    'destination' => 'name'
-                ]
+                    'destination' => 'name',
+                ],
             ],
         ];
     }

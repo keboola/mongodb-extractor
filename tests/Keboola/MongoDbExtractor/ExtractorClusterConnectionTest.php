@@ -1,7 +1,11 @@
 <?php
 
-namespace Keboola\MongoDbExtractor;
+declare(strict_types=1);
 
+namespace Keboola\MongoDbExtractor\Tests;
+
+use Keboola\MongoDbExtractor\ExportCommandFactory;
+use Keboola\MongoDbExtractor\UriFactory;
 use Mockery;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
@@ -13,13 +17,11 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
  */
 class ExtractorClusterConnectionTest extends ExtractorTestCase
 {
-    /** @var Filesystem */
-    private $fs;
+    private Filesystem $fs;
 
-    /** @var string */
-    protected $path = '/tmp/extractor-cluster';
+    protected string $path = '/tmp/extractor-cluster';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -36,7 +38,7 @@ class ExtractorClusterConnectionTest extends ExtractorTestCase
         $this
             ->uriFactory
             ->shouldReceive('create')
-            ->andReturnUsing(function (array $params) use($originUriFactory) {
+            ->andReturnUsing(function (array $params) use ($originUriFactory) {
                 $uri = $originUriFactory->create($params);
                 return str_replace(
                     'mongodb.cluster.local/test',
@@ -45,15 +47,14 @@ class ExtractorClusterConnectionTest extends ExtractorTestCase
                 );
             });
         $this->exportCommandFactory = new ExportCommandFactory($this->uriFactory);
-
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->fs->remove($this->path);
     }
 
-    protected function getConfig()
+    protected function getConfig(): array
     {
         $config = <<<JSON
 {
@@ -67,6 +68,6 @@ class ExtractorClusterConnectionTest extends ExtractorTestCase
   }
 }
 JSON;
-        return (new JsonDecode(true))->decode($config, JsonEncoder::FORMAT);
+        return (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($config, JsonEncoder::FORMAT);
     }
 }

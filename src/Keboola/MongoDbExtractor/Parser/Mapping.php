@@ -12,23 +12,17 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
 class Mapping
 {
-    /** @var array */
-    private $mapping;
+    private array $mapping;
 
-    /** @var string */
-    private $path;
+    private string $path;
 
-    /** @var Filesystem */
-    private $filesystem;
+    private Filesystem $filesystem;
 
-    /** @var JsonEncode */
-    private $jsonEncode;
+    private JsonEncode $jsonEncode;
 
-    /** @var string  */
-    private $name;
+    private string $name;
 
-    /** @var array */
-    private $manifestOptions;
+    private array $manifestOptions;
 
     public function __construct(string $name, array $mapping, string $outputPath, array $manifestOptions)
     {
@@ -43,8 +37,6 @@ class Mapping
 
     /**
      * Parses provided data and writes to output files
-     * @param array $data
-     * @throws \Exception
      */
     public function parse(array $data): void
     {

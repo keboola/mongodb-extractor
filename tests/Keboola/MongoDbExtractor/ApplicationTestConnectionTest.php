@@ -1,16 +1,20 @@
 <?php
 
-namespace Keboola\MongoDbExtractor;
+declare(strict_types=1);
 
+namespace Keboola\MongoDbExtractor\Tests;
+
+use Keboola\MongoDbExtractor\Application;
 use MongoDB\Driver\Exception\AuthenticationException;
 use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Driver\Exception\ConnectionTimeoutException;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
-class ApplicationTestConnectionTest extends \PHPUnit\Framework\TestCase
+class ApplicationTestConnectionTest extends TestCase
 {
-    public function testActionTestConnectionOk()
+    public function testActionTestConnectionOk(): void
     {
         $json = <<<JSON
 {
@@ -34,7 +38,7 @@ class ApplicationTestConnectionTest extends \PHPUnit\Framework\TestCase
   }
 }
 JSON;
-        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
 
         $application = new Application($config);
         $application->actionTestConnection();
@@ -42,7 +46,7 @@ JSON;
         $this->assertSame(['status' => 'ok'], $application->actionTestConnection());
     }
 
-    public function testActionTestConnectionOkViaAuthDb()
+    public function testActionTestConnectionOkViaAuthDb(): void
     {
         $json = <<<JSON
 {
@@ -69,7 +73,7 @@ JSON;
   }
 }
 JSON;
-        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
 
         $application = new Application($config);
         $application->actionTestConnection();
@@ -77,7 +81,7 @@ JSON;
         $this->assertSame(['status' => 'ok'], $application->actionTestConnection());
     }
 
-    public function testActionTestConnectionFailWrongHost()
+    public function testActionTestConnectionFailWrongHost(): void
     {
         $this->expectException(ConnectionTimeoutException::class);
 
@@ -103,16 +107,16 @@ JSON;
   }
 }
 JSON;
-        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
 
         $application = new Application($config);
         $application->actionTestConnection();
     }
 
-    public function testActionTestConnectionFailWithoutPassword()
+    public function testActionTestConnectionFailWithoutPassword(): void
     {
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessageRegExp('~not authorized~');
+        $this->expectExceptionMessageMatches('~not authorized~');
 
         $json = <<<JSON
 {
@@ -136,16 +140,16 @@ JSON;
   }
 }
 JSON;
-        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
 
         $application = new Application($config);
         $application->actionTestConnection();
     }
 
-    public function testActionTestConnectionFailWrongPassword()
+    public function testActionTestConnectionFailWrongPassword(): void
     {
         $this->expectException(AuthenticationException::class);
-        $this->expectExceptionMessageRegExp('~Authentication failed~');
+        $this->expectExceptionMessageMatches('~Authentication failed~');
 
         $json = <<<JSON
 {
@@ -171,7 +175,7 @@ JSON;
   }
 }
 JSON;
-        $config = (new JsonDecode(true))->decode($json, JsonEncoder::FORMAT);
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
 
         $application = new Application($config);
         $application->actionTestConnection();

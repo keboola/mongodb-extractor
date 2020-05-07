@@ -11,17 +11,17 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
 class ConfigDefinition implements ConfigurationInterface
 {
-    public const
-        PROTOCOL_MONGO_DB = 'mongodb',
-        PROTOCOL_MONGO_DB_SRV = 'mongodb+srv'; // https://docs.mongodb.com/manual/reference/connection-string/#dns-seedlist-connection-format
+    public const PROTOCOL_MONGO_DB = 'mongodb';
+
+    // https://docs.mongodb.com/manual/reference/connection-string/#dns-seedlist-connection-format
+    public const PROTOCOL_MONGO_DB_SRV = 'mongodb+srv';
 
 
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('parameters');
+        $treeBuilder = new TreeBuilder('parameters');
 
-        $rootNode
+        $treeBuilder->getRootNode()
             ->children()
                 ->arrayNode('db')
                     ->children()
@@ -98,10 +98,9 @@ class ConfigDefinition implements ConfigurationInterface
 
     private function addSshNode(): NodeDefinition
     {
-        $builder = new TreeBuilder();
-        $node = $builder->root('ssh');
+        $builder = new TreeBuilder('ssh');
 
-        $node
+        $builder->getRootNode()
             ->children()
                 ->booleanNode('enabled')->end()
                 ->arrayNode('keys')
@@ -120,6 +119,6 @@ class ConfigDefinition implements ConfigurationInterface
             ->end()
         ;
 
-        return $node;
+        return $builder->getRootNode();
     }
 }

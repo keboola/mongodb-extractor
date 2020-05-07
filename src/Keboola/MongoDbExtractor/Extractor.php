@@ -10,24 +10,15 @@ use MongoDB\Driver\Manager;
 
 class Extractor
 {
-    /** @var array */
-    private $parameters;
+    private array $parameters;
 
-    /** @var UriFactory */
-    private $uriFactory;
+    private UriFactory $uriFactory;
 
-    /** @var ExportCommandFactory */
-    private $exportCommandFactory;
+    private ExportCommandFactory $exportCommandFactory;
 
-    /** @var array */
-    private $inputState;
+    private array $inputState;
 
-    /**
-     * Mapping:
-     * - encrypted password
-     * @var array
-     */
-    private $dbParamsMapping = [
+    private array $dbParamsMapping = [
         '#password' => 'password',
     ];
 

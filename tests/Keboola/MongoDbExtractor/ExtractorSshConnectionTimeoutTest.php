@@ -1,30 +1,32 @@
 <?php
 
-namespace Keboola\MongoDbExtractor;
+declare(strict_types=1);
 
+namespace Keboola\MongoDbExtractor\Tests;
+
+use Keboola\MongoDbExtractor\ExportCommandFactory;
+use Keboola\MongoDbExtractor\Tests\Traits\CreateExtractorTrait;
+use Keboola\MongoDbExtractor\UriFactory;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 use Keboola\SSHTunnel\SSHException;
 
-class ExtractorSshConnectionTimeoutTest extends \PHPUnit\Framework\TestCase
+class ExtractorSshConnectionTimeoutTest extends TestCase
 {
     use CreateExtractorTrait;
 
-    /** @var UriFactory */
-    protected $uriFactory;
+    protected UriFactory $uriFactory;
 
-    /** @var ExportCommandFactory */
-    protected $exportCommandFactory;
+    protected ExportCommandFactory $exportCommandFactory;
 
-    /** @var string */
-    protected $path = '/tmp/extractor-ssh-connection-timeout';
+    protected string $path = '/tmp/extractor-ssh-connection-timeout';
 
-    /** @var Filesystem */
-    private $fs;
+    private Filesystem $fs;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->uriFactory = new UriFactory();
         $this->exportCommandFactory = new ExportCommandFactory($this->uriFactory);
@@ -36,16 +38,17 @@ class ExtractorSshConnectionTimeoutTest extends \PHPUnit\Framework\TestCase
         parent::setUp();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->fs->remove($this->path);
 
-        $process = new Process('pgrep ssh | xargs -r kill');
+        $process = Process::fromShellCommandline('pgrep ssh | xargs -r kill');
         $process->mustRun();
     }
 
-    protected function getConfig()
+    protected function getConfig(): array
     {
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
         $config = <<<JSON
 {
   "parameters": {
@@ -80,10 +83,11 @@ class ExtractorSshConnectionTimeoutTest extends \PHPUnit\Framework\TestCase
   }
 }
 JSON;
-        return (new JsonDecode(true))->decode($config, JsonEncoder::FORMAT);
+        // phpcs:enable
+        return (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($config, JsonEncoder::FORMAT);
     }
 
-    public function testWrongConnection()
+    public function testWrongConnection(): void
     {
         $this->expectException(SSHException::class);
         $this->expectExceptionMessage('Unable to create ssh tunnel');

@@ -1,6 +1,8 @@
 <?php
 
-namespace Keboola\MongoDbExtractor;
+declare(strict_types=1);
+
+namespace Keboola\MongoDbExtractor\Tests;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
@@ -9,12 +11,11 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
 class ExtractorSshConnectionTest extends ExtractorTestCase
 {
-    /** @var Filesystem */
-    private $fs;
+    private Filesystem $fs;
 
-    protected $path = '/tmp/extractor-ssh';
+    protected string  $path = '/tmp/extractor-ssh';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->fs = new Filesystem;
         $this->fs->remove($this->path);
@@ -23,16 +24,17 @@ class ExtractorSshConnectionTest extends ExtractorTestCase
         parent::setUp();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->fs->remove($this->path);
 
-        $process = new Process('pgrep ssh | xargs kill');
+        $process = Process::fromShellCommandline('pgrep ssh | xargs kill');
         $process->mustRun();
     }
 
-    protected function getConfig()
+    protected function getConfig(): array
     {
+        //phpcs:disable Generic.Files.LineLength.MaxExceeded
         $config = <<<JSON
 {
   "parameters": {
@@ -54,7 +56,8 @@ class ExtractorSshConnectionTest extends ExtractorTestCase
   }
 }
 JSON;
+        //phpcs:enable
 
-        return (new JsonDecode(true))->decode($config, JsonEncoder::FORMAT);
+        return (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($config, JsonEncoder::FORMAT);
     }
 }

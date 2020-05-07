@@ -31,7 +31,7 @@ try {
         throw new Exception('Config file not found.');
     }
 
-    $jsonDecode = new JsonDecode(true);
+    $jsonDecode = new JsonDecode([JsonDecode::ASSOCIATIVE => true]);
     $config = $jsonDecode->decode(
         file_get_contents($arguments['data'] . '/config.json'),
         JsonEncoder::FORMAT

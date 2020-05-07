@@ -1,14 +1,18 @@
 <?php
 
-namespace Keboola\MongoDbExtractor;
+declare(strict_types=1);
+
+namespace Keboola\MongoDbExtractor\Tests\Traits;
+
+use Keboola\MongoDbExtractor\ExportCommandFactory;
+use Keboola\MongoDbExtractor\Extractor;
+use Keboola\MongoDbExtractor\UriFactory;
 
 trait CreateExtractorTrait
 {
-    /** @var UriFactory */
-    protected $uriFactory;
+    protected UriFactory $uriFactory;
 
-    /** @var ExportCommandFactory */
-    protected $exportCommandFactory;
+    protected ExportCommandFactory $exportCommandFactory;
 
     public function createExtractor(array $parameters): Extractor
     {

@@ -1,45 +1,46 @@
 <?php
 
-namespace Keboola\MongoDbExtractor;
+declare(strict_types=1);
+
+namespace Keboola\MongoDbExtractor\Tests;
 
 use Keboola\CsvMap\Exception\BadConfigException;
+use Keboola\MongoDbExtractor\ExportCommandFactory;
+use Keboola\MongoDbExtractor\Tests\Traits\CreateExtractorTrait;
+use Keboola\MongoDbExtractor\UriFactory;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
-class ExtractorObjectInPrimaryKeyTest extends \PHPUnit\Framework\TestCase
+class ExtractorObjectInPrimaryKeyTest extends TestCase
 {
     use CreateExtractorTrait;
 
-    /** @var UriFactory */
-    protected $uriFactory;
+    protected UriFactory $uriFactory;
 
-    /** @var ExportCommandFactory */
-    protected $exportCommandFactory;
+    protected ExportCommandFactory $exportCommandFactory;
 
-    /** @var Filesystem */
-    private $fs;
+    private string $path = '/tmp/object-in-primary-key';
 
-    private $path = '/tmp/object-in-primary-key';
-
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->uriFactory = new UriFactory();
         $this->exportCommandFactory = new ExportCommandFactory($this->uriFactory);
 
-        $this->fs = new Filesystem;
-        $this->fs->remove($this->path);
-        $this->fs->mkdir($this->path);
+        $fs = new Filesystem;
+        $fs->remove($this->path);
+        $fs->mkdir($this->path);
     }
 
-    public function testExportObjectInPrimaryKey()
+    public function testExportObjectInPrimaryKey(): void
     {
         $this->expectException(BadConfigException::class);
-        $this->expectExceptionMessageRegExp('~Only scalar values are allowed in primary key.~');
+        $this->expectExceptionMessageMatches('~Only scalar values are allowed in primary key.~');
         $this->createExtractor($this->getConfig()['parameters'])->extract($this->path);
     }
 
-    protected function getConfig()
+    protected function getConfig(): array
     {
         $config = <<<JSON
 {
@@ -79,6 +80,6 @@ class ExtractorObjectInPrimaryKeyTest extends \PHPUnit\Framework\TestCase
   }
 }
 JSON;
-        return (new JsonDecode(true))->decode($config, JsonEncoder::FORMAT);
+        return (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($config, JsonEncoder::FORMAT);
     }
 }
