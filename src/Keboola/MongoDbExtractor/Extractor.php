@@ -6,6 +6,8 @@ namespace Keboola\MongoDbExtractor;
 
 use Keboola\SSHTunnel\SSH;
 use MongoDB\Driver\Command;
+use MongoDB\Driver\Exception\InvalidArgumentException;
+use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Driver\Manager;
 
 class Extractor
@@ -83,7 +85,11 @@ class Extractor
     public function testConnection(): void
     {
         $uri = $this->uriFactory->create($this->parameters['db']);
-        $manager = new Manager($uri);
+        try {
+            $manager = new Manager($uri);
+        } catch (InvalidArgumentException | RuntimeException $exception) {
+            throw new UserException($exception->getMessage(), 0, $exception);
+        }
         $manager->executeCommand($this->parameters['db']['database'], new Command(['listCollections' => 1]));
     }
 
