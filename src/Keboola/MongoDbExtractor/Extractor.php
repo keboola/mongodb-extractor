@@ -6,6 +6,7 @@ namespace Keboola\MongoDbExtractor;
 
 use Keboola\SSHTunnel\SSH;
 use MongoDB\Driver\Command;
+use MongoDB\Driver\Exception\Exception;
 use MongoDB\Driver\Manager;
 
 class Extractor
@@ -83,7 +84,11 @@ class Extractor
     public function testConnection(): void
     {
         $uri = $this->uriFactory->create($this->parameters['db']);
-        $manager = new Manager($uri);
+        try {
+            $manager = new Manager($uri);
+        } catch (Exception $exception) {
+            throw new UserException($exception->getMessage(), 0, $exception);
+        }
         $manager->executeCommand($this->parameters['db']['database'], new Command(['listCollections' => 1]));
     }
 
