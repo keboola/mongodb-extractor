@@ -180,7 +180,24 @@ class Export
         $output = $process->getOutput();
         if (!empty($output)) {
             $data = $this->jsonDecoder->decode($output, JsonEncoder::FORMAT, ['json_decode_associative' => true]);
-            foreach (explode('.', $this->exportOptions['incrementalFetchingColumn']) as $item) {
+            $incrementalFetchingColumn = explode('.', $this->exportOptions['incrementalFetchingColumn']);
+            foreach ($incrementalFetchingColumn as $item) {
+                if (!isset($data[$item])) {
+                    $fullPathColumnMessage = '';
+                    if (count($incrementalFetchingColumn) > 1) {
+                        $fullPathColumnMessage = sprintf(
+                            ' ("%s")',
+                            $this->exportOptions['incrementalFetchingColumn']
+                        );
+                    }
+                    throw new UserException(
+                        sprintf(
+                            'Column "%s"%s does not exists.',
+                            $item,
+                            $fullPathColumnMessage
+                        )
+                    );
+                }
                 $data = $data[$item];
             }
             return $data;

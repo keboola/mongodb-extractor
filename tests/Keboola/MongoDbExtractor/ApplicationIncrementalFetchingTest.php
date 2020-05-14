@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Keboola\MongoDbExtractor\Tests;
 
 use Keboola\MongoDbExtractor\Application;
+use Keboola\MongoDbExtractor\UserException;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
@@ -355,5 +356,63 @@ CSV;
 CSV;
         Assert::assertEquals($expectedStateFileContent, file_get_contents($stateFile));
         Assert::assertEquals($expectedIncrementalFileContent, file_get_contents($incrementalFile));
+    }
+
+    /**
+     * @dataProvider incrementalFetchingUnexistsColumnProvider
+     */
+    public function testIncrementalFetchingUnexistsColumn(string $column, string $expectedMessage): void
+    {
+        $json = <<<JSON
+{
+  "parameters": {
+    "db": {
+      "host": "mongodb",
+      "port": 27017,
+      "database": "test"
+    },
+    "exports": [
+      {
+        "name": "incremental",
+        "id": 123,
+        "collection": "incremental",
+        "incremental": true,
+        "incrementalFetchingColumn": "%s",
+        "mapping": {
+          "id": "id",
+          "decimal": "decimal",
+          "date": "date",
+          "timestamp": "timestamp"
+        }
+      }
+    ]
+  }
+}
+JSON;
+        $jsonDecode = new JsonDecode([JsonDecode::ASSOCIATIVE => true]);
+        $config = $jsonDecode->decode(sprintf($json, $column), JsonEncoder::FORMAT);
+
+        $this->expectException(UserException::class);
+        $this->expectExceptionMessage($expectedMessage);
+        $application = new Application($config);
+        $application->actionRun($this->path . '/out/tables');
+    }
+
+    public function incrementalFetchingUnexistsColumnProvider(): array
+    {
+        return [
+            [
+                'unexistsColumn',
+                'Column "unexistsColumn" does not exists.',
+            ],
+            [
+                'unexists.column',
+                'Column "unexists" ("unexists.column") does not exists.',
+            ],
+            [
+                'id.unexistssubcolumn',
+                'Column "unexistssubcolumn" ("id.unexistssubcolumn") does not exists.',
+            ],
+        ];
     }
 }
