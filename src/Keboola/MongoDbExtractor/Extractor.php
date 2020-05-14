@@ -127,7 +127,7 @@ class Extractor
             if ($export->isEnabled()) {
                 $count++;
                 if ($incrementalFetching) {
-                    $lastFetchedValues[$exportOptions['id']] = $export->getLastFetchedValue();
+                    $lastFetchedValues[$exportOptions['id']] = $export->getLastFetchedValue() ?? $lastFetchedValue;
                 }
                 $export->export();
                 $export->parseAndCreateManifest();
