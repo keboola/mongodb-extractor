@@ -17,38 +17,69 @@ class UriFactoryTest extends TestCase
         $this->uriFactory = new UriFactory();
     }
 
-    public function testCreateMinimal(): void
+    /**
+     * @dataProvider paramsDataProvider
+     */
+    public function testUriFactory(string $expected, array $params): void
     {
-        $this->assertSame('mongodb://localhost:27017/myDatabase', $this->uriFactory->create([
-            'host' => 'localhost',
-            'port' => 27017,
-            'database' => 'myDatabase',
-        ]));
+        $this->assertSame($expected, $this->uriFactory->create($params));
     }
 
-    public function testCreateUserAndPassword(): void
+    public function paramsDataProvider(): array
     {
-        $this->assertSame('mongodb://user:pass@localhost:27017/myDatabase', $this->uriFactory->create([
-            'host' => 'localhost',
-            'port' => 27017,
-            'database' => 'myDatabase',
-            'user' => 'user',
-            'password' => 'pass',
-        ]));
-    }
+        return [
+            'minimal' => [
+                'mongodb://localhost:27017/myDatabase',
+                [
+                    'host' => 'localhost',
+                    'port' => 27017,
+                    'database' => 'myDatabase',
 
-    public function testCreateAuthDb(): void
-    {
-        $this->assertSame(
-            'mongodb://user:pass@localhost:27017/myDatabase?authSource=authDb',
-            $this->uriFactory->create([
-                'host' => 'localhost',
-                'port' => 27017,
-                'database' => 'myDatabase',
-                'user' => 'user',
-                'password' => 'pass',
-                'authenticationDatabase' => 'authDb',
-            ])
-        );
+                ],
+            ],
+            'userAndPassword' => [
+                'mongodb://user:pass@localhost:27017/myDatabase',
+                [
+                    'host' => 'localhost',
+                    'port' => 27017,
+                    'database' => 'myDatabase',
+                    'user' => 'user',
+                    'password' => 'pass',
+                ],
+            ],
+            'authDb' => [
+                'mongodb://user:pass@localhost:27017/myDatabase?authSource=authDb',
+                [
+                    'host' => 'localhost',
+                    'port' => 27017,
+                    'database' => 'myDatabase',
+                    'user' => 'user',
+                    'password' => 'pass',
+                    'authenticationDatabase' => 'authDb',
+                ],
+            ],
+            'authDb-escape' => [
+                'mongodb://user:pass@localhost:27017/myDatabase?authSource=a%2Fb%2Fc%24%25%5E',
+                [
+                    'host' => 'localhost',
+                    'port' => 27017,
+                    'database' => 'myDatabase',
+                    'user' => 'user',
+                    'password' => 'pass',
+                    'authenticationDatabase' => 'a/b/c$%^',
+                ],
+            ],
+            'database-escape' => [
+                'mongodb://user:pass@localhost:27017/a%2Fb%2Fc%24%25%5E?authSource=authDb',
+                [
+                    'host' => 'localhost',
+                    'port' => 27017,
+                    'database' => 'a/b/c$%^',
+                    'user' => 'user',
+                    'password' => 'pass',
+                    'authenticationDatabase' => 'authDb',
+                ],
+            ],
+        ];
     }
 }
