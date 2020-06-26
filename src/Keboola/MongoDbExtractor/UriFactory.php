@@ -29,12 +29,12 @@ class UriFactory
             $uri[] = ':' . $params['port'];
         }
 
-        $uri[] = '/' . $params['database'];
+        $uri[] = '/' . rawurlencode($params['database']);
 
         if (isset($params['user'], $params['password'], $params['authenticationDatabase'])
             && !empty(trim((string) $params['authenticationDatabase']))
         ) {
-            $uri[] = '?authSource=' . $params['authenticationDatabase'];
+            $uri[] = '?authSource=' . rawurlencode($params['authenticationDatabase']);
         }
 
         return implode('', $uri);
