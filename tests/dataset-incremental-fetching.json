@@ -1,4 +1,4 @@
-{ "id" : 1, "decimal": 123.344, "date": "2020-05-18T16:00:00Z", "timestamp": 1587646020, "string":  "testString"}
-{ "id" : 2, "decimal": 133.444, "date": "2020-02-15T13:00:00Z", "timestamp": 1587626020, "string":  "testString"}
-{ "id" : 3, "decimal": 783.028, "date": "2020-05-18T11:00:00Z", "timestamp": 1587606020, "string":  "testString"}
-{ "id" : 4, "decimal": 283.473, "date": "2020-04-18T16:00:00Z", "timestamp": 1587146020, "string":  "testString"}
+{ "id" : 1, "decimal": 123.344, "date": {"$date": "2020-05-18T16:00:00Z"}, "timestamp": 1587646020, "string":  "testString"}
+{ "id" : 2, "decimal": 133.444, "date": {"$date": "2020-02-15T13:00:00Z"}, "timestamp": 1587626020, "string":  "testString"}
+{ "id" : 3, "decimal": 783.028, "date": {"$date": "2020-05-18T11:00:00Z"}, "timestamp": 1587606020, "string":  "testString"}
+{ "id" : 4, "decimal": 283.473, "date": {"$date": "2020-04-18T16:00:00Z"}, "timestamp": 1587146020, "string":  "testString"}

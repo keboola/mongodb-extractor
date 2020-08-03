@@ -102,9 +102,15 @@ class Export
         $parsedDocumentsCount = 0;
         $skippedDocumentsCount = 0;
         while (!feof($handle)) {
-            $line = fgets($handle);
+            $line = (string) fgets($handle);
+
+            // Replace {"$date":"DATE"} to "DATE" if mapping mode
+            if ($this->exportOptions['mode'] !== 'raw') {
+                $line = DateHelper::convertDatesToString($line);
+            }
+
             try {
-                $data = trim((string) $line) !== ''
+                $data = trim($line) !== ''
                     ? [$this->jsonDecoder->decode($line, JsonEncoder::FORMAT)]
                     : [];
                 $parser->parse($data);
@@ -180,6 +186,9 @@ class Export
 
         $output = $process->getOutput();
         if (!empty($output)) {
+            // Replace {"$date":"DATE"} to "ISODate("DATE")"
+            $output = DateHelper::convertDatesToString($output, true);
+
             $data = $this->jsonDecoder->decode($output, JsonEncoder::FORMAT, ['json_decode_associative' => true]);
             $incrementalFetchingColumn = explode('.', $this->exportOptions['incrementalFetchingColumn']);
             foreach ($incrementalFetchingColumn as $item) {
@@ -201,6 +210,14 @@ class Export
                 }
                 $data = $data[$item];
             }
+
+            if (is_array($data)) {
+                throw new UserException(sprintf(
+                    'Unexpected value "%s" in output of incremental fetching.',
+                    json_encode($data)
+                ));
+            }
+
             return $data;
         }
         return null;
@@ -229,7 +246,7 @@ class Export
             ];
         }
 
-        $params['query'] = json_encode($query);
+        $params['query'] = DateHelper::fixIsoDateInGteQuery(json_encode($query));
         $params['sort'] = json_encode([$params['incrementalFetchingColumn'] => 1]);
         return $params;
     }
