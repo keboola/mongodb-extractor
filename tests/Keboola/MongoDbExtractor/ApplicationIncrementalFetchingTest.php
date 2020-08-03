@@ -358,6 +358,57 @@ CSV;
         Assert::assertEquals($expectedIncrementalFileContent, file_get_contents($incrementalFile));
     }
 
+    public function testIncrementalFetchingLimitEmptyString(): void
+    {
+        $json = <<<JSON
+{
+  "parameters": {
+    "db": {
+      "host": "mongodb",
+      "port": 27017,
+      "database": "test"
+    },
+    "exports": [
+      {
+        "name": "incremental",
+        "id": 123,
+        "collection": "incremental",
+        "incremental": true,
+        "incrementalFetchingColumn": "id",
+        "limit": "",
+        "mapping": {
+          "id": "id",
+          "decimal": "decimal",
+          "date": "date",
+          "timestamp": "timestamp"
+        }
+      }
+    ]
+  }
+}
+JSON;
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
+
+        $application = new Application($config);
+        $application->actionRun($this->path . '/out/tables');
+
+        $stateFile = $this->path . '/out/state.json';
+        $expectedStateFileContent = '{"lastFetchedRow":{"123":4}}';
+        $incrementalFile = $this->path . '/out/tables/incremental.csv';
+        $expectedIncrementalFileContent = <<< CSV
+"id","decimal","date","timestamp"
+"1","123.344","2020-05-18T16:00:00Z","1587646020"
+"2","133.444","2020-02-15T13:00:00Z","1587626020"
+"3","783.028","2020-05-18T11:00:00Z","1587606020"
+"4","283.473","2020-04-18T16:00:00Z","1587146020"
+
+CSV;
+        Assert::assertFileExists($stateFile);
+        Assert::assertEquals($expectedStateFileContent, file_get_contents($stateFile));
+        Assert::assertFileExists($incrementalFile);
+        Assert::assertEquals($expectedIncrementalFileContent, file_get_contents($incrementalFile));
+    }
+
     /**
      * @dataProvider incrementalFetchingUnexistsColumnProvider
      */

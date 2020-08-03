@@ -155,7 +155,8 @@ class Export
      */
     public function getLastFetchedValue()
     {
-        if (isset($this->exportOptions['limit'])) {
+        // Limit can be disabled with empty string
+        if (!empty($this->exportOptions['limit'])) {
             $lastvalueOptions = [
                 'limit' => 1,
                 'skip' => $this->exportOptions['limit']-1,
