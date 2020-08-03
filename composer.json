@@ -22,7 +22,8 @@
         "keboola/csvmap": "^0.6.0",
         "php": "^7.4",
         "ext-json": "*",
-        "keboola/csv": "^1.1"
+        "keboola/csv": "^1.1",
+        "league/uri": "^6.2"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.3",
