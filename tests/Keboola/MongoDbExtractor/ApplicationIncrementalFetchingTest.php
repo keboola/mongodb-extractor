@@ -45,7 +45,7 @@ class ApplicationIncrementalFetchingTest extends TestCase
     "exports": [
       {
         "name": "incremental",
-        "id": 123,
+        "id": "export-id",
         "collection": "incremental",
         "incremental": true,
         "incrementalFetchingColumn": "id",
@@ -66,14 +66,14 @@ JSON;
         $application->actionRun($this->path . '/out/tables');
 
         $stateFile = $this->path . '/out/state.json';
-        $expectedStateFileContent = '{"lastFetchedRow":{"123":4}}';
+        $expectedStateFileContent = '{"lastFetchedRow":{"export-id":4}}';
         $incrementalFile = $this->path . '/out/tables/incremental.csv';
         $expectedIncrementalFileContent = <<< CSV
 "id","decimal","date","timestamp"
-"1","123.344","2020-05-18T16:00:00Z","1587646020"
-"2","133.444","2020-02-15T13:00:00Z","1587626020"
-"3","783.028","2020-05-18T11:00:00Z","1587606020"
-"4","283.473","2020-04-18T16:00:00Z","1587146020"
+"1","123.344","2020-05-18T16:00:00.000Z","1587646020"
+"2","133.444","2020-02-15T13:00:00.000Z","1587626020"
+"3","783.028","2020-05-18T11:00:00.000Z","1587606020"
+"4","283.473","2020-04-18T16:00:00.000Z","1587146020"
 
 CSV;
         Assert::assertFileExists($stateFile);
@@ -87,7 +87,7 @@ CSV;
 
         $expectedIncrementalFileContent = <<< CSV
 "id","decimal","date","timestamp"
-"4","283.473","2020-04-18T16:00:00Z","1587146020"
+"4","283.473","2020-04-18T16:00:00.000Z","1587146020"
 
 CSV;
         Assert::assertEquals($expectedStateFileContent, file_get_contents($stateFile));
@@ -107,7 +107,7 @@ CSV;
     "exports": [
       {
         "name": "incremental",
-        "id": 123,
+        "id": "export-id",
         "collection": "incremental",
         "incremental": true,
         "incrementalFetchingColumn": "id",
@@ -124,7 +124,7 @@ CSV;
 JSON;
         $stateFile = $this->path . '/out/state.json';
         $incrementalFile = $this->path . '/out/tables/incremental.csv';
-        $expectedStateFileContent = '{"lastFetchedRow":{"123":4}}';
+        $expectedStateFileContent = '{"lastFetchedRow":{"export-id":4}}';
 
         $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
 
@@ -132,10 +132,10 @@ JSON;
         $application->actionRun($this->path . '/out/tables');
         $expectedIncrementalFileContent = <<< CSV
 "id","decimal","date","timestamp"
-"1","123.344","2020-05-18T16:00:00Z","1587646020"
-"2","133.444","2020-02-15T13:00:00Z","1587626020"
-"3","783.028","2020-05-18T11:00:00Z","1587606020"
-"4","283.473","2020-04-18T16:00:00Z","1587146020"
+"1","123.344","2020-05-18T16:00:00.000Z","1587646020"
+"2","133.444","2020-02-15T13:00:00.000Z","1587626020"
+"3","783.028","2020-05-18T11:00:00.000Z","1587606020"
+"4","283.473","2020-04-18T16:00:00.000Z","1587146020"
 
 CSV;
         Assert::assertFileExists($incrementalFile);
@@ -162,7 +162,7 @@ CSV;
         $application->actionRun($this->path . '/out/tables');
         $expectedIncrementalFileContent = <<< CSV
 "id","decimal","date","timestamp"
-"4","283.473","2020-04-18T16:00:00Z","1587146020"
+"4","283.473","2020-04-18T16:00:00.000Z","1587146020"
 
 CSV;
         Assert::assertFileExists($incrementalFile);
@@ -184,7 +184,7 @@ CSV;
     "exports": [
       {
         "name": "incremental",
-        "id": 123,
+        "id": "export-id",
         "collection": "incremental",
         "incremental": true,
         "incrementalFetchingColumn": "decimal",
@@ -205,14 +205,14 @@ JSON;
         $application->actionRun($this->path . '/out/tables');
 
         $stateFile = $this->path . '/out/state.json';
-        $expectedStateFileContent = '{"lastFetchedRow":{"123":783.028}}';
+        $expectedStateFileContent = '{"lastFetchedRow":{"export-id":783.028}}';
         $incrementalFile = $this->path . '/out/tables/incremental.csv';
         $expectedIncrementalFileContent = <<< CSV
 "id","decimal","date","timestamp"
-"1","123.344","2020-05-18T16:00:00Z","1587646020"
-"2","133.444","2020-02-15T13:00:00Z","1587626020"
-"4","283.473","2020-04-18T16:00:00Z","1587146020"
-"3","783.028","2020-05-18T11:00:00Z","1587606020"
+"1","123.344","2020-05-18T16:00:00.000Z","1587646020"
+"2","133.444","2020-02-15T13:00:00.000Z","1587626020"
+"4","283.473","2020-04-18T16:00:00.000Z","1587146020"
+"3","783.028","2020-05-18T11:00:00.000Z","1587606020"
 
 CSV;
         Assert::assertFileExists($stateFile);
@@ -226,9 +226,72 @@ CSV;
 
         $expectedIncrementalFileContent = <<< CSV
 "id","decimal","date","timestamp"
-"3","783.028","2020-05-18T11:00:00Z","1587606020"
+"3","783.028","2020-05-18T11:00:00.000Z","1587606020"
 
 CSV;
+        Assert::assertEquals($expectedStateFileContent, file_get_contents($stateFile));
+        Assert::assertEquals($expectedIncrementalFileContent, file_get_contents($incrementalFile));
+    }
+
+    public function testIncrementalFetchingDate(): void
+    {
+        $json = <<<JSON
+{
+  "parameters": {
+    "db": {
+      "host": "mongodb",
+      "port": 27017,
+      "database": "test"
+    },
+    "exports": [
+      {
+        "name": "incremental",
+        "id": "export-id",
+        "collection": "incremental",
+        "incremental": true,
+        "incrementalFetchingColumn": "date",
+        "mapping": {
+          "id": "id",
+          "decimal": "decimal",
+          "date": "date",
+          "timestamp": "timestamp"
+        }
+      }
+    ]
+  }
+}
+JSON;
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
+
+        $application = new Application($config);
+        $application->actionRun($this->path . '/out/tables');
+
+        $stateFile = $this->path . '/out/state.json';
+        $expectedStateFileContent = '{"lastFetchedRow":{"export-id":"ISODate(\"2020-05-18T16:00:00.000Z\")"}}';
+        $incrementalFile = $this->path . '/out/tables/incremental.csv';
+        $expectedIncrementalFileContent = <<< CSV
+"id","decimal","date","timestamp"
+"2","133.444","2020-02-15T13:00:00.000Z","1587626020"
+"4","283.473","2020-04-18T16:00:00.000Z","1587146020"
+"3","783.028","2020-05-18T11:00:00.000Z","1587606020"
+"1","123.344","2020-05-18T16:00:00.000Z","1587646020"
+
+CSV;
+        Assert::assertFileExists($stateFile);
+        Assert::assertEquals($expectedStateFileContent, file_get_contents($stateFile));
+        Assert::assertFileExists($incrementalFile);
+        Assert::assertEquals($expectedIncrementalFileContent, file_get_contents($incrementalFile));
+
+        $this->fs->remove($incrementalFile);
+        $application = new Application($config, json_decode((string) file_get_contents($stateFile), true));
+        $application->actionRun($this->path . '/out/tables');
+
+        $expectedIncrementalFileContent = <<< CSV
+"id","decimal","date","timestamp"
+"1","123.344","2020-05-18T16:00:00.000Z","1587646020"
+
+CSV;
+
         Assert::assertEquals($expectedStateFileContent, file_get_contents($stateFile));
         Assert::assertEquals($expectedIncrementalFileContent, file_get_contents($incrementalFile));
     }
@@ -246,7 +309,7 @@ CSV;
     "exports": [
       {
         "name": "incremental",
-        "id": 123,
+        "id": "export-id",
         "collection": "incremental",
         "incremental": true,
         "incrementalFetchingColumn": "timestamp",
@@ -267,14 +330,14 @@ JSON;
         $application->actionRun($this->path . '/out/tables');
 
         $stateFile = $this->path . '/out/state.json';
-        $expectedStateFileContent = '{"lastFetchedRow":{"123":1587646020}}';
+        $expectedStateFileContent = '{"lastFetchedRow":{"export-id":1587646020}}';
         $incrementalFile = $this->path . '/out/tables/incremental.csv';
         $expectedIncrementalFileContent = <<< CSV
 "id","decimal","date","timestamp"
-"4","283.473","2020-04-18T16:00:00Z","1587146020"
-"3","783.028","2020-05-18T11:00:00Z","1587606020"
-"2","133.444","2020-02-15T13:00:00Z","1587626020"
-"1","123.344","2020-05-18T16:00:00Z","1587646020"
+"4","283.473","2020-04-18T16:00:00.000Z","1587146020"
+"3","783.028","2020-05-18T11:00:00.000Z","1587606020"
+"2","133.444","2020-02-15T13:00:00.000Z","1587626020"
+"1","123.344","2020-05-18T16:00:00.000Z","1587646020"
 
 CSV;
         Assert::assertFileExists($stateFile);
@@ -288,7 +351,7 @@ CSV;
 
         $expectedIncrementalFileContent = <<< CSV
 "id","decimal","date","timestamp"
-"1","123.344","2020-05-18T16:00:00Z","1587646020"
+"1","123.344","2020-05-18T16:00:00.000Z","1587646020"
 
 CSV;
         Assert::assertEquals($expectedStateFileContent, file_get_contents($stateFile));
@@ -308,7 +371,7 @@ CSV;
     "exports": [
       {
         "name": "incremental",
-        "id": 123,
+        "id": "export-id",
         "collection": "incremental",
         "incremental": true,
         "incrementalFetchingColumn": "id",
@@ -330,12 +393,12 @@ JSON;
         $application->actionRun($this->path . '/out/tables');
 
         $stateFile = $this->path . '/out/state.json';
-        $expectedStateFileContent = '{"lastFetchedRow":{"123":2}}';
+        $expectedStateFileContent = '{"lastFetchedRow":{"export-id":2}}';
         $incrementalFile = $this->path . '/out/tables/incremental.csv';
         $expectedIncrementalFileContent = <<< CSV
 "id","decimal","date","timestamp"
-"1","123.344","2020-05-18T16:00:00Z","1587646020"
-"2","133.444","2020-02-15T13:00:00Z","1587626020"
+"1","123.344","2020-05-18T16:00:00.000Z","1587646020"
+"2","133.444","2020-02-15T13:00:00.000Z","1587626020"
 
 CSV;
         Assert::assertFileExists($stateFile);
@@ -347,11 +410,11 @@ CSV;
         $application = new Application($config, json_decode((string) file_get_contents($stateFile), true));
         $application->actionRun($this->path . '/out/tables');
 
-        $expectedStateFileContent = '{"lastFetchedRow":{"123":3}}';
+        $expectedStateFileContent = '{"lastFetchedRow":{"export-id":3}}';
         $expectedIncrementalFileContent = <<< CSV
 "id","decimal","date","timestamp"
-"2","133.444","2020-02-15T13:00:00Z","1587626020"
-"3","783.028","2020-05-18T11:00:00Z","1587606020"
+"2","133.444","2020-02-15T13:00:00.000Z","1587626020"
+"3","783.028","2020-05-18T11:00:00.000Z","1587606020"
 
 CSV;
         Assert::assertEquals($expectedStateFileContent, file_get_contents($stateFile));
@@ -397,10 +460,10 @@ JSON;
         $incrementalFile = $this->path . '/out/tables/incremental.csv';
         $expectedIncrementalFileContent = <<< CSV
 "id","decimal","date","timestamp"
-"1","123.344","2020-05-18T16:00:00Z","1587646020"
-"2","133.444","2020-02-15T13:00:00Z","1587626020"
-"3","783.028","2020-05-18T11:00:00Z","1587606020"
-"4","283.473","2020-04-18T16:00:00Z","1587146020"
+"1","123.344","2020-05-18T16:00:00.000Z","1587646020"
+"2","133.444","2020-02-15T13:00:00.000Z","1587626020"
+"3","783.028","2020-05-18T11:00:00.000Z","1587606020"
+"4","283.473","2020-04-18T16:00:00.000Z","1587146020"
 
 CSV;
         Assert::assertFileExists($stateFile);
@@ -425,7 +488,7 @@ CSV;
     "exports": [
       {
         "name": "incremental",
-        "id": 123,
+        "id": "export-id",
         "collection": "incremental",
         "incremental": true,
         "incrementalFetchingColumn": "%s",
