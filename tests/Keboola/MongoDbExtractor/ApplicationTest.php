@@ -286,8 +286,8 @@ JSON;
 
     public function testCreateWithMissingRequiredParam(): void
     {
-        $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessageMatches('~The child node "host" at path "parameters.db" must be configured~');
+        $this->expectException(UserException::class);
+        $this->expectExceptionMessageMatches('~The child node "host" at path "parameters.db" must be configured.~');
 
         $json = <<<JSON
 {

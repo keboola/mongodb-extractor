@@ -112,6 +112,32 @@ JSON;
         (new Processor())->processConfiguration(new ConfigDefinition, [$config['parameters']]);
     }
 
+    public function testMissingUri(): void
+    {
+        $this->expectException(InvalidConfigurationException::class);
+
+        $json = <<<JSON
+{
+  "parameters": {
+    "db": {
+      "protocol": "custom_uri",
+      "database": "db",
+      "password": "pass"
+    },
+    "exports": [
+      {
+        "name": "bronx-bakeries",
+        "collection": "restaurants"
+      }
+    ]
+  }
+}
+JSON;
+
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
+        (new Processor())->processConfiguration(new ConfigDefinition, [$config['parameters']]);
+    }
+
     public function testInvalidProtocol(): void
     {
         $this->expectException(InvalidConfigurationException::class);

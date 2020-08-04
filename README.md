@@ -13,6 +13,12 @@ command, which exports data from specified database and collection. Then those d
 
 ## Configuration
 
+### Protocol
+
+#### mongodb://
+
+When `parameters.db.protocol` is not defined or is set to `mongodb`, then extractor connects to single MongoDB node.
+
 ```json
 {
   "parameters": {
@@ -21,7 +27,62 @@ command, which exports data from specified database and collection. Then those d
       "port": 27017,
       "database": "test",
       "user": "username",
-      "password": "password",
+      "#password": "password"
+    },
+    "exports": "..."
+  }
+}
+```
+
+#### mongodb+srv://
+
+When `parameters.db.protocol` = `mongodb+srv`, then extractor connects to 
+MongoDB cluster using [DNS Seedlist Connection Format](https://docs.mongodb.com/manual/reference/connection-string/#dns-seedlist-connection-format).
+
+```json
+{
+  "parameters": {
+    "db": {
+      "protocol": "mongodb+srv",
+      "host": "mongodb.cluster.local",
+      "database": "test",
+      "user": "username",
+      "#password": "password"
+    },
+    "exports": "..."
+  }
+}
+```
+
+#### Custom URI
+
+When `parameters.db.protocol` = `custom_uri`, then extractor connects to URI defined in `parameters.db.uri`:
+ - The password is not a part of URI, but it must be encrypted in `#password` item.
+ - `host`, `port`, `database` are included in `uri` and must not be defined in separate items.
+
+```json
+{
+  "parameters": {
+    "db": {
+      "protocol": "custom_uri",
+      "uri": "mongodb://user@localhost,localhost:27018,localhost:27019/db?replicaSet=test&ssl=true",
+      "#password": "password"
+    },
+    "exports": "..."
+  }
+}
+```
+
+### Example
+```json
+{
+  "parameters": {
+    "db": {
+      "host": "127.0.0.1",
+      "port": 27017,
+      "database": "test",
+      "user": "username",
+      "#password": "password",
       "ssh": {
         "enabled": true,
         "sshHost": "mongodb",

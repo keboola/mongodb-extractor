@@ -21,9 +21,12 @@ class ExportCommandFactory
         $command = ['mongoexport'];
 
         // Connection options
-        if ($protocol === ConfigDefinition::PROTOCOL_MONGO_DB_SRV) {
+        if (in_array($protocol, [
+            ConfigDefinition::PROTOCOL_MONGO_DB_SRV,
+            ConfigDefinition::PROTOCOL_CUSTOM_URI,
+        ], true)) {
             // mongodb+srv:// can be used only in URI parameter
-            $uri = $this->uriFactory->create($params);
+            $uri = (string) $this->uriFactory->create($params);
             $command[] = '--uri ' . escapeshellarg($uri);
         } else {
             // If not mongodb+srv://, then use standard parameters: --host, --db, ...
