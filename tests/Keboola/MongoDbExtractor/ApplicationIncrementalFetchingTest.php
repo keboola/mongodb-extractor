@@ -296,6 +296,70 @@ CSV;
         Assert::assertEquals($expectedIncrementalFileContent, file_get_contents($incrementalFile));
     }
 
+    public function testIncrementalFetchingDateDifferentMapping(): void
+    {
+        // Test backward compatibility of date mapping: "date.$date"
+        $json = <<<JSON
+{
+  "parameters": {
+    "db": {
+      "host": "mongodb",
+      "port": 27017,
+      "database": "test"
+    },
+    "exports": [
+      {
+        "name": "incremental",
+        "id": "export-id",
+        "collection": "incremental",
+        "incremental": true,
+        "incrementalFetchingColumn": "date",
+        "mapping": {
+          "id": "id",
+          "decimal": "decimal",
+          "date.\$date": "date",
+          "timestamp": "timestamp"
+        }
+      }
+    ]
+  }
+}
+JSON;
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
+
+        $application = new Application($config);
+        $application->actionRun($this->path . '/out/tables');
+
+        $stateFile = $this->path . '/out/state.json';
+        $expectedStateFileContent = '{"lastFetchedRow":{"export-id":"ISODate(\"2020-05-18T16:00:00.000Z\")"}}';
+        $incrementalFile = $this->path . '/out/tables/incremental.csv';
+        $expectedIncrementalFileContent = <<< CSV
+"id","decimal","date","timestamp"
+"2","133.444","2020-02-15T13:00:00.000Z","1587626020"
+"4","283.473","2020-04-18T16:00:00.000Z","1587146020"
+"3","783.028","2020-05-18T11:00:00.000Z","1587606020"
+"1","123.344","2020-05-18T16:00:00.000Z","1587646020"
+
+CSV;
+        Assert::assertFileExists($stateFile);
+        Assert::assertEquals($expectedStateFileContent, file_get_contents($stateFile));
+        Assert::assertFileExists($incrementalFile);
+        Assert::assertEquals($expectedIncrementalFileContent, file_get_contents($incrementalFile));
+
+        $this->fs->remove($incrementalFile);
+        $application = new Application($config, json_decode((string) file_get_contents($stateFile), true));
+        $application->actionRun($this->path . '/out/tables');
+
+        $expectedIncrementalFileContent = <<< CSV
+"id","decimal","date","timestamp"
+"1","123.344","2020-05-18T16:00:00.000Z","1587646020"
+
+CSV;
+
+        Assert::assertEquals($expectedStateFileContent, file_get_contents($stateFile));
+        Assert::assertEquals($expectedIncrementalFileContent, file_get_contents($incrementalFile));
+    }
+
     public function testIncrementalFetchingTimestamp(): void
     {
         $json = <<<JSON
