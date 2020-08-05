@@ -13,6 +13,53 @@ command, which exports data from specified database and collection. Then those d
 
 ## Configuration
 
+The configuration `config.json` contains following properties in `parameters` key: 
+- `db` - object (required): Configuration of the connection.
+    - `protocol` - string (optional): One of `mongodb` (default), `mongodb+srv` or `custom_uri`.
+    - **Additional parameters if `protocol` = `custom_uri`**:
+        - `uri` - string:  
+          - [MongoDB Connection String](https://docs.mongodb.com/manual/reference/connection-string/)
+          - Eg. `mongodb://user@localhost,localhost:27018,localhost:27019/db?replicaSet=test&ssl=true`.
+          - The password must not be a part of URI. It must be encrypted in `#password` item.
+        - `#password` - string (required): Password for user specified in `uri`.
+    - **Additional parameters if `protocol` = `mongodb` or `mongodb+srv`**:
+        - `host` - string (required): 
+            - If `protocol` = `mongodb`, then value is hostname of MongoDB server.
+            - If `protocol` = `mongodb+srv`, then value is [DNS Seedlist Connection Format](https://docs.mongodb.com/manual/reference/connection-string/#dns-seedlist-connection-format). 
+        - `port` - string (optional): Server port (default port is `27017`).
+        - `database` - string (required):  Database to connect to.
+        - `authenticationDatabase` - string (optional): [Authentication database](https://docs.mongodb.com/manual/reference/program/mongo/#authentication-options) for `user`.
+        - `user` - string (optional): User with correct access rights.
+        - `#password` - string (optional): Password for given `user`. Both or none of couple `user` and `#password` must be specified.
+        - `ssh` - object (optional): Settings for SSH tunnel.
+            - `enabled` - bool (required):  Enables SSH tunnel.
+            - `sshHost` - string (required): IP address or hostname of SSH server.
+            - `sshPort` - integer (optional): SSH server port (default port is `22`).
+            - `localPort` - integer (required): SSH tunnel local port in Docker container (default `33006`).
+            - `user` - string (optional): SSH user (default same as `db.user`).
+            - `compression`  - bool (optional): Enables SSH tunnel compression (default `false`).
+            - `keys` - object (optional): SSH keys.
+                - `public` - string (optional): Public SSH key.
+                - `#private` - string (optional): Private SSH key.
+- `exports` - object[] (required): [Exports configuration](https://help.keboola.com/components/extractors/database/mongodb/#configure-exports).
+    - `enabled` - boolean (optional): Default `true`.
+    - `id` - scalar (required): Internal `id` of the export.
+    - `name` - string (required): Name of the output CSV file.
+    - `collection` - string (required): Represents the collection name in your MongoDB database.
+    - `query`- string (optional): 
+        - JSON string specifying a query which limits documents data in exported data. 
+        - Must be specified in a [strict format](https://help.keboola.com/components/extractors/database/mongodb/#strict-format).
+    - `incremental` - boolean (optional): Enables [Incremental Loading](https://help.keboola.com/storage/tables/#incremental-loading). Default `false`.
+    - `incrementalFetchingColumn` - string (optional): Name of column for [Incremental Fetching](https://help.keboola.com/components/extractors/database/#incremental-fetching)
+    - `sort`- string (optional): 
+        - JSON string specifying the order of documents in exported data. 
+        - Must be specified in a [strict format](https://help.keboola.com/components/extractors/database/mongodb/#strict-format).
+    - `limit`- string (optional): Limits the number of exported documents.
+    - `mode` - enum (optional)
+        - `mapping` (default) - Values are exported using specified `mapping`, [read more](https://help.keboola.com/components/extractors/database/mongodb/#configure-mapping).
+        - `raw` - Documents are exported as plain JSON strings, [read more](https://help.keboola.com/components/extractors/database/mongodb/#raw-export-mode).
+    - `mapping` - string - required for `mode` = `mapping`, [read more](https://help.keboola.com/components/extractors/database/mongodb/#configure-mapping).
+
 ### Protocol
 
 #### mongodb://
@@ -58,7 +105,8 @@ MongoDB cluster using [DNS Seedlist Connection Format](https://docs.mongodb.com/
 
 When `parameters.db.protocol` = `custom_uri`, then extractor connects to URI defined in `parameters.db.uri`:
  - The password is not a part of URI, but it must be encrypted in `#password` item.
- - `host`, `port`, `database` are included in `uri` and must not be defined in separate items.
+ - `host`, `port`, `database`, `authenticationDatabase` are included in `uri` and must not be defined in separate items.
+ - Custom URI cannot be used with SSH tunnel.
 
 ```json
 {
