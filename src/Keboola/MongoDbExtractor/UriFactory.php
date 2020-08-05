@@ -5,38 +5,74 @@ declare(strict_types=1);
 namespace Keboola\MongoDbExtractor;
 
 use Keboola\MongoDbExtractor\Config\ConfigDefinition;
+use League\Uri\Exceptions\SyntaxError;
 
 class UriFactory
 {
-    public function create(array $params): string
+    public function create(array $params): Uri
     {
         $protocol = $params['protocol']  ?? ConfigDefinition::PROTOCOL_MONGO_DB;
-        $uri = [$protocol . '://'];
 
-        if (isset($params['user'], $params['password'])) {
-            $uri[] = rawurlencode($params['user']) . ':' . rawurlencode($params['password']) . '@';
+        try {
+            return $protocol === ConfigDefinition::PROTOCOL_CUSTOM_URI ?
+                $this->fromCustomUri($params) :
+                $this->fromParams($protocol, $params);
+        } catch (SyntaxError $e) {
+            throw new UserException('Failed to parse MongoDB URI: ' . $e->getMessage(), 0, $e);
+        }
+    }
+
+    private function fromCustomUri(array $params): Uri
+    {
+        $uri = Uri::createFromString($params['uri']);
+
+        if (!$uri->hasUser()) {
+            throw new UserException('Connection URI must contain user, eg: "mongodb://user@hostname/database".');
         }
 
-        $uri[] = $params['host'];
-
-        // Validate port, required for mongodb://, optional/ignored for mongodb+srv://
-        // URI starting with mongodb+srv:// must not include a port number
-        if ($protocol === ConfigDefinition::PROTOCOL_MONGO_DB) {
-            if (empty($params['port'])) {
-                throw new UserException('Missing connection parameter "port".');
-            }
-
-            $uri[] = ':' . $params['port'];
+        if ($uri->hasPassword()) {
+            throw new UserException(
+                'Connection URI must not contain the password. ' .
+                'The password is a separate item for security reasons.'
+            );
         }
 
-        $uri[] = '/' . rawurlencode($params['database']);
+        if (!$uri->hasDatabase()) {
+            throw new UserException(
+                'Connection URI must contain the database, eg: "mongodb://user@hostname/database".'
+            );
+        }
 
+        $uri->setPassword($params['password']);
+
+        return $uri;
+    }
+
+    private function fromParams(string $protocol, array $params): Uri
+    {
+        if ($protocol === ConfigDefinition::PROTOCOL_MONGO_DB && empty($params['port'])) {
+            // Validate port, required for mongodb://, optional/ignored for mongodb+srv://
+            throw new UserException('Missing connection parameter "port".');
+        } elseif ($protocol === ConfigDefinition::PROTOCOL_MONGO_DB_SRV) {
+            // URI starting with mongodb+srv:// must not include a port number
+            $params['port'] = null;
+        }
+
+        $query = [];
         if (isset($params['user'], $params['password'], $params['authenticationDatabase'])
             && !empty(trim((string) $params['authenticationDatabase']))
         ) {
-            $uri[] = '?authSource=' . rawurlencode($params['authenticationDatabase']);
+            $query[] = ['authSource', $params['authenticationDatabase']];
         }
 
-        return implode('', $uri);
+        return Uri::createFromParts(
+            $protocol,
+            $params['user'] ?? null,
+            $params['password'] ?? null,
+            $params['host'],
+            !empty($params['port']) ? (int) $params['port']  : null,
+            $params['database'],
+            $query
+        );
     }
 }

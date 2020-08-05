@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Keboola\MongoDbExtractor;
 
 use Keboola\MongoDbExtractor\Config\ConfigDefinition;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
 
 class Application
@@ -18,10 +19,16 @@ class Application
     public function __construct(array $config, array $inputState = [])
     {
         $this->config = $config;
-        $this->parameters = (new Processor)->processConfiguration(
-            new ConfigDefinition,
-            [$this->config['parameters']]
-        );
+
+        try {
+            $this->parameters = (new Processor)->processConfiguration(
+                new ConfigDefinition,
+                [$this->config['parameters']]
+            );
+        } catch (InvalidConfigurationException $e) {
+            throw new UserException($e->getMessage(), 0, $e);
+        }
+
         if (count($this->parameters['exports'])
             !== count(array_unique(array_column($this->parameters['exports'], 'name')))) {
             throw new UserException('Please remove duplicate export names');

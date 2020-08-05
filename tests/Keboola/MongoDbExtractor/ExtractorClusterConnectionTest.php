@@ -6,6 +6,7 @@ namespace Keboola\MongoDbExtractor\Tests;
 
 use Keboola\MongoDbExtractor\ExportCommandFactory;
 use Keboola\MongoDbExtractor\UriFactory;
+use League\Uri\Components\Query;
 use Mockery;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
@@ -40,11 +41,9 @@ class ExtractorClusterConnectionTest extends ExtractorTestCase
             ->shouldReceive('create')
             ->andReturnUsing(function (array $params) use ($originUriFactory) {
                 $uri = $originUriFactory->create($params);
-                return str_replace(
-                    'mongodb.cluster.local/test',
-                    'mongodb.cluster.local/test?ssl=false',
-                    $uri
-                );
+                $query = $uri->getQuery();
+                $uri->setQuery($query->withPair('ssl', 'false'));
+                return $uri;
             });
         $this->exportCommandFactory = new ExportCommandFactory($this->uriFactory);
     }

@@ -81,6 +81,38 @@ JSON;
         $this->assertSame(['status' => 'ok'], $application->actionTestConnection());
     }
 
+    public function testActionTestConnectionCustomUri(): void
+    {
+        $json = <<<JSON
+{
+  "parameters": {
+    "db": {
+      "protocol": "custom_uri",
+      "uri": "mongodb://user@mongodb-auth:27017/test",
+      "password": "p#a!s@sw:o&r%^d"
+    },
+    "exports": [
+      {
+        "name": "bakeries",
+        "id": 123,
+        "collection": "restaurants",
+        "incremental": true,
+        "mapping": {
+          "_id.\$oid": "id"
+        }
+      }
+    ]
+  }
+}
+JSON;
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
+
+        $application = new Application($config);
+        $application->actionTestConnection();
+
+        $this->assertSame(['status' => 'ok'], $application->actionTestConnection());
+    }
+
     public function testActionTestConnectionFailWrongHost(): void
     {
         $this->expectException(ConnectionTimeoutException::class);
