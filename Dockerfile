@@ -7,7 +7,7 @@ COPY docker/php/php-prod.ini /usr/local/etc/php/php.ini
 COPY docker/composer-install.sh /tmp/composer-install.sh
 
 RUN apt-get update -q \
-  && apt-get install unzip git libssl-dev ssh gnupg2 dirmngr wget wait-for-it -y --no-install-recommends \
+  && apt-get install unzip git libssl-dev libicu-dev g++ ssh gnupg2 dirmngr wget wait-for-it -y --no-install-recommends \
   && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4 \
   && echo "deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/4.0 main" > /etc/apt/sources.list.d/mongodb-org-4.0.list \
   && apt-get update -q \
@@ -16,6 +16,10 @@ RUN apt-get update -q \
   && /tmp/composer-install.sh \
   && rm /tmp/composer-install.sh \
   && mv composer.phar /usr/local/bin/composer
+
+# Intl is required for league/uri
+RUN docker-php-ext-configure intl \
+    && docker-php-ext-install intl
 
 RUN pecl install mongodb \
   && docker-php-ext-enable mongodb

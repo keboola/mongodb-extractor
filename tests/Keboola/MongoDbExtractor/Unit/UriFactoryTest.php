@@ -91,6 +91,17 @@ class UriFactoryTest extends TestCase
                     'authenticationDatabase' => 'authDb',
                 ],
             ],
+            'vpn-host' => [
+                'mongodb://user:pass@aBC1cmVrABc.vpn2keboola.com:27017/a%2Fb%2Fc%24%25%5E?authSource=authDb',
+                [
+                    'host' => 'aBC1cmVrABc.vpn2keboola.com',
+                    'port' => 27017,
+                    'database' => 'a/b/c$%^',
+                    'user' => 'user',
+                    'password' => 'pass',
+                    'authenticationDatabase' => 'authDb',
+                ],
+            ],
             'mongodb+srv' => [
                 'mongodb+srv://u%24er:pa%24%24@mongodb.cluster.local/myDatabase?authSource=authDb',
                 [
@@ -107,6 +118,14 @@ class UriFactoryTest extends TestCase
                 [
                     'protocol' => 'custom_uri',
                     'uri' => 'mongodb://user%40@localhost:27017/db?authSource=authDb&replicaSet=myRepl',
+                    'password' => 'pas$$word@',
+                ],
+            ],
+            'vpn-custom-uri' => [
+                'mongodb://user%40:pas%24%24word%40@aBC1cmVrABc.vpn2keboola.com/db?authSource=authDb&replicaSet=myRepl',
+                [
+                    'protocol' => 'custom_uri',
+                    'uri' => 'mongodb://user%40@aBC1cmVrABc.vpn2keboola.com/db?authSource=authDb&replicaSet=myRepl',
                     'password' => 'pas$$word@',
                 ],
             ],
