@@ -22,6 +22,7 @@
         "keboola/csvmap": "^0.6.0",
         "php": "^7.4",
         "ext-json": "*",
+        "ext-intl": "*",
         "keboola/csv": "^1.1",
         "league/uri": "^6.2",
         "league/uri-components": "^2.2"

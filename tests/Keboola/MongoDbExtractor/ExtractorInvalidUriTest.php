@@ -61,8 +61,8 @@ JSON;
     {
         $this->expectException(UserException::class);
         $this->expectExceptionMessage(
-            'Failed to parse MongoDB URI: The host `mongodb://keboola-test@mongodb/test` is invalid : ' .
-            'a registered name can not contain URI delimiters or spaces'
+            'Failed to parse MongoDB URI: ' .
+            "'mongodb://mongodb://keboola-test@mongodb/test:27017/test'. Invalid host string in URI."
         );
         $this->createExtractor($this->getConfig()['parameters'])->extract($this->path);
     }

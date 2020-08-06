@@ -11,7 +11,7 @@ use League\Uri\UriString;
 
 class Uri
 {
-    private const MEMBERS_HOSTS_PLACEHOLDER = 'members.hosts';
+    private const HOSTS_PLACEHOLDER = 'uri_host_placeholder.hosts';
 
     private LeagueUri $uri;
 
@@ -23,12 +23,12 @@ class Uri
     private ?string $password;
 
     // LeagueUri cannot parse multiple guests in one URI, so they are replaced in URI by a placeholder.
-    private ?string $membersHosts;
+    private ?string $hostPart;
 
     public static function createFromString(string $str): self
     {
         // LeagueUri cannot parse multiple guests in one URI, so they are replaced in URI by a placeholder, see GROUP 2
-        $membersHosts = null;
+        $hostPart = null;
         $hostsRegexp =
             '~' . // delimiter
             '^' . // start
@@ -39,16 +39,12 @@ class Uri
             ')' . // group 1 end
             '([^/]+)(/|$)' . // hosts, GROUP 2, eg: localhost,localhost:27018,localhost:27019/
             '~'; // delimiter
-        $str = preg_replace_callback($hostsRegexp, function (array $matches) use (&$membersHosts) {
+        $str = preg_replace_callback($hostsRegexp, function (array $matches) use (&$hostPart) {
             $hostPart = $matches[2];
-
-            // Use placeholder if host part of URI contains multiple hosts, separated by ,
-            if (strpos($hostPart, ',') !== false) {
-                $membersHosts = $hostPart;
-                return $matches[1] . self::MEMBERS_HOSTS_PLACEHOLDER . $matches[3];
-            }
-
-            return $matches[0];
+            // Use placeholder for host part:
+            //   - host can contain multiple hosts separated by commas - not parsed by League/Uri
+            //   - or host contains upper/lower case letters - undesirably converted to lowercase by League/Uri
+            return $matches[1] . self::HOSTS_PLACEHOLDER . $matches[3];
         }, $str);
 
         // Parse URI
@@ -62,7 +58,7 @@ class Uri
 
         $uri = LeagueUri::createFromComponents($components);
 
-        return new self($uri->withUserInfo(null), $user, $password, $membersHosts);
+        return new self($uri->withUserInfo(null), $user, $password, $hostPart);
     }
 
     public static function createFromParts(
@@ -76,19 +72,19 @@ class Uri
     ): self {
         return new self(LeagueUri::createFromComponents([
             'scheme' => $protocol,
-            'host' => $host,
+            'host' => self::HOSTS_PLACEHOLDER,
             'port' => $port,
             'path' => '/' . urlencode($database),
             'query' => Query::createFromPairs($query)->getContent(),
-        ]), $user, $password, null);
+        ]), $user, $password, $host);
     }
 
-    private function __construct(LeagueUri $uri, ?string $user, ?string $password, ?string $membersHosts)
+    private function __construct(LeagueUri $uri, ?string $user, ?string $password, ?string $hostPart)
     {
         $this->uri = LeagueUri::createFromString($uri);
         $this->user = $user;
         $this->password = $password;
-        $this->membersHosts = $membersHosts;
+        $this->hostPart = $hostPart;
 
         // Check protocol
         if (!in_array($this->uri->getScheme(), ['mongodb', 'mongodb+srv'], true)) {
@@ -103,12 +99,12 @@ class Uri
             );
         }
 
-        // Check members hosts, if present, URI must contains placeholder
-        if ($this->membersHosts && $uri->getHost() !== self::MEMBERS_HOSTS_PLACEHOLDER) {
+        // Check hostPart, if present, URI must contains placeholder
+        if ($this->hostPart && $uri->getHost() !== self::HOSTS_PLACEHOLDER) {
             throw new InvalidArgumentException(sprintf(
                 'Unexpected host value: "%s", expected placeholder: "%s".',
                 $uri->getHost(),
-                self::MEMBERS_HOSTS_PLACEHOLDER,
+                self::HOSTS_PLACEHOLDER,
             ));
         }
     }
@@ -118,7 +114,7 @@ class Uri
         $authority = $this->uri->getAuthority();
 
         // Replace members hosts placeholder
-        $authority = str_replace(self::MEMBERS_HOSTS_PLACEHOLDER, $this->membersHosts, $authority);
+        $authority = str_replace(self::HOSTS_PLACEHOLDER, $this->hostPart, $authority);
 
         // Percent-encode username and password according to RFC 3986
         if ($this->user) {
