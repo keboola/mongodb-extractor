@@ -52,7 +52,7 @@ class ApplicationIncrementalFetchingTest extends TestCase
         "mapping": {
           "id": "id",
           "decimal": "decimal",
-          "date": "date",
+          "date.\$date": "date",
           "timestamp": "timestamp"
         }
       }
@@ -114,7 +114,7 @@ CSV;
         "mapping": {
           "id": "id",
           "decimal": "decimal",
-          "date": "date",
+          "date.\$date": "date",
           "timestamp": "timestamp"
         }
       }
@@ -191,7 +191,7 @@ CSV;
         "mapping": {
           "id": "id",
           "decimal": "decimal",
-          "date": "date",
+          "date.\$date": "date",
           "timestamp": "timestamp"
         }
       }
@@ -253,7 +253,7 @@ CSV;
         "mapping": {
           "id": "id",
           "decimal": "decimal",
-          "date": "date",
+          "date.\$date": "date",
           "timestamp": "timestamp"
         }
       }
@@ -296,7 +296,7 @@ CSV;
         Assert::assertEquals($expectedIncrementalFileContent, file_get_contents($incrementalFile));
     }
 
-    public function testIncrementalFetchingDateDifferentMapping(): void
+    public function testIncrementalFetchingDateSuffixInColName(): void
     {
         // Test backward compatibility of date mapping: "date.$date"
         $json = <<<JSON
@@ -313,7 +313,7 @@ CSV;
         "id": "export-id",
         "collection": "incremental",
         "incremental": true,
-        "incrementalFetchingColumn": "date",
+        "incrementalFetchingColumn": "date.\$date",
         "mapping": {
           "id": "id",
           "decimal": "decimal",
@@ -380,7 +380,7 @@ CSV;
         "mapping": {
           "id": "id",
           "decimal": "decimal",
-          "date": "date",
+          "date.\$date": "date",
           "timestamp": "timestamp"
         }
       }
@@ -443,7 +443,7 @@ CSV;
         "mapping": {
           "id": "id",
           "decimal": "decimal",
-          "date": "date",
+          "date.\$date": "date",
           "timestamp": "timestamp"
         }
       }
@@ -506,7 +506,7 @@ CSV;
         "mapping": {
           "id": "id",
           "decimal": "decimal",
-          "date": "date",
+          "date.\$date": "date",
           "timestamp": "timestamp"
         }
       }
@@ -559,7 +559,7 @@ CSV;
         "mapping": {
           "id": "id",
           "decimal": "decimal",
-          "date": "date",
+          "date.\$date": "date",
           "timestamp": "timestamp"
         }
       }

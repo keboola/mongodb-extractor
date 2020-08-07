@@ -26,16 +26,8 @@ class Mapping
 
     public function __construct(string $name, array $mapping, string $outputPath, array $manifestOptions)
     {
-        // Fix backward compatibility of date mapping, "date.$date" is equal to "date".
-        // {"$date":"DATE"} is replaced to "DATE" in "mongoexport" output if mapping mode, see Export class
-        $mappingModified = [];
-        foreach ($mapping as $key => $value) {
-            $key = preg_replace('~\.\$date$~', '', $key);
-            $mappingModified[$key] = $value;
-        }
-
         $this->name = $name;
-        $this->mapping = $mappingModified;
+        $this->mapping = $mapping;
         $this->path = $outputPath;
         $this->manifestOptions = $manifestOptions;
 
