@@ -104,11 +104,6 @@ class Export
         while (!feof($handle)) {
             $line = (string) fgets($handle);
 
-            // Replace {"$date":"DATE"} to "DATE" if mapping mode
-            if ($this->exportOptions['mode'] !== 'raw') {
-                $line = DateHelper::convertDatesToString($line);
-            }
-
             try {
                 $data = trim($line) !== ''
                     ? [$this->jsonDecoder->decode($line, JsonEncoder::FORMAT)]

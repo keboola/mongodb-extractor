@@ -112,6 +112,17 @@ class ConfigDefinition implements ConfigurationInterface
                                 $message = 'Both incremental fetching and sort cannot be set together.';
                                 throw new InvalidConfigurationException($message);
                             }
+
+                            // Normalize incrementalFetchingColumn:
+                            // In mapping are dates exported as "PARENT.FIELD.$date",
+                            // ... but for incremental fetching is needed to enter "PARENT.FIELD"
+                            // Therefore, the user would not be confused,
+                            // we support both variants: "PARENT.FIELD.$date" and "PARENT.FIELD"
+                            if (isset($v['incrementalFetchingColumn'])) {
+                                $v['incrementalFetchingColumn'] =
+                                    preg_replace('~\.\$date$~', '', $v['incrementalFetchingColumn']);
+                            }
+
                             return $v;
                         })
                         ->end()

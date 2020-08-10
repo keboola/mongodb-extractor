@@ -52,7 +52,7 @@ class ApplicationIncrementalFetchingTest extends TestCase
         "mapping": {
           "id": "id",
           "decimal": "decimal",
-          "date": "date",
+          "date.\$date": "date",
           "timestamp": "timestamp"
         }
       }
@@ -114,7 +114,7 @@ CSV;
         "mapping": {
           "id": "id",
           "decimal": "decimal",
-          "date": "date",
+          "date.\$date": "date",
           "timestamp": "timestamp"
         }
       }
@@ -191,7 +191,7 @@ CSV;
         "mapping": {
           "id": "id",
           "decimal": "decimal",
-          "date": "date",
+          "date.\$date": "date",
           "timestamp": "timestamp"
         }
       }
@@ -253,7 +253,7 @@ CSV;
         "mapping": {
           "id": "id",
           "decimal": "decimal",
-          "date": "date",
+          "date.\$date": "date",
           "timestamp": "timestamp"
         }
       }
@@ -296,7 +296,7 @@ CSV;
         Assert::assertEquals($expectedIncrementalFileContent, file_get_contents($incrementalFile));
     }
 
-    public function testIncrementalFetchingDateDifferentMapping(): void
+    public function testIncrementalFetchingDateSuffixInColName(): void
     {
         // Test backward compatibility of date mapping: "date.$date"
         $json = <<<JSON
@@ -313,7 +313,7 @@ CSV;
         "id": "export-id",
         "collection": "incremental",
         "incremental": true,
-        "incrementalFetchingColumn": "date",
+        "incrementalFetchingColumn": "date.\$date",
         "mapping": {
           "id": "id",
           "decimal": "decimal",
@@ -360,6 +360,76 @@ CSV;
         Assert::assertEquals($expectedIncrementalFileContent, file_get_contents($incrementalFile));
     }
 
+    public function testIncrementalFetchingNestedDate(): void
+    {
+        // Test backward compatibility of date mapping: "date.$date"
+        $json = <<<JSON
+{
+  "parameters": {
+    "db": {
+      "host": "mongodb",
+      "port": 27017,
+      "database": "test"
+    },
+    "exports": [
+      {
+        "name": "incremental",
+        "id": "export-id",
+        "collection": "incremental",
+        "incremental": true,
+        "incrementalFetchingColumn": "nested.date",
+        "mapping": {
+          "nested": {
+            "type": "table",
+            "destination": "table_nested",
+            "parentKey": {
+              "disable": true
+            },
+            "tableMapping": {
+                "date.\$date": "value"
+            }
+          }
+        }
+      }
+    ]
+  }
+}
+JSON;
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
+
+        $application = new Application($config);
+        $application->actionRun($this->path . '/out/tables');
+
+        $stateFile = $this->path . '/out/state.json';
+        $expectedStateFileContent = '{"lastFetchedRow":{"export-id":"ISODate(\"2020-03-18T06:00:00.000Z\")"}}';
+        $incrementalFile = $this->path . '/out/tables/table-nested.csv';
+        $expectedIncrementalFileContent = <<< CSV
+"value"
+"2020-03-18T01:00:00.000Z"
+"2020-03-18T02:00:00.000Z"
+"2020-03-18T05:00:00.000Z"
+"2020-03-18T06:00:00.000Z"
+
+CSV;
+        Assert::assertFileExists($stateFile);
+        Assert::assertEquals($expectedStateFileContent, file_get_contents($stateFile));
+        Assert::assertFileExists($incrementalFile);
+        Assert::assertEquals($expectedIncrementalFileContent, file_get_contents($incrementalFile));
+
+        $this->fs->remove($incrementalFile);
+        $application = new Application($config, json_decode((string) file_get_contents($stateFile), true));
+        $application->actionRun($this->path . '/out/tables');
+
+        $expectedIncrementalFileContent = <<< CSV
+"value"
+"2020-03-18T06:00:00.000Z"
+
+CSV;
+
+        Assert::assertEquals($expectedStateFileContent, file_get_contents($stateFile));
+        Assert::assertEquals($expectedIncrementalFileContent, file_get_contents($incrementalFile));
+    }
+
     public function testIncrementalFetchingTimestamp(): void
     {
         $json = <<<JSON
@@ -380,7 +450,7 @@ CSV;
         "mapping": {
           "id": "id",
           "decimal": "decimal",
-          "date": "date",
+          "date.\$date": "date",
           "timestamp": "timestamp"
         }
       }
@@ -443,7 +513,7 @@ CSV;
         "mapping": {
           "id": "id",
           "decimal": "decimal",
-          "date": "date",
+          "date.\$date": "date",
           "timestamp": "timestamp"
         }
       }
@@ -506,7 +576,7 @@ CSV;
         "mapping": {
           "id": "id",
           "decimal": "decimal",
-          "date": "date",
+          "date.\$date": "date",
           "timestamp": "timestamp"
         }
       }
@@ -559,7 +629,7 @@ CSV;
         "mapping": {
           "id": "id",
           "decimal": "decimal",
-          "date": "date",
+          "date.\$date": "date",
           "timestamp": "timestamp"
         }
       }
