@@ -250,4 +250,43 @@ JSON
             ],
         ];
     }
+
+    public function testIncrementalFetchingColumnNormalization(): void
+    {
+        $json = <<<JSON
+{
+  "parameters": {
+    "db": {
+      "host": "127.0.0.1",
+      "database": "test",
+      "user": "user",
+      "password": "password"
+    },
+    "exports": [
+      {
+        "name": "bronx-bakeries",
+        "collection": "restaurants",
+        "incrementalFetchingColumn": "someColumn"
+      },
+      {
+        "name": "bronx-bakeries",
+        "collection": "restaurants",
+        "incrementalFetchingColumn": "someColumn.\$date"
+      },
+      {
+        "name": "bronx-bakeries",
+        "collection": "restaurants",
+        "incrementalFetchingColumn": "someColumn.nested.\$date"
+      }
+    ]
+  }
+}
+JSON;
+        $config = (new JsonDecode([JsonDecode::ASSOCIATIVE => true]))->decode($json, JsonEncoder::FORMAT);
+        $processor = new Processor;
+        $processedConfig = $processor->processConfiguration(new ConfigDefinition, [$config['parameters']]);
+        $this->assertSame('someColumn', $processedConfig['exports'][0]['incrementalFetchingColumn']);
+        $this->assertSame('someColumn', $processedConfig['exports'][1]['incrementalFetchingColumn']);
+        $this->assertSame('someColumn.nested', $processedConfig['exports'][2]['incrementalFetchingColumn']);
+    }
 }
