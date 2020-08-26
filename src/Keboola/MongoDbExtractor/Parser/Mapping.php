@@ -14,6 +14,8 @@ class Mapping
 {
     private array $mapping;
 
+    private bool $includeParentInPK;
+
     private string $path;
 
     private Filesystem $filesystem;
@@ -24,10 +26,16 @@ class Mapping
 
     private array $manifestOptions;
 
-    public function __construct(string $name, array $mapping, string $outputPath, array $manifestOptions)
-    {
+    public function __construct(
+        string $name,
+        array $mapping,
+        bool $includeParentInPK,
+        string $outputPath,
+        array $manifestOptions
+    ) {
         $this->name = $name;
         $this->mapping = $mapping;
+        $this->includeParentInPK = $includeParentInPK;
         $this->path = $outputPath;
         $this->manifestOptions = $manifestOptions;
 
@@ -40,8 +48,9 @@ class Mapping
      */
     public function parse(array $data): void
     {
+        $userData = $this->includeParentInPK ? ['parentId' => md5(serialize($data))] : [];
         $mapper = new Mapper($this->mapping, $this->name);
-        $mapper->parse($data);
+        $mapper->parse($data, $userData);
 
         foreach ($mapper->getCsvFiles() as $file) {
             if ($file !== null) {
