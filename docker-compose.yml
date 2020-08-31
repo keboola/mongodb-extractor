@@ -29,6 +29,7 @@ services:
         && mongoimport --host mongodb --db test --collection restaurantsIdAsString --drop --file tests/dataset-id-as-string.json
         && mongoimport --host mongodb --db test --collection invalidJSON --drop --file tests/dataset-invalid-json-values.json
         && mongoimport --host mongodb --db test --collection mixedIds --drop --file tests/dataset-mixed-ids.json
+        && mongoimport --host mongodb --db test --collection sameSubDocs --drop --file tests/dataset-same-subdocs.json
         && mongoimport --host mongodb-auth --username user --password "p#a!s@sw:o&r%^d" --db test --collection restaurants --drop --file tests/dataset.json
         && mongoimport --host node1.mongodb.cluster.local --db test --collection restaurants --drop --file tests/dataset.json
         && exec "$$@"

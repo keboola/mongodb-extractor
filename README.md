@@ -59,6 +59,16 @@ The configuration `config.json` contains following properties in `parameters` ke
         - `mapping` (default) - Values are exported using specified `mapping`, [read more](https://help.keboola.com/components/extractors/database/mongodb/#configure-mapping).
         - `raw` - Documents are exported as plain JSON strings, [read more](https://help.keboola.com/components/extractors/database/mongodb/#raw-export-mode).
     - `mapping` - string - required for `mode` = `mapping`, [read more](https://help.keboola.com/components/extractors/database/mongodb/#configure-mapping).
+    - `includeParentInPK` - boolean (optional): Default `false`
+        - Intended for `mapping` mode and ignored in `raw` mode.
+        - If `false`
+            - PK of sub-document depends ONLY on sub-document content,
+            - ... so same PK is generated for sub-documents with same content, but from different parent document
+            - this is legacy/default behaviour
+        - If `true`
+            - PK of sub-document depends on content AND hash of parent document
+            - ... so different PK is generated for sub-documents with same content, but from different parent document
+            - this is new behaviour, the UI automatically turns it on for new configs
 
 ### Protocol
 

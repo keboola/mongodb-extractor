@@ -94,7 +94,13 @@ class Export
         if ($this->exportOptions['mode'] === 'raw') {
             $parser = new Raw($this->name, $this->path, $manifestOptions);
         } else {
-            $parser = new Mapping($this->name, $this->mapping, $this->path, $manifestOptions);
+            $parser = new Mapping(
+                $this->name,
+                $this->mapping,
+                $this->exportOptions['includeParentInPK'] ?? false,
+                $this->path,
+                $manifestOptions
+            );
         }
 
         $handle = fopen($this->getOutputFilename(), 'r');
