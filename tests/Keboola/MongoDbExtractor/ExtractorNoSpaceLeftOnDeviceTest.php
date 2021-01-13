@@ -37,7 +37,7 @@ class ExtractorNoSpaceLeftOnDeviceTest extends TestCase
         $process->mustRun();
 
         $this->uriFactory = new UriFactory();
-        $this->exportCommandFactory = new ExportCommandFactory($this->uriFactory);
+        $this->exportCommandFactory = new ExportCommandFactory($this->uriFactory, false);
     }
 
     public function testExportNoSpaceLeftOnDevice(): void

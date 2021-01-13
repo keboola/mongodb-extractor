@@ -46,6 +46,6 @@
     "scripts": {
         "phpcs": "phpcs -n --ignore=vendor --extensions=php .",
         "phpcbf": "phpcbf -n --ignore=vendor --extensions=php .",
-        "phpunit": "phpunit"
+        "phpunit": "XDEBUG_MODE=coverage phpunit"
     }
 }

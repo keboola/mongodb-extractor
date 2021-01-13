@@ -10,9 +10,12 @@ class ExportCommandFactory
 {
     private UriFactory $uriFactory;
 
-    public function __construct(UriFactory $uriFactory)
+    private bool $quiet;
+
+    public function __construct(UriFactory $uriFactory, bool $quiet)
     {
         $this->uriFactory = $uriFactory;
+        $this->quiet = $quiet;
     }
 
     public function create(array $params): string
@@ -64,6 +67,10 @@ class ExportCommandFactory
         $command[] = '--type ' . escapeshellarg('json');
         if (isset($params['out'])) {
             $command[] = '--out ' . escapeshellarg($params['out']);
+        }
+
+        if ($this->quiet) {
+            $command[] = '--quiet';
         }
 
         return implode(' ', $command);

@@ -45,7 +45,7 @@ class ExtractorClusterConnectionTest extends ExtractorTestCase
                 $uri->setQuery($query->withPair('ssl', 'false'));
                 return $uri;
             });
-        $this->exportCommandFactory = new ExportCommandFactory($this->uriFactory);
+        $this->exportCommandFactory = new ExportCommandFactory($this->uriFactory, false);
     }
 
     protected function tearDown(): void

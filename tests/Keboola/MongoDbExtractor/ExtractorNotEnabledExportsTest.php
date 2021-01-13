@@ -25,7 +25,7 @@ class ExtractorNotEnabledExportsTest extends TestCase
     protected function setUp(): void
     {
         $this->uriFactory = new UriFactory();
-        $this->exportCommandFactory = new ExportCommandFactory($this->uriFactory);
+        $this->exportCommandFactory = new ExportCommandFactory($this->uriFactory, false);
     }
 
     protected function getConfig(): array

@@ -35,7 +35,7 @@ class Application
         }
 
         $uriFactory = new UriFactory();
-        $exportCommandFactory = new ExportCommandFactory($uriFactory);
+        $exportCommandFactory = new ExportCommandFactory($uriFactory, $this->parameters['quiet']);
         $this->extractor = new Extractor($uriFactory, $exportCommandFactory, $this->parameters, $inputState);
     }
 

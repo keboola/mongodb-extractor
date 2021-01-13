@@ -1,6 +1,6 @@
 # MongoDB Extractor
 
-[![Build Status](https://travis-ci.org/keboola/mongodb-extractor.svg?branch=master)](https://travis-ci.org/keboola/mongodb-extractor)
+[![Build Status](https://travis-ci.com/keboola/mongodb-extractor.svg?branch=master)](https://travis-ci.com/keboola/mongodb-extractor)
 [![Code Climate](https://codeclimate.com/github/keboola/mongodb-extractor/badges/gpa.svg)](https://codeclimate.com/github/keboola/mongodb-extractor)
 [![Test Coverage](https://codeclimate.com/github/keboola/mongodb-extractor/badges/coverage.svg)](https://codeclimate.com/github/keboola/mongodb-extractor/coverage)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/keboola/mongodb-extractor/blob/master/LICENSE.md)
@@ -41,6 +41,7 @@ The configuration `config.json` contains following properties in `parameters` ke
             - `keys` - object (optional): SSH keys.
                 - `public` - string (optional): Public SSH key.
                 - `#private` - string (optional): Private SSH key.
+- `quiet` - boolean (optional): Default `false`, pass `--quiet` to `mongoexport` command to hide logs. It should help with `Failed: EOF` problem, [read more](https://stackoverflow.com/a/39122219).
 - `exports` - object[] (required): [Exports configuration](https://help.keboola.com/components/extractors/database/mongodb/#configure-exports).
     - `enabled` - boolean (optional): Default `true`.
     - `id` - scalar (required): Internal `id` of the export.

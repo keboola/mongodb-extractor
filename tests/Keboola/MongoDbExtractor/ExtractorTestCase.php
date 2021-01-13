@@ -26,7 +26,7 @@ abstract class ExtractorTestCase extends TestCase
     protected function setUp(): void
     {
         $this->uriFactory = new UriFactory();
-        $this->exportCommandFactory = new ExportCommandFactory($this->uriFactory);
+        $this->exportCommandFactory = new ExportCommandFactory($this->uriFactory, false);
     }
 
     abstract protected function getConfig(): array;
