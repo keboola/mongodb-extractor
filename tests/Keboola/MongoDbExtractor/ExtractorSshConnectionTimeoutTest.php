@@ -29,7 +29,7 @@ class ExtractorSshConnectionTimeoutTest extends TestCase
     protected function setUp(): void
     {
         $this->uriFactory = new UriFactory();
-        $this->exportCommandFactory = new ExportCommandFactory($this->uriFactory);
+        $this->exportCommandFactory = new ExportCommandFactory($this->uriFactory, false);
 
         $this->fs = new Filesystem;
         $this->fs->remove($this->path);

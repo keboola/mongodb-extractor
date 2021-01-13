@@ -16,7 +16,7 @@ class ExportCommandFactoryTest extends TestCase
     {
         parent::setUp();
         $uriFactory = new UriFactory();
-        $this->commandFactory = new ExportCommandFactory($uriFactory);
+        $this->commandFactory = new ExportCommandFactory($uriFactory, false);
     }
 
     public function testCreateMinimal(): void
@@ -223,6 +223,26 @@ mongoexport --host 'localhost' --port '27017' --db 'myDatabase' --username 'user
 BASH;
         // phpcs:enable
 
+        $this->assertSame($expectedCommand, $command);
+    }
+
+    public function testQuietTrue(): void
+    {
+        $options = [
+            'host' => 'localhost',
+            'port' => 27017,
+            'database' => 'myDatabase',
+            'collection' => 'myCollection',
+            'out' => '/tmp/create-test.json',
+        ];
+
+        $commandFactory = new ExportCommandFactory(new UriFactory(), true);
+        $command = $commandFactory->create($options);
+        // phpcs:disable Generic.Files.LineLength.MaxExceeded
+        $expectedCommand = <<<BASH
+mongoexport --host 'localhost' --port '27017' --db 'myDatabase' --collection 'myCollection' --type 'json' --out '/tmp/create-test.json' --quiet
+BASH;
+        // phpcs:enable
         $this->assertSame($expectedCommand, $command);
     }
 }

@@ -26,7 +26,7 @@ class ExtractorObjectInPrimaryKeyTest extends TestCase
     protected function setUp(): void
     {
         $this->uriFactory = new UriFactory();
-        $this->exportCommandFactory = new ExportCommandFactory($this->uriFactory);
+        $this->exportCommandFactory = new ExportCommandFactory($this->uriFactory, false);
 
         $fs = new Filesystem;
         $fs->remove($this->path);

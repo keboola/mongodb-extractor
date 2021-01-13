@@ -32,7 +32,7 @@ class ApplicationTest extends TestCase
         $this->fs->remove($this->path);
     }
 
-    public function testActionRunFull(): void
+    public function testActionRunFull(string $quiet = 'false'): void
     {
         $json = <<<JSON
 {
@@ -42,6 +42,7 @@ class ApplicationTest extends TestCase
       "port": 27017,
       "database": "test"
     },
+    "quiet": $quiet,
     "exports": [
       {
         "name": "bakeries",
@@ -139,6 +140,11 @@ CSV;
 JSON;
         $this->assertFileExists($actualJsonFileRelated);
         $this->assertEquals($expectedJsonRelated, file_get_contents($actualJsonFileRelated));
+    }
+
+    public function testActionRunFullQuite(): void
+    {
+        $this->testActionRunFull('true');
     }
 
     public function testActionRunDuplicateExportNames(): void
