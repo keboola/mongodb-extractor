@@ -9,6 +9,7 @@ use Keboola\CsvMap\Exception\BadDataException;
 use Keboola\MongoDbExtractor\ExportCommandFactory;
 use Keboola\MongoDbExtractor\Tests\Traits\CreateExtractorTrait;
 use Keboola\MongoDbExtractor\UriFactory;
+use Keboola\MongoDbExtractor\UserException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
@@ -74,6 +75,35 @@ abstract class ExtractorTestCase extends TestCase
         $process->mustRun();
 
         $this->assertSame(74, (int) $process->getOutput());
+    }
+
+    public function testArrayInHeader(): void
+    {
+        $exportParams = [
+            'collection' => 'restaurants',
+            'name' => 'export-all',
+            'mapping' => [
+                'name' => [
+                    'type' => 'column',
+                    'mapping' => [
+                        'destination' => ['bad', 'type'],
+                    ],
+                ],
+            ],
+            'enabled' => true,
+            'mode' => 'mapping',
+        ];
+
+        $parameters = $this->getConfig()['parameters'];
+        $parameters['exports'][] = $exportParams;
+
+        $extractor = $this->createExtractor($parameters);
+
+        $this->expectException(UserException::class);
+        $this->expectExceptionMessage(
+            'CSV writing error. Header and mapped documents must be scalar values. Cannot write array into a column'
+        );
+        $extractor->extract($this->path);
     }
 
     public function testExportOne(): void

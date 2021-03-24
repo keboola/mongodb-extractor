@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Keboola\MongoDbExtractor;
 
+use Keboola\Csv\Exception as CsvException;
 use Keboola\MongoDbExtractor\Parser\Mapping;
 use Keboola\MongoDbExtractor\Parser\Raw;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -121,6 +122,11 @@ class Export
             } catch (NotEncodableValueException $notEncodableValueException) {
                 $this->consoleOutput->writeln('Could not decode JSON: ' . substr($line, 0, 80) . '...');
                 $skippedDocumentsCount++;
+            } catch (CsvException $e) {
+                throw new UserException(sprintf(
+                    'CSV writing error. Header and mapped documents must be scalar values. %s',
+                    $e->getMessage()
+                ));
             } finally {
                 $parsedDocumentsCount++;
             }
