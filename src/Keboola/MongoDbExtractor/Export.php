@@ -9,6 +9,7 @@ use Keboola\MongoDbExtractor\Parser\Mapping;
 use Keboola\MongoDbExtractor\Parser\Raw;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Nette\Utils\Strings;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
@@ -73,10 +74,26 @@ class Export
         $cliCommand = $this->exportCommandFactory->create($options);
 
         $process = Process::fromShellCommandline($cliCommand, null, null, null, null);
-        $process->mustRun(function ($type, $buffer): void {
-            // $type is always Process::ERR here, so we don't check it
-            $this->consoleOutput->write($buffer);
-        });
+
+        $lastOutput = null;
+        try {
+            $process->mustRun(function ($type, $buffer) use (&$lastOutput): void {
+                // $type is always Process::ERR here, so we don't check it
+                $lastOutput = $buffer;
+                $this->consoleOutput->write($buffer);
+            });
+        } catch (ProcessFailedException $e) {
+            if ($lastOutput && strpos($lastOutput, 'Failed: EOF') !== false) {
+                throw new UserException(sprintf(
+                    'Export \"%s\" failed. Timeout occurred while waiting for data. ' .
+                    'Please check your query. Problem can be a typo in the field name or missing index.' .
+                    'In these cases, the full scan is made and it can take too long.',
+                    $this->name
+                ));
+            }
+
+            throw $e;
+        }
     }
 
     /**
